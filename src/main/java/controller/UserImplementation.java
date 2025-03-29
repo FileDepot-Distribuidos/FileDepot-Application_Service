@@ -1,10 +1,14 @@
 package controller;
 
+import com.google.gson.Gson;
 import jakarta.jws.WebService;
 import org.json.JSONObject;
 
 @WebService(endpointInterface = "controller.FileDepotService")
-public class ServiceImpl implements FileDepotService {
+public class UserImplementation implements FileDepotService {
+
+    private final Gson gson = new Gson();
+
     @Override
     public String ping() {
         return "Conexión exitosa con FileDepot SOAP Server";
@@ -40,5 +44,14 @@ public class ServiceImpl implements FileDepotService {
         }
 
         return "{\"success\": false, \"message\": \"Acción no soportada\"}";
+    }
+
+    // Los siguientes métodos deben quedar vacíos o retornar error:
+    @Override public String processFileRequest(String action, String data) { return notImplemented(); }
+    @Override public String processDirectoryRequest(String action, String data) { return notImplemented(); }
+    @Override public String processShareRequest(String action, String data) { return notImplemented(); }
+
+    private String notImplemented() {
+        return gson.toJson(new dto.SoapResponse(false, "Método no implementado en este controlador."));
     }
 }

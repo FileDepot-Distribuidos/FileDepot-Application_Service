@@ -69,23 +69,23 @@ public class main {
 
 
         // Convertir archivos base64 y mandar a los nodos
-//        try {
-//            // Ruta del archivo real a subir (por ejemplo, un .docx o .jpg)
-//            Path path = Paths.get("src/main/java/propuesta-proyecto.docx");
-//
-//            // Leer archivo como bytes y codificar en base64
-//            byte[] fileBytes = Files.readAllBytes(path);
-//            String base64 = Base64.getEncoder().encodeToString(fileBytes);
-//
-//            String filename = "documento.docx";
-//            String directory = "mis_archivos";
-//
-//            // Enviar por gRPC
-//            String resultado = client.uploadBase64File(filename, base64, directory);
-//            System.out.println("Resultado: " + resultado);
-//
-//        } catch (Exception e) {
-//            System.err.println("Error: " + e.getMessage());
-//        }
+        try {
+            // Ruta del archivo real a subir (por ejemplo, un .docx o .jpg)
+            Path path = Paths.get("src/main/java/propuesta-proyecto.docx");
+
+            // Leer archivo como bytes y codificar en base64
+            byte[] fileBytes = Files.readAllBytes(path);
+            String base64 = Base64.getEncoder().encodeToString(fileBytes);
+
+            String filename = "documento.docx";
+            String directory = "mis_archivos";
+
+            // Enviar por gRPC
+            String resultado = client.uploadBase64File(filename, base64, directory);
+            System.out.println("Resultado: " + resultado);
+
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
     }
 }
