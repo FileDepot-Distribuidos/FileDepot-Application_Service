@@ -4,10 +4,6 @@
 package filesystem;
 
 /**
- * <pre>
- * Mensajes para el registro y estado de los nodos
- * </pre>
- *
  * Protobuf type {@code filesystem.NodeInfo}
  */
 public final class NodeInfo extends
@@ -53,10 +49,6 @@ private static final long serialVersionUID = 0L;
   @SuppressWarnings("serial")
   private volatile java.lang.Object address_ = "";
   /**
-   * <pre>
-   * Dirección del nodo (por ejemplo, "ip:puerto")
-   * </pre>
-   *
    * <code>string address = 1;</code>
    * @return The address.
    */
@@ -74,10 +66,6 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <pre>
-   * Dirección del nodo (por ejemplo, "ip:puerto")
-   * </pre>
-   *
    * <code>string address = 1;</code>
    * @return The bytes for address.
    */
@@ -100,10 +88,6 @@ private static final long serialVersionUID = 0L;
   @SuppressWarnings("serial")
   private volatile java.lang.Object status_ = "";
   /**
-   * <pre>
-   * Estado inicial (por ejemplo, "activo")
-   * </pre>
-   *
    * <code>string status = 2;</code>
    * @return The status.
    */
@@ -121,10 +105,6 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <pre>
-   * Estado inicial (por ejemplo, "activo")
-   * </pre>
-   *
    * <code>string status = 2;</code>
    * @return The bytes for status.
    */
@@ -308,10 +288,6 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
-   * <pre>
-   * Mensajes para el registro y estado de los nodos
-   * </pre>
-   *
    * Protobuf type {@code filesystem.NodeInfo}
    */
   public static final class Builder extends
@@ -497,10 +473,6 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object address_ = "";
     /**
-     * <pre>
-     * Dirección del nodo (por ejemplo, "ip:puerto")
-     * </pre>
-     *
      * <code>string address = 1;</code>
      * @return The address.
      */
@@ -517,10 +489,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * Dirección del nodo (por ejemplo, "ip:puerto")
-     * </pre>
-     *
      * <code>string address = 1;</code>
      * @return The bytes for address.
      */
@@ -538,10 +506,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * Dirección del nodo (por ejemplo, "ip:puerto")
-     * </pre>
-     *
      * <code>string address = 1;</code>
      * @param value The address to set.
      * @return This builder for chaining.
@@ -555,10 +519,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * Dirección del nodo (por ejemplo, "ip:puerto")
-     * </pre>
-     *
      * <code>string address = 1;</code>
      * @return This builder for chaining.
      */
@@ -569,10 +529,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * Dirección del nodo (por ejemplo, "ip:puerto")
-     * </pre>
-     *
      * <code>string address = 1;</code>
      * @param value The bytes for address to set.
      * @return This builder for chaining.
@@ -589,10 +545,6 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object status_ = "";
     /**
-     * <pre>
-     * Estado inicial (por ejemplo, "activo")
-     * </pre>
-     *
      * <code>string status = 2;</code>
      * @return The status.
      */
@@ -609,10 +561,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * Estado inicial (por ejemplo, "activo")
-     * </pre>
-     *
      * <code>string status = 2;</code>
      * @return The bytes for status.
      */
@@ -630,10 +578,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     * Estado inicial (por ejemplo, "activo")
-     * </pre>
-     *
      * <code>string status = 2;</code>
      * @param value The status to set.
      * @return This builder for chaining.
@@ -647,10 +591,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * Estado inicial (por ejemplo, "activo")
-     * </pre>
-     *
      * <code>string status = 2;</code>
      * @return This builder for chaining.
      */
@@ -661,10 +601,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * Estado inicial (por ejemplo, "activo")
-     * </pre>
-     *
      * <code>string status = 2;</code>
      * @param value The bytes for status to set.
      * @return This builder for chaining.

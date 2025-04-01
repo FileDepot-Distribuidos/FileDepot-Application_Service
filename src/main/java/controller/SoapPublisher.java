@@ -1,11 +1,20 @@
 package controller;
 
+import controller.implementations.FileDepotImplementation;
+import grpc.GrpcNodeManager;
 import jakarta.xml.ws.Endpoint;
 
 public class SoapPublisher {
     public static void main(String[] args) {
-        String url = "http://localhost:8080/FileDepotService";
-        Endpoint.publish(url, new ServiceImpl());
-        System.out.println("SOAP Service publicado en: " + url);
+        try {
+            GrpcNodeManager.verifyConnectionReady();
+
+            Endpoint.publish("http://localhost:2005/FileDepotService", new FileDepotImplementation());
+            System.out.println("SOAP Service iniciado en http://localhost:2005/FileDepotService?wsdl");
+
+        } catch (IllegalStateException e) {
+            System.err.println("Error al iniciar SOAP: " + e.getMessage());
+            System.exit(1);
+        }
     }
 }

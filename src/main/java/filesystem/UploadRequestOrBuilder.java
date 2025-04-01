@@ -44,4 +44,16 @@ public interface UploadRequestOrBuilder extends
    * @return The content.
    */
   com.google.protobuf.ByteString getContent();
+
+  /**
+   * <code>string contentBase64 = 4;</code>
+   * @return The contentBase64.
+   */
+  java.lang.String getContentBase64();
+  /**
+   * <code>string contentBase64 = 4;</code>
+   * @return The bytes for contentBase64.
+   */
+  com.google.protobuf.ByteString
+      getContentBase64Bytes();
 }

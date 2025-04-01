@@ -17,6 +17,7 @@ public class FileSystemClient {
                 .build();
 
         stub = FileSystemServiceGrpc.newBlockingStub(channel);
+        System.out.println("Conectado a nodo gRPC en " + host + ":" + port);
     }
 
     public String uploadBase64File(String filename, String base64Content, String directory) {
@@ -31,13 +32,18 @@ public class FileSystemClient {
                     .setContent(ByteString.copyFrom(base64Content.getBytes()))
                     .build();
 
+            System.out.println("Subiendo archivo: " + filename + " a " + directory);
             Response response = stub.uploadFile(request);
+            System.out.println("Respuesta del nodo: " + response.getMessage());
+
             return response.getMessage();
 
         } catch (Exception e) {
+            System.err.println("Error en subida gRPC: " + e.getMessage());
             return "Error en subida gRPC: " + e.getMessage();
         }
     }
+
     public String renameFile(String oldName, String newName) {
         try {
             RenameRequest request = RenameRequest.newBuilder()
@@ -45,23 +51,32 @@ public class FileSystemClient {
                     .setNewName(newName)
                     .build();
 
+            System.out.println("Renombrando: " + oldName + " a " + newName);
             Response response = stub.renameFile(request);
+            System.out.println("Respuesta del nodo: " + response.getMessage());
+
             return response.getMessage();
 
         } catch (Exception e) {
+            System.err.println("Error al renombrar: " + e.getMessage());
             return "Error al renombrar archivo: " + e.getMessage();
         }
     }
+
     public String deleteFile(String path) {
         try {
             DeleteRequest request = DeleteRequest.newBuilder()
                     .setPath(path)
                     .build();
 
+            System.out.println("Eliminando: " + path);
             Response response = stub.deleteFile(request);
+            System.out.println("Respuesta del nodo: " + response.getMessage());
+
             return response.getMessage();
 
         } catch (Exception e) {
+            System.err.println("Error al eliminar: " + e.getMessage());
             return "Error al eliminar archivo/directorio: " + e.getMessage();
         }
     }
@@ -72,13 +87,18 @@ public class FileSystemClient {
                     .setPath(path)
                     .build();
 
+            System.out.println("Creando directorio: " + path);
             Response response = stub.createDirectory(request);
+            System.out.println("Respuesta del nodo: " + response.getMessage());
+
             return response.getMessage();
 
         } catch (Exception e) {
+            System.err.println("Error al crear directorio: " + e.getMessage());
             return "Error al crear directorio: " + e.getMessage();
         }
     }
+
     public String createSubdirectory(String parentDir, String subdirName) {
         try {
             SubdirectoryRequest request = SubdirectoryRequest.newBuilder()
@@ -86,10 +106,14 @@ public class FileSystemClient {
                     .setSubdirectoryName(subdirName)
                     .build();
 
+            System.out.println("Creando subdirectorio: " + subdirName + " en " + parentDir);
             Response response = stub.createSubdirectory(request);
+            System.out.println("Respuesta del nodo: " + response.getMessage());
+
             return response.getMessage();
 
         } catch (Exception e) {
+            System.err.println("Error al crear subdirectorio: " + e.getMessage());
             return "Error al crear subdirectorio: " + e.getMessage();
         }
     }
@@ -100,12 +124,17 @@ public class FileSystemClient {
                     .setPath(directory)
                     .build();
 
+            System.out.println("Listando archivos en: " + directory);
             ListResponse response = stub.listFiles(request);
+
+            System.out.println("Archivos encontrados:");
+            response.getFilesList().forEach(System.out::println);
+
             return response.getFilesList();
 
         } catch (Exception e) {
             System.err.println("Error al listar archivos: " + e.getMessage());
-            return List.of(); // lista vacía si hay error
+            return List.of();
         }
     }
 
@@ -116,10 +145,14 @@ public class FileSystemClient {
                     .setDestinationPath(destinationPath)
                     .build();
 
+            System.out.println("Moviendo de: " + sourcePath + " a " + destinationPath);
             Response response = stub.moveFile(request);
+            System.out.println("Respuesta del nodo: " + response.getMessage());
+
             return response.getMessage();
 
         } catch (Exception e) {
+            System.err.println("Error al mover archivo/directorio: " + e.getMessage());
             return "Error al mover archivo/directorio: " + e.getMessage();
         }
     }

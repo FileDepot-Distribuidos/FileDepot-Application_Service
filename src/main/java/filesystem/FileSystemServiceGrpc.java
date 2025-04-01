@@ -233,6 +233,37 @@ public final class FileSystemServiceGrpc {
     return getMoveFileMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<filesystem.DirectoryRequest,
+      filesystem.ListAllResponse> getListAllMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "ListAll",
+      requestType = filesystem.DirectoryRequest.class,
+      responseType = filesystem.ListAllResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<filesystem.DirectoryRequest,
+      filesystem.ListAllResponse> getListAllMethod() {
+    io.grpc.MethodDescriptor<filesystem.DirectoryRequest, filesystem.ListAllResponse> getListAllMethod;
+    if ((getListAllMethod = FileSystemServiceGrpc.getListAllMethod) == null) {
+      synchronized (FileSystemServiceGrpc.class) {
+        if ((getListAllMethod = FileSystemServiceGrpc.getListAllMethod) == null) {
+          FileSystemServiceGrpc.getListAllMethod = getListAllMethod =
+              io.grpc.MethodDescriptor.<filesystem.DirectoryRequest, filesystem.ListAllResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "ListAll"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  filesystem.DirectoryRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  filesystem.ListAllResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("ListAll"))
+              .build();
+        }
+      }
+    }
+    return getListAllMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -332,6 +363,13 @@ public final class FileSystemServiceGrpc {
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getMoveFileMethod(), responseObserver);
     }
+
+    /**
+     */
+    default void listAll(filesystem.DirectoryRequest request,
+        io.grpc.stub.StreamObserver<filesystem.ListAllResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getListAllMethod(), responseObserver);
+    }
   }
 
   /**
@@ -422,6 +460,14 @@ public final class FileSystemServiceGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getMoveFileMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void listAll(filesystem.DirectoryRequest request,
+        io.grpc.stub.StreamObserver<filesystem.ListAllResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getListAllMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -490,6 +536,13 @@ public final class FileSystemServiceGrpc {
     public filesystem.Response moveFile(filesystem.MoveRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getMoveFileMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public filesystem.ListAllResponse listAll(filesystem.DirectoryRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getListAllMethod(), getCallOptions(), request);
     }
   }
 
@@ -567,6 +620,14 @@ public final class FileSystemServiceGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getMoveFileMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<filesystem.ListAllResponse> listAll(
+        filesystem.DirectoryRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getListAllMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_UPLOAD_FILE = 0;
@@ -576,6 +637,7 @@ public final class FileSystemServiceGrpc {
   private static final int METHODID_DELETE_FILE = 4;
   private static final int METHODID_LIST_FILES = 5;
   private static final int METHODID_MOVE_FILE = 6;
+  private static final int METHODID_LIST_ALL = 7;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -621,6 +683,10 @@ public final class FileSystemServiceGrpc {
         case METHODID_MOVE_FILE:
           serviceImpl.moveFile((filesystem.MoveRequest) request,
               (io.grpc.stub.StreamObserver<filesystem.Response>) responseObserver);
+          break;
+        case METHODID_LIST_ALL:
+          serviceImpl.listAll((filesystem.DirectoryRequest) request,
+              (io.grpc.stub.StreamObserver<filesystem.ListAllResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -689,6 +755,13 @@ public final class FileSystemServiceGrpc {
               filesystem.MoveRequest,
               filesystem.Response>(
                 service, METHODID_MOVE_FILE)))
+        .addMethod(
+          getListAllMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              filesystem.DirectoryRequest,
+              filesystem.ListAllResponse>(
+                service, METHODID_LIST_ALL)))
         .build();
   }
 
@@ -744,6 +817,7 @@ public final class FileSystemServiceGrpc {
               .addMethod(getDeleteFileMethod())
               .addMethod(getListFilesMethod())
               .addMethod(getMoveFileMethod())
+              .addMethod(getListAllMethod())
               .build();
         }
       }
