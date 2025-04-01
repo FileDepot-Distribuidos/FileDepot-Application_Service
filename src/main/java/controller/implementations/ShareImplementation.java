@@ -1,6 +1,7 @@
-package controller;
+package controller.implementations;
 
 import com.google.gson.Gson;
+import controller.FileDepotService;
 import dto.*;
 import dto.share.*;
 import jakarta.jws.WebService;
@@ -38,7 +39,6 @@ public class ShareImplementation implements FileDepotService {
         }
     }
 
-    @Override public String ping() { return ""; }
     @Override public String processAuthRequest(String action, String data) { return ""; }
     @Override public String processFileRequest(String action, String data) { return ""; }
     @Override public String processDirectoryRequest(String action, String data) { return ""; }

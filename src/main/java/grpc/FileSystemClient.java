@@ -105,7 +105,7 @@ public class FileSystemClient {
 
         } catch (Exception e) {
             System.err.println("Error al listar archivos: " + e.getMessage());
-            return List.of(); // lista vacía si hay error
+            return List.of();
         }
     }
 

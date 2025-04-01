@@ -1,6 +1,7 @@
-package controller;
+package controller.implementations;
 
 import com.google.gson.Gson;
+import controller.FileDepotService;
 import dto.*;
 import dto.directory.*;
 import grpc.FileSystemClient;
@@ -20,9 +21,12 @@ public class DirectoryImplementation implements FileDepotService {
             switch (action) {
                 case "createDirectory":
                     CreateDirectory create = gson.fromJson(data, CreateDirectory.class);
-                    String path = create.isRoot ? create.path : create.parentDirectory + "/" + create.path;
-                    String createResult = client.createDirectory(path);
-                    return gson.toJson(new SoapResponse(true, createResult));
+                    String createResult = client.createDirectory(create.path);
+                    if (createResult.toLowerCase().contains("correctamente")) {
+                        return gson.toJson(new SoapResponse(true, "Directorio creado correctamente", create));
+                    } else {
+                        return gson.toJson(new SoapResponse(false, "Error al crear directorio", null));
+                    }
 
                 case "addSubdirectory":
                     Subdirectory sub = gson.fromJson(data, Subdirectory.class);
@@ -56,7 +60,6 @@ public class DirectoryImplementation implements FileDepotService {
         }
     }
 
-    @Override public String ping() { return ""; }
     @Override public String processAuthRequest(String action, String data) { return ""; }
     @Override public String processFileRequest(String action, String data) { return ""; }
     @Override public String processShareRequest(String action, String data) { return ""; }

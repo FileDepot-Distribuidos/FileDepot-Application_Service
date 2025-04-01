@@ -1,6 +1,7 @@
-package controller;
+package controller.implementations;
 
 import com.google.gson.Gson;
+import controller.FileDepotService;
 import dto.*;
 import dto.files.*;
 import grpc.FileSystemClient;
@@ -49,7 +50,6 @@ public class FileImplementation implements FileDepotService {
         }
     }
 
-    @Override public String ping() { return ""; }
     @Override public String processAuthRequest(String action, String data) { return ""; }
     @Override public String processDirectoryRequest(String action, String data) { return ""; }
     @Override public String processShareRequest(String action, String data) { return ""; }

@@ -7,8 +7,6 @@ import jakarta.jws.WebParam;
 @WebService(targetNamespace = "http://filedepot.appserver/ws")
 public interface FileDepotService {
 
-    @WebMethod
-    String ping();
 
     @WebMethod
     String processAuthRequest(
