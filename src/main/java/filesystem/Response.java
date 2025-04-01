@@ -17,6 +17,7 @@ private static final long serialVersionUID = 0L;
   }
   private Response() {
     message_ = "";
+    fileBase64_ = "";
   }
 
   @java.lang.Override
@@ -83,6 +84,45 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int FILEBASE64_FIELD_NUMBER = 2;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object fileBase64_ = "";
+  /**
+   * <code>string fileBase64 = 2;</code>
+   * @return The fileBase64.
+   */
+  @java.lang.Override
+  public java.lang.String getFileBase64() {
+    java.lang.Object ref = fileBase64_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      fileBase64_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string fileBase64 = 2;</code>
+   * @return The bytes for fileBase64.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getFileBase64Bytes() {
+    java.lang.Object ref = fileBase64_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      fileBase64_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -100,6 +140,9 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, message_);
     }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(fileBase64_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, fileBase64_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -111,6 +154,9 @@ private static final long serialVersionUID = 0L;
     size = 0;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, message_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(fileBase64_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, fileBase64_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -129,6 +175,8 @@ private static final long serialVersionUID = 0L;
 
     if (!getMessage()
         .equals(other.getMessage())) return false;
+    if (!getFileBase64()
+        .equals(other.getFileBase64())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -142,6 +190,8 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
     hash = (53 * hash) + getMessage().hashCode();
+    hash = (37 * hash) + FILEBASE64_FIELD_NUMBER;
+    hash = (53 * hash) + getFileBase64().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -272,6 +322,7 @@ private static final long serialVersionUID = 0L;
       super.clear();
       bitField0_ = 0;
       message_ = "";
+      fileBase64_ = "";
       return this;
     }
 
@@ -307,6 +358,9 @@ private static final long serialVersionUID = 0L;
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
         result.message_ = message_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.fileBase64_ = fileBase64_;
       }
     }
 
@@ -359,6 +413,11 @@ private static final long serialVersionUID = 0L;
         bitField0_ |= 0x00000001;
         onChanged();
       }
+      if (!other.getFileBase64().isEmpty()) {
+        fileBase64_ = other.fileBase64_;
+        bitField0_ |= 0x00000002;
+        onChanged();
+      }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
@@ -390,6 +449,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000001;
               break;
             } // case 10
+            case 18: {
+              fileBase64_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000002;
+              break;
+            } // case 18
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -475,6 +539,78 @@ private static final long serialVersionUID = 0L;
       checkByteStringIsUtf8(value);
       message_ = value;
       bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object fileBase64_ = "";
+    /**
+     * <code>string fileBase64 = 2;</code>
+     * @return The fileBase64.
+     */
+    public java.lang.String getFileBase64() {
+      java.lang.Object ref = fileBase64_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        fileBase64_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string fileBase64 = 2;</code>
+     * @return The bytes for fileBase64.
+     */
+    public com.google.protobuf.ByteString
+        getFileBase64Bytes() {
+      java.lang.Object ref = fileBase64_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        fileBase64_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string fileBase64 = 2;</code>
+     * @param value The fileBase64 to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFileBase64(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      fileBase64_ = value;
+      bitField0_ |= 0x00000002;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string fileBase64 = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearFileBase64() {
+      fileBase64_ = getDefaultInstance().getFileBase64();
+      bitField0_ = (bitField0_ & ~0x00000002);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string fileBase64 = 2;</code>
+     * @param value The bytes for fileBase64 to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFileBase64Bytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      fileBase64_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }

@@ -19,29 +19,49 @@ public class UserImplementation implements FileDepotService {
                 case "login" -> {
                     UserLogin login = gson.fromJson(data, UserLogin.class);
 
-                    if ("ex@ex.com".equals(login.email) && "password123".equals(login.password)) {
-                        return gson.toJson(new SoapResponse(true, gson.toJson(login)));
+                    boolean valid = "ex@ex.com".equals(login.email) && "password123".equals(login.password);
+                    SoapResponse response;
+
+                    if (valid) {
+                        response = new SoapResponse(true, gson.toJson(login));
                     } else {
-                        return gson.toJson(new SoapResponse(false, "Credenciales inválidas"));
+                        response = new SoapResponse(false, "Credenciales inválidas");
                     }
+
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
                 }
 
                 case "register" -> {
                     UserRegister register = gson.fromJson(data, UserRegister.class);
 
-                    if (!register.email.isEmpty() && !register.password.isEmpty() && !register.phone.isEmpty()) {
-                        return gson.toJson(new SoapResponse(true, "Usuario registrado exitosamente"));
+                    boolean valid = !register.email.isEmpty() && !register.password.isEmpty() && !register.phone.isEmpty();
+                    SoapResponse response;
+
+                    if (valid) {
+                        response = new SoapResponse(true, "Usuario registrado exitosamente");
                     } else {
-                        return gson.toJson(new SoapResponse(false, "Datos incompletos"));
+                        response = new SoapResponse(false, "Datos incompletos");
                     }
+
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
                 }
 
                 default -> {
-                    return gson.toJson(new SoapResponse(false, "Acción no soportada"));
+                    SoapResponse response = new SoapResponse(false, "Acción no soportada");
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
                 }
             }
         } catch (Exception e) {
-            return gson.toJson(new SoapResponse(false, "Error en el servidor: " + e.getMessage()));
+            SoapResponse response = new SoapResponse(false, "Error en el servidor: " + e.getMessage());
+            String json = gson.toJson(response);
+            System.out.println("Respuesta enviada al backend cliente: " + json);
+            return json;
         }
     }
 
@@ -50,7 +70,9 @@ public class UserImplementation implements FileDepotService {
     @Override public String processShareRequest(String action, String data) { return notImplemented(); }
 
     private String notImplemented() {
-        return gson.toJson(new SoapResponse(false, "Método no implementado en este controlador."));
+        SoapResponse response = new SoapResponse(false, "Método no implementado en este controlador.");
+        String json = gson.toJson(response);
+        System.out.println("Respuesta enviada al backend cliente: " + json);
+        return json;
     }
-
 }

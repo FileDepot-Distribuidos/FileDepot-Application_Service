@@ -23,6 +23,7 @@ private static final long serialVersionUID = 0L;
     filename_ = "";
     directory_ = "";
     content_ = com.google.protobuf.ByteString.EMPTY;
+    contentBase64_ = "";
   }
 
   @java.lang.Override
@@ -147,6 +148,45 @@ private static final long serialVersionUID = 0L;
     return content_;
   }
 
+  public static final int CONTENTBASE64_FIELD_NUMBER = 4;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object contentBase64_ = "";
+  /**
+   * <code>string contentBase64 = 4;</code>
+   * @return The contentBase64.
+   */
+  @java.lang.Override
+  public java.lang.String getContentBase64() {
+    java.lang.Object ref = contentBase64_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      contentBase64_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string contentBase64 = 4;</code>
+   * @return The bytes for contentBase64.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getContentBase64Bytes() {
+    java.lang.Object ref = contentBase64_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      contentBase64_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -170,6 +210,9 @@ private static final long serialVersionUID = 0L;
     if (!content_.isEmpty()) {
       output.writeBytes(3, content_);
     }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(contentBase64_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, contentBase64_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -188,6 +231,9 @@ private static final long serialVersionUID = 0L;
     if (!content_.isEmpty()) {
       size += com.google.protobuf.CodedOutputStream
         .computeBytesSize(3, content_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(contentBase64_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, contentBase64_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -210,6 +256,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getDirectory())) return false;
     if (!getContent()
         .equals(other.getContent())) return false;
+    if (!getContentBase64()
+        .equals(other.getContentBase64())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -227,6 +275,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getDirectory().hashCode();
     hash = (37 * hash) + CONTENT_FIELD_NUMBER;
     hash = (53 * hash) + getContent().hashCode();
+    hash = (37 * hash) + CONTENTBASE64_FIELD_NUMBER;
+    hash = (53 * hash) + getContentBase64().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -363,6 +413,7 @@ private static final long serialVersionUID = 0L;
       filename_ = "";
       directory_ = "";
       content_ = com.google.protobuf.ByteString.EMPTY;
+      contentBase64_ = "";
       return this;
     }
 
@@ -404,6 +455,9 @@ private static final long serialVersionUID = 0L;
       }
       if (((from_bitField0_ & 0x00000004) != 0)) {
         result.content_ = content_;
+      }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.contentBase64_ = contentBase64_;
       }
     }
 
@@ -464,6 +518,11 @@ private static final long serialVersionUID = 0L;
       if (other.getContent() != com.google.protobuf.ByteString.EMPTY) {
         setContent(other.getContent());
       }
+      if (!other.getContentBase64().isEmpty()) {
+        contentBase64_ = other.contentBase64_;
+        bitField0_ |= 0x00000008;
+        onChanged();
+      }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
@@ -505,6 +564,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000004;
               break;
             } // case 26
+            case 34: {
+              contentBase64_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000008;
+              break;
+            } // case 34
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -714,6 +778,78 @@ private static final long serialVersionUID = 0L;
     public Builder clearContent() {
       bitField0_ = (bitField0_ & ~0x00000004);
       content_ = getDefaultInstance().getContent();
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object contentBase64_ = "";
+    /**
+     * <code>string contentBase64 = 4;</code>
+     * @return The contentBase64.
+     */
+    public java.lang.String getContentBase64() {
+      java.lang.Object ref = contentBase64_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        contentBase64_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string contentBase64 = 4;</code>
+     * @return The bytes for contentBase64.
+     */
+    public com.google.protobuf.ByteString
+        getContentBase64Bytes() {
+      java.lang.Object ref = contentBase64_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        contentBase64_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string contentBase64 = 4;</code>
+     * @param value The contentBase64 to set.
+     * @return This builder for chaining.
+     */
+    public Builder setContentBase64(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      contentBase64_ = value;
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string contentBase64 = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearContentBase64() {
+      contentBase64_ = getDefaultInstance().getContentBase64();
+      bitField0_ = (bitField0_ & ~0x00000008);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string contentBase64 = 4;</code>
+     * @param value The bytes for contentBase64 to set.
+     * @return This builder for chaining.
+     */
+    public Builder setContentBase64Bytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      contentBase64_ = value;
+      bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }

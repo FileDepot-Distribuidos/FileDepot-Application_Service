@@ -7,6 +7,7 @@ import static io.grpc.MethodDescriptor.generateFullMethodName;
  * Servicio para el registro y estado de los nodos
  * </pre>
  */
+
 @io.grpc.stub.annotations.GrpcGenerated
 public final class NodeServiceGrpc {
 

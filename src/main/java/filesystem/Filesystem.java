@@ -55,6 +55,11 @@ public final class Filesystem {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_filesystem_ListResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_filesystem_ListAllResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_filesystem_ListAllResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_filesystem_NodeInfo_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -73,36 +78,40 @@ public final class Filesystem {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020filesystem.proto\022\nfilesystem\"E\n\rUpload" +
+      "\n\020filesystem.proto\022\nfilesystem\"\\\n\rUpload" +
       "Request\022\020\n\010filename\030\001 \001(\t\022\021\n\tdirectory\030\002" +
-      " \001(\t\022\017\n\007content\030\003 \001(\014\" \n\020DirectoryReques" +
-      "t\022\014\n\004path\030\001 \001(\t\"J\n\023SubdirectoryRequest\022\030" +
-      "\n\020parent_directory\030\001 \001(\t\022\031\n\021subdirectory" +
-      "_name\030\002 \001(\t\"3\n\rRenameRequest\022\020\n\010old_name" +
-      "\030\001 \001(\t\022\020\n\010new_name\030\002 \001(\t\"\035\n\rDeleteReques" +
-      "t\022\014\n\004path\030\001 \001(\t\"<\n\013MoveRequest\022\023\n\013source" +
-      "_path\030\001 \001(\t\022\030\n\020destination_path\030\002 \001(\t\"\033\n" +
-      "\010Response\022\017\n\007message\030\001 \001(\t\"\035\n\014ListRespon" +
-      "se\022\r\n\005files\030\001 \003(\t\"+\n\010NodeInfo\022\017\n\007address" +
-      "\030\001 \001(\t\022\016\n\006status\030\002 \001(\t\"-\n\nNodeStatus\022\017\n\007" +
-      "address\030\001 \001(\t\022\016\n\006status\030\002 \001(\t2\344\003\n\021FileSy" +
-      "stemService\022=\n\nUploadFile\022\031.filesystem.U" +
-      "ploadRequest\032\024.filesystem.Response\022E\n\017Cr" +
-      "eateDirectory\022\034.filesystem.DirectoryRequ" +
-      "est\032\024.filesystem.Response\022K\n\022CreateSubdi" +
-      "rectory\022\037.filesystem.SubdirectoryRequest" +
-      "\032\024.filesystem.Response\022=\n\nRenameFile\022\031.f" +
-      "ilesystem.RenameRequest\032\024.filesystem.Res" +
-      "ponse\022=\n\nDeleteFile\022\031.filesystem.DeleteR" +
-      "equest\032\024.filesystem.Response\022C\n\tListFile" +
-      "s\022\034.filesystem.DirectoryRequest\032\030.filesy" +
-      "stem.ListResponse\0229\n\010MoveFile\022\027.filesyst" +
-      "em.MoveRequest\032\024.filesystem.Response2\207\001\n" +
-      "\013NodeService\022:\n\014RegisterNode\022\024.filesyste" +
-      "m.NodeInfo\032\024.filesystem.Response\022<\n\014Repo" +
-      "rtStatus\022\026.filesystem.NodeStatus\032\024.files" +
-      "ystem.ResponseB \n\nfilesystemP\001Z\020proto/fi" +
-      "lesystemb\006proto3"
+      " \001(\t\022\017\n\007content\030\003 \001(\014\022\025\n\rcontentBase64\030\004" +
+      " \001(\t\" \n\020DirectoryRequest\022\014\n\004path\030\001 \001(\t\"J" +
+      "\n\023SubdirectoryRequest\022\030\n\020parent_director" +
+      "y\030\001 \001(\t\022\031\n\021subdirectory_name\030\002 \001(\t\"3\n\rRe" +
+      "nameRequest\022\020\n\010old_name\030\001 \001(\t\022\020\n\010new_nam" +
+      "e\030\002 \001(\t\"\035\n\rDeleteRequest\022\014\n\004path\030\001 \001(\t\"<" +
+      "\n\013MoveRequest\022\023\n\013source_path\030\001 \001(\t\022\030\n\020de" +
+      "stination_path\030\002 \001(\t\"/\n\010Response\022\017\n\007mess" +
+      "age\030\001 \001(\t\022\022\n\nfileBase64\030\002 \001(\t\"\035\n\014ListRes" +
+      "ponse\022\r\n\005files\030\001 \003(\t\"5\n\017ListAllResponse\022" +
+      "\r\n\005files\030\001 \003(\t\022\023\n\013directories\030\002 \003(\t\"+\n\010N" +
+      "odeInfo\022\017\n\007address\030\001 \001(\t\022\016\n\006status\030\002 \001(\t" +
+      "\"-\n\nNodeStatus\022\017\n\007address\030\001 \001(\t\022\016\n\006statu" +
+      "s\030\002 \001(\t2\252\004\n\021FileSystemService\022=\n\nUploadF" +
+      "ile\022\031.filesystem.UploadRequest\032\024.filesys" +
+      "tem.Response\022E\n\017CreateDirectory\022\034.filesy" +
+      "stem.DirectoryRequest\032\024.filesystem.Respo" +
+      "nse\022K\n\022CreateSubdirectory\022\037.filesystem.S" +
+      "ubdirectoryRequest\032\024.filesystem.Response" +
+      "\022=\n\nRenameFile\022\031.filesystem.RenameReques" +
+      "t\032\024.filesystem.Response\022=\n\nDeleteFile\022\031." +
+      "filesystem.DeleteRequest\032\024.filesystem.Re" +
+      "sponse\022C\n\tListFiles\022\034.filesystem.Directo" +
+      "ryRequest\032\030.filesystem.ListResponse\0229\n\010M" +
+      "oveFile\022\027.filesystem.MoveRequest\032\024.files" +
+      "ystem.Response\022D\n\007ListAll\022\034.filesystem.D" +
+      "irectoryRequest\032\033.filesystem.ListAllResp" +
+      "onse2\207\001\n\013NodeService\022:\n\014RegisterNode\022\024.f" +
+      "ilesystem.NodeInfo\032\024.filesystem.Response" +
+      "\022<\n\014ReportStatus\022\026.filesystem.NodeStatus" +
+      "\032\024.filesystem.ResponseB \n\nfilesystemP\001Z\020" +
+      "proto/filesystemb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -113,7 +122,7 @@ public final class Filesystem {
     internal_static_filesystem_UploadRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_filesystem_UploadRequest_descriptor,
-        new java.lang.String[] { "Filename", "Directory", "Content", });
+        new java.lang.String[] { "Filename", "Directory", "Content", "ContentBase64", });
     internal_static_filesystem_DirectoryRequest_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_filesystem_DirectoryRequest_fieldAccessorTable = new
@@ -149,21 +158,27 @@ public final class Filesystem {
     internal_static_filesystem_Response_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_filesystem_Response_descriptor,
-        new java.lang.String[] { "Message", });
+        new java.lang.String[] { "Message", "FileBase64", });
     internal_static_filesystem_ListResponse_descriptor =
       getDescriptor().getMessageTypes().get(7);
     internal_static_filesystem_ListResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_filesystem_ListResponse_descriptor,
         new java.lang.String[] { "Files", });
-    internal_static_filesystem_NodeInfo_descriptor =
+    internal_static_filesystem_ListAllResponse_descriptor =
       getDescriptor().getMessageTypes().get(8);
+    internal_static_filesystem_ListAllResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_filesystem_ListAllResponse_descriptor,
+        new java.lang.String[] { "Files", "Directories", });
+    internal_static_filesystem_NodeInfo_descriptor =
+      getDescriptor().getMessageTypes().get(9);
     internal_static_filesystem_NodeInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_filesystem_NodeInfo_descriptor,
         new java.lang.String[] { "Address", "Status", });
     internal_static_filesystem_NodeStatus_descriptor =
-      getDescriptor().getMessageTypes().get(9);
+      getDescriptor().getMessageTypes().get(10);
     internal_static_filesystem_NodeStatus_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_filesystem_NodeStatus_descriptor,

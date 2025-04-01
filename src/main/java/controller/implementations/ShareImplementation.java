@@ -2,7 +2,7 @@ package controller.implementations;
 
 import com.google.gson.Gson;
 import controller.FileDepotService;
-import dto.*;
+import dto.SoapResponse;
 import dto.share.*;
 import jakarta.jws.WebService;
 
@@ -16,26 +16,45 @@ public class ShareImplementation implements FileDepotService {
         try {
             switch (action) {
                 case "shareFile":
-                case "shareDirectory":
+                case "shareDirectory": {
                     Share share = gson.fromJson(data, Share.class);
                     String tipo = action.equals("shareFile") ? "archivo" : "directorio";
-                    return gson.toJson(new SoapResponse(true,
-                            tipo + " compartido con " + share.sharedWith + " por " + share.sharedBy));
+                    String message = tipo + " compartido con " + share.sharedWith + " por " + share.sharedBy;
+                    SoapResponse response = new SoapResponse(true, message);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
 
-                case "revokeAccess":
+                case "revokeAccess": {
                     RevokeAccess revoke = gson.fromJson(data, RevokeAccess.class);
-                    return gson.toJson(new SoapResponse(true,
-                            "Acceso revocado para ID: " + revoke.shareID));
+                    String message = "Acceso revocado para ID: " + revoke.shareID;
+                    SoapResponse response = new SoapResponse(true, message);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
 
-                case "listSharedFiles":
+                case "listSharedFiles": {
                     String[] shared = {"/docs/tarea.pdf", "/proyectos/code/"};
-                    return gson.toJson(new SoapResponse(true, gson.toJson(shared)));
+                    SoapResponse response = new SoapResponse(true, gson.toJson(shared));
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
 
-                default:
-                    return gson.toJson(new SoapResponse(false, "Acción de compartido no soportada: " + action));
+                default: {
+                    SoapResponse response = new SoapResponse(false, "Acción de compartido no soportada: " + action);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
             }
         } catch (Exception e) {
-            return gson.toJson(new SoapResponse(false, "Error en acción de compartido: " + e.getMessage()));
+            SoapResponse response = new SoapResponse(false, "Error en acción de compartido: " + e.getMessage());
+            String json = gson.toJson(response);
+            System.out.println("Respuesta enviada al backend cliente: " + json);
+            return json;
         }
     }
 

@@ -2,7 +2,7 @@ package controller.implementations;
 
 import com.google.gson.Gson;
 import controller.FileDepotService;
-import dto.*;
+import dto.SoapResponse;
 import dto.directory.*;
 import grpc.FileSystemClient;
 import grpc.GrpcNodeManager;
@@ -19,44 +19,76 @@ public class DirectoryImplementation implements FileDepotService {
 
         try {
             switch (action) {
-                case "createDirectory":
+                case "createDirectory": {
                     CreateDirectory create = gson.fromJson(data, CreateDirectory.class);
-                    String createResult = client.createDirectory(create.path);
-                    if (createResult.toLowerCase().contains("correctamente")) {
-                        return gson.toJson(new SoapResponse(true, "Directorio creado correctamente", create));
-                    } else {
-                        return gson.toJson(new SoapResponse(false, "Error al crear directorio", null));
-                    }
+                    String result = client.createDirectory(create.path);
+                    boolean success = result.toLowerCase().contains("correctamente");
+                    SoapResponse response = new SoapResponse(success, result);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
 
-                case "addSubdirectory":
+                case "addSubdirectory": {
                     Subdirectory sub = gson.fromJson(data, Subdirectory.class);
-                    String subResult = client.createSubdirectory(sub.parentDirectory, sub.subdirectory);
-                    return gson.toJson(new SoapResponse(true, subResult));
+                    String result = client.createSubdirectory(sub.parentDirectory, sub.subdirectory);
+                    boolean success = result.toLowerCase().contains("correctamente");
+                    SoapResponse response = new SoapResponse(success, result);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
 
-                case "renameDirectory":
+                case "renameDirectory": {
                     RenameDirectory rename = gson.fromJson(data, RenameDirectory.class);
-                    String renameResult = client.renameFile(rename.directoryID, rename.newName);
-                    return gson.toJson(new SoapResponse(true, renameResult));
+                    String result = client.renameFile(rename.directoryID, rename.newName);
+                    boolean success = result.toLowerCase().contains("correctamente");
+                    SoapResponse response = new SoapResponse(success, result);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
 
-                case "moveDirectory":
+                case "moveDirectory": {
                     MoveDirectory move = gson.fromJson(data, MoveDirectory.class);
-                    String moveResult = client.moveFile(move.directoryID, move.newParentDirectory);
-                    return gson.toJson(new SoapResponse(true, moveResult));
+                    String result = client.moveFile(move.directoryID, move.newParentDirectory);
+                    boolean success = result.toLowerCase().contains("correctamente");
+                    SoapResponse response = new SoapResponse(success, result);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
 
-                case "deleteDirectory":
+                case "deleteDirectory": {
                     DeleteDirectory delete = gson.fromJson(data, DeleteDirectory.class);
-                    String deleteResult = client.deleteFile(delete.directoryID);
-                    return gson.toJson(new SoapResponse(true, deleteResult));
+                    String result = client.deleteFile(delete.directoryID);
+                    boolean success = result.toLowerCase().contains("correctamente");
+                    SoapResponse response = new SoapResponse(success, result);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
 
-                case "listDirectories":
+                case "listDirectories": {
                     var files = client.listFiles("/");
-                    return gson.toJson(new SoapResponse(true, gson.toJson(files)));
+                    SoapResponse response = new SoapResponse(true, gson.toJson(files));
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
 
-                default:
-                    return gson.toJson(new SoapResponse(false, "Acción de directorio no soportada: " + action));
+                default: {
+                    SoapResponse response = new SoapResponse(false, "Acción de directorio no soportada: " + action);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
             }
         } catch (Exception e) {
-            return gson.toJson(new SoapResponse(false, "Error procesando directorio: " + e.getMessage()));
+            SoapResponse response = new SoapResponse(false, "Error procesando directorio: " + e.getMessage());
+            String json = gson.toJson(response);
+            System.out.println("Respuesta enviada al backend cliente: " + json);
+            return json;
         }
     }
 

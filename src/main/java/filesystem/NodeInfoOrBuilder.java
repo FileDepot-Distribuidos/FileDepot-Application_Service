@@ -8,19 +8,11 @@ public interface NodeInfoOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <pre>
-   * Dirección del nodo (por ejemplo, "ip:puerto")
-   * </pre>
-   *
    * <code>string address = 1;</code>
    * @return The address.
    */
   java.lang.String getAddress();
   /**
-   * <pre>
-   * Dirección del nodo (por ejemplo, "ip:puerto")
-   * </pre>
-   *
    * <code>string address = 1;</code>
    * @return The bytes for address.
    */
@@ -28,19 +20,11 @@ public interface NodeInfoOrBuilder extends
       getAddressBytes();
 
   /**
-   * <pre>
-   * Estado inicial (por ejemplo, "activo")
-   * </pre>
-   *
    * <code>string status = 2;</code>
    * @return The status.
    */
   java.lang.String getStatus();
   /**
-   * <pre>
-   * Estado inicial (por ejemplo, "activo")
-   * </pre>
-   *
    * <code>string status = 2;</code>
    * @return The bytes for status.
    */

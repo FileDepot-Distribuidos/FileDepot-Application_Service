@@ -2,7 +2,7 @@ package controller.implementations;
 
 import com.google.gson.Gson;
 import controller.FileDepotService;
-import dto.*;
+import dto.SoapResponse;
 import dto.files.*;
 import grpc.FileSystemClient;
 import grpc.GrpcNodeManager;
@@ -19,28 +19,54 @@ public class FileImplementation implements FileDepotService {
 
         try {
             switch (action) {
-                case "upload":
+                case "upload": {
                     UploadFile upload = gson.fromJson(data, UploadFile.class);
                     String result = client.uploadBase64File(upload.name, upload.base64, "/");
-                    return gson.toJson(new SoapResponse(true, result));
+                    boolean success = result.toLowerCase().contains("correctamente");
 
-                case "delete":
+                    SoapResponse response = new SoapResponse(success, result);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
+
+                case "delete": {
                     DeleteFile delete = gson.fromJson(data, DeleteFile.class);
-                    String deleteResult = client.deleteFile(delete.fileID);
-                    return gson.toJson(new SoapResponse(true, deleteResult));
+                    String result = client.deleteFile(delete.fileID);
+                    boolean success = result.toLowerCase().contains("correctamente");
 
-                case "move":
+                    SoapResponse response = new SoapResponse(success, result);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
+
+                case "move": {
                     MoveFile move = gson.fromJson(data, MoveFile.class);
-                    String moveResult = client.moveFile(move.fileID, move.newDirectoryID);
-                    return gson.toJson(new SoapResponse(true, moveResult));
+                    String result = client.moveFile(move.fileID, move.newDirectoryID);
+                    boolean success = result.toLowerCase().contains("correctamente");
 
-                case "read":
+                    SoapResponse response = new SoapResponse(success, result);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
+
+                case "read": {
                     ReadFile read = gson.fromJson(data, ReadFile.class);
-                    return gson.toJson(new SoapResponse(true, "Contenido de: " + read.fileID));
+                    SoapResponse response = new SoapResponse(true, "Contenido de: " + read.fileID);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
 
-                case "download":
+                case "download": {
                     ReadFile download = gson.fromJson(data, ReadFile.class);
-                    return gson.toJson(new SoapResponse(true, "Archivo disponible para descarga: " + download.fileID));
+                    SoapResponse response = new SoapResponse(true, "Archivo disponible para descarga: " + download.fileID);
+                    String json = gson.toJson(response);
+                    System.out.println("Respuesta enviada al backend cliente: " + json);
+                    return json;
+                }
 
                 default:
                     return gson.toJson(new SoapResponse(false, "Acción '" + action + "' no soportada."));

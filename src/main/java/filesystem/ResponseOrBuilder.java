@@ -18,4 +18,16 @@ public interface ResponseOrBuilder extends
    */
   com.google.protobuf.ByteString
       getMessageBytes();
+
+  /**
+   * <code>string fileBase64 = 2;</code>
+   * @return The fileBase64.
+   */
+  java.lang.String getFileBase64();
+  /**
+   * <code>string fileBase64 = 2;</code>
+   * @return The bytes for fileBase64.
+   */
+  com.google.protobuf.ByteString
+      getFileBase64Bytes();
 }
