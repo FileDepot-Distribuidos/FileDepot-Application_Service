@@ -6,6 +6,9 @@ import dto.SoapResponse;
 import dto.user.UserLogin;
 import dto.user.UserRegister;
 import jakarta.jws.WebService;
+import rmi.AuthService;
+
+import java.rmi.RemoteException;
 
 @WebService(endpointInterface = "controller.FileDepotService")
 public class UserImplementation implements FileDepotService {
@@ -14,54 +17,51 @@ public class UserImplementation implements FileDepotService {
 
     @Override
     public String processAuthRequest(String action, String data) {
+        System.out.println("→ Solicitud SOAP recibida en processAuthRequest");
+        System.out.println("  Acción: " + action);
+        System.out.println("  Datos: " + data);
+
         try {
             switch (action) {
                 case "login" -> {
                     UserLogin login = gson.fromJson(data, UserLogin.class);
+                    System.out.println("  → Login con email: " + login.email);
 
-                    boolean valid = "ex@ex.com".equals(login.email) && "password123".equals(login.password);
-                    SoapResponse response;
+                    boolean success = AuthService.getService().login(login.email, login.password);
+                    System.out.println("  Resultado login: " + success);
 
-                    if (valid) {
-                        response = new SoapResponse(true, gson.toJson(login));
+                    if (success) {
+                        return gson.toJson(new SoapResponse(true, "Login exitoso"));
                     } else {
-                        response = new SoapResponse(false, "Credenciales inválidas");
+                        return gson.toJson(new SoapResponse(false, "Credenciales inválidas"));
                     }
-
-                    String json = gson.toJson(response);
-                    System.out.println("Respuesta enviada al backend cliente: " + json);
-                    return json;
                 }
 
                 case "register" -> {
                     UserRegister register = gson.fromJson(data, UserRegister.class);
+                    System.out.println("  → Registro con email: " + register.email + ", phone: " + register.phone);
 
-                    boolean valid = !register.email.isEmpty() && !register.password.isEmpty() && !register.phone.isEmpty();
-                    SoapResponse response;
+                    boolean created = AuthService.getService().register(
+                            "a", register.email, register.password, register.phone);
 
-                    if (valid) {
-                        response = new SoapResponse(true, "Usuario registrado exitosamente");
+                    System.out.println("  Resultado registro: " + created);
+
+                    if (created) {
+                        return gson.toJson(new SoapResponse(true, "Usuario registrado correctamente"));
                     } else {
-                        response = new SoapResponse(false, "Datos incompletos");
+                        return gson.toJson(new SoapResponse(false, "No se pudo registrar el usuario"));
                     }
-
-                    String json = gson.toJson(response);
-                    System.out.println("Respuesta enviada al backend cliente: " + json);
-                    return json;
                 }
 
                 default -> {
-                    SoapResponse response = new SoapResponse(false, "Acción no soportada");
-                    String json = gson.toJson(response);
-                    System.out.println("Respuesta enviada al backend cliente: " + json);
-                    return json;
+                    System.out.println("  Acción no soportada");
+                    return gson.toJson(new SoapResponse(false, "Acción no soportada"));
                 }
             }
         } catch (Exception e) {
-            SoapResponse response = new SoapResponse(false, "Error en el servidor: " + e.getMessage());
-            String json = gson.toJson(response);
-            System.out.println("Respuesta enviada al backend cliente: " + json);
-            return json;
+            System.err.println("Error procesando auth: " + e.getMessage());
+            e.printStackTrace();
+            return gson.toJson(new SoapResponse(false, "Error al procesar solicitud de autenticación: " + e.getMessage()));
         }
     }
 
@@ -70,9 +70,6 @@ public class UserImplementation implements FileDepotService {
     @Override public String processShareRequest(String action, String data) { return notImplemented(); }
 
     private String notImplemented() {
-        SoapResponse response = new SoapResponse(false, "Método no implementado en este controlador.");
-        String json = gson.toJson(response);
-        System.out.println("Respuesta enviada al backend cliente: " + json);
-        return json;
+        return gson.toJson(new SoapResponse(false, "Método no implementado en este controlador."));
     }
 }
