@@ -1,4 +1,4 @@
-package controller;
+package Service;
 
 import controller.implementations.FileDepotImplementation;
 import grpc.GrpcNodeManager;
@@ -10,7 +10,7 @@ public class SoapPublisher {
             GrpcNodeManager.verifyConnectionReady();
 
             Endpoint.publish("http://localhost:2005/FileDepotService", new FileDepotImplementation());
-            System.out.println("SOAP Service iniciado en http://localhost:2005/FileDepotService?wsdl");
+            System.out.println("SOAP Service.Service iniciado en http://localhost:2005/FileDepotService?wsdl");
 
         } catch (IllegalStateException e) {
             System.err.println("Error al iniciar SOAP: " + e.getMessage());
