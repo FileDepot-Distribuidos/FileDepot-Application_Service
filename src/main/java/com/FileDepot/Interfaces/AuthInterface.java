@@ -5,5 +5,5 @@ import java.rmi.RemoteException;
 
 public interface AuthInterface extends Remote {
     boolean login(String email, String password) throws RemoteException;
-    boolean register(String name, String email, String password, long number) throws RemoteException;
+    int register(String name, String email, String password, long number) throws RemoteException;
 }

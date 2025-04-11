@@ -1,6 +1,7 @@
 package grpc;
 
 import com.google.protobuf.ByteString;
+import dto.files.UploadResult;
 import filesystem.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -20,10 +21,12 @@ public class FileSystemClient {
         System.out.println("Conectado a nodo gRPC en " + host + ":" + port);
     }
 
-    public String uploadBase64File(String filename, String base64Content, String directory) {
+    public UploadResult uploadBase64File(String filename, String base64Content, String directory) {
         try {
             if (filename == null || base64Content == null) {
-                return "El nombre del archivo y el contenido base64 no pueden ser nulos.";
+                return new UploadResult(filesystem.Response.newBuilder()
+                        .setMessage("El nombre del archivo y el contenido base64 no pueden ser nulos.")
+                        .build());
             }
 
             UploadRequest request = UploadRequest.newBuilder()
@@ -35,14 +38,19 @@ public class FileSystemClient {
             System.out.println("Subiendo archivo: " + filename + " a " + directory);
             Response response = stub.uploadFile(request);
             System.out.println("Respuesta del nodo: " + response.getMessage());
+            System.out.println("Ruta completa devuelta por el nodo: " + response.getFilePath());
 
-            return response.getMessage();
+            return new UploadResult(response);
 
         } catch (Exception e) {
             System.err.println("Error en subida gRPC: " + e.getMessage());
-            return "Error en subida gRPC: " + e.getMessage();
+            Response errorResponse = Response.newBuilder()
+                    .setMessage("Error en subida gRPC: " + e.getMessage())
+                    .build();
+            return new UploadResult(errorResponse);
         }
     }
+
 
     public String renameFile(String oldName, String newName) {
         try {
@@ -156,4 +164,38 @@ public class FileSystemClient {
             return "Error al mover archivo/directorio: " + e.getMessage();
         }
     }
+
+    public ListAllResponse listAll(String directory) {
+        try {
+            DirectoryRequest request = DirectoryRequest.newBuilder()
+                    .setPath(directory)
+                    .build();
+
+            System.out.println("Listando archivos y directorios en: " + directory);
+            return stub.listAll(request);
+
+        } catch (Exception e) {
+            System.err.println("Error al listar todo: " + e.getMessage());
+            return ListAllResponse.newBuilder().build(); // vacío
+        }
+    }
+
+    public String getNodeId(String filename, String base64Content, String directory) {
+        try {
+            UploadRequest request = UploadRequest.newBuilder()
+                    .setFilename(filename)
+                    .setDirectory(directory != null ? directory : "")
+                    .setContent(ByteString.copyFrom(base64Content.getBytes()))
+                    .build();
+
+            Response response = stub.uploadFile(request);
+            System.out.println("Respuesta del nodo: " + response.getMessage() + " | Node ID: " + response.getNodeId());
+            return response.getNodeId();
+
+        } catch (Exception e) {
+            System.err.println("Error al obtener Node ID: " + e.getMessage());
+            return null;
+        }
+    }
+
 }

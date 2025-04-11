@@ -1,5 +1,6 @@
 package grpc;
 
+import apirest.NodeApi;
 import util.ConfigLoader;
 
 import java.util.ArrayList;
@@ -23,7 +24,10 @@ public class GrpcNodeManager {
         for (String host : hosts) {
             if (host != null && !host.isEmpty()) {
                 clients.add(new FileSystemClient(host, port));
-                System.out.println("Conectado a nodo gRPC: " + host + ":" + port);
+
+                // Registrar nodo automáticamente en base de datos
+                System.out.println("📡 Registrando nodo en microservicio DB: " + host);
+                NodeApi.registerNode(host, 1000000, 1000000); // Puedes reemplazar valores simulados
             }
         }
 
