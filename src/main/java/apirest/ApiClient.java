@@ -7,7 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ApiClient {
-    private static final String BASE_URL = "http://localhost:3000/api";
+    private static final String BASE_URL = "http://localhost:3001/api";
 
     public static boolean post(String endpoint, String json) {
         try {

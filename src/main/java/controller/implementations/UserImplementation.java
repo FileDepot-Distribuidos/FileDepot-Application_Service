@@ -25,11 +25,16 @@ public class UserImplementation implements FileDepotService {
                     UserLogin login = gson.fromJson(data, UserLogin.class);
                     System.out.println("  → Login con email: " + login.email);
 
-                    boolean success = AuthService.getService().login(login.email, login.password);
-                    System.out.println("  Resultado login: " + success);
+                    int userId = AuthService.getService().login(login.email, login.password);
+                    boolean success = userId > 0;
+
+                    System.out.println("  Resultado login: " + success + " (ID: " + userId + ")");
+
+                    var loginData = new java.util.HashMap<String, Object>();
+                    loginData.put("userId", userId);
 
                     if (success) {
-                        return gson.toJson(new SoapResponse(true, "Login exitoso"));
+                        return gson.toJson(new SoapResponse(true, "Login exitoso", loginData));
                     } else {
                         return gson.toJson(new SoapResponse(false, "Credenciales inválidas"));
                     }
@@ -68,10 +73,6 @@ public class UserImplementation implements FileDepotService {
                         return gson.toJson(new SoapResponse(false, "No se pudo registrar el usuario"));
                     }
                 }
-
-
-
-
                 default -> {
                     System.out.println("  Acción no soportada");
                     return gson.toJson(new SoapResponse(false, "Acción no soportada"));
