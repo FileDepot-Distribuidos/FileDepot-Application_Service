@@ -15,6 +15,8 @@ public class FileSystemClient {
     public FileSystemClient(String host, int port) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
                 .usePlaintext()
+                .maxInboundMessageSize(20 * 1024 * 1024) // 20MB, puedes ajustar
+                .maxInboundMetadataSize(10 * 1024 * 1024) // opcional, por si usas metadatos grandes
                 .build();
 
         stub = FileSystemServiceGrpc.newBlockingStub(channel);

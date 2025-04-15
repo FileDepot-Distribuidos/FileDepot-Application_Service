@@ -5,6 +5,8 @@ import dto.files.UploadFile;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.security.MessageDigest;
+import java.util.Base64;
 
 public class FileApi {
 
@@ -43,6 +45,46 @@ public class FileApi {
         }
     }
 
+    public static String getFiles(int userId) {
+        try {
+            String endpoint = "/files/" + userId;
+            return ApiClient.get(endpoint);
+        } catch (Exception e) {
+            System.err.println("Error al obtener archivos del usuario: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static String generateHash(String base64Content) {
+        try {
+
+            String cleanBase64 = base64Content;
+
+            if (base64Content.contains(",")) {
+                cleanBase64 = base64Content.split(",", 2)[1];
+            }
+
+            byte[] fileBytes = Base64.getDecoder().decode(cleanBase64);
+
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(fileBytes);
+
+            // Convertir a string hexadecimal
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashBytes) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
     static class FilePayload {
         String name;
@@ -57,7 +99,7 @@ public class FileApi {
             this.name = f.name;
             this.type = fileType;
             this.size = f.size;
-            this.hash = "abc123";
+            this.hash = generateHash(f.base64);
             this.owner_id = f.owner;
             this.NODE_idNODE = Integer.parseInt(nodeId);
             int dirId = DirectoryApi.getRootDirectoryId(f.owner);

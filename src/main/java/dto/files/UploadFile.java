@@ -3,7 +3,7 @@ package dto.files;
 public class UploadFile {
     public String base64;
     public String name;
-    public int size;
+    public long size;
     public String owner;
 
     public UploadFile() {

@@ -25,6 +25,8 @@ public class FileImplementation implements FileDepotService {
                 case "upload": {
                     UploadFile upload = gson.fromJson(data, UploadFile.class);
 
+                    System.out.println(gson.toJson(upload));
+
                     String directory = upload.owner + "/";
 
                     try {
@@ -35,9 +37,10 @@ public class FileImplementation implements FileDepotService {
                         }
 
                         upload.name = result.name;
-                        upload.size = (int) result.size;
                         String fileType = result.type;
                         String nodeId = result.nodeId;
+
+                        System.out.println(gson.toJson(upload.size));
 
                         boolean saved = apirest.FileApi.registerFile(upload, nodeId, fileType);
 
@@ -147,19 +150,34 @@ public class FileImplementation implements FileDepotService {
                     return json;
                 }
 
-                case "listAll": {
-                    ListAll request = gson.fromJson(data, ListAll.class);
-                    ListAllResponse responseGrpc = client.listAll(request.path);
+//                case "listAll": {
+//                    ListAll request = gson.fromJson(data, ListAll.class);
+//                    ListAllResponse responseGrpc = client.listAll(request.path);
+//
+//                    // Puedes empaquetar como JSON combinado (archivos y carpetas)
+//                    var result = new java.util.HashMap<String, Object>();
+//                    result.put("directories", responseGrpc.getDirectoriesList());
+//                    result.put("files", responseGrpc.getFilesList());
+//
+//                    SoapResponse response = new SoapResponse(true, gson.toJson(result));
+//                    String json = gson.toJson(response);
+//                    System.out.println("Respuesta enviada al backend cliente: " + json);
+//                    return json;
+//                }
 
-                    // Puedes empaquetar como JSON combinado (archivos y carpetas)
-                    var result = new java.util.HashMap<String, Object>();
-                    result.put("directories", responseGrpc.getDirectoriesList());
-                    result.put("files", responseGrpc.getFilesList());
+                case "getFiles": {
+                    var request = gson.fromJson(data, dto.files.ListAll.class);
 
-                    SoapResponse response = new SoapResponse(true, gson.toJson(result));
-                    String json = gson.toJson(response);
-                    System.out.println("Respuesta enviada al backend cliente: " + json);
-                    return json;
+                    String responseJson = FileApi.getFiles(request.userId);
+
+                    System.out.println("Respuesta enviada al backend cliente: " + responseJson);
+
+                    if (responseJson == null) {
+                        return gson.toJson(new SoapResponse(false, "No se pudo obtener la lista de archivos del usuario"));
+                    }
+
+                    SoapResponse response = new SoapResponse(true, "Se han recuperado los archivos", responseJson);
+                    return gson.toJson(response);
                 }
 
 
