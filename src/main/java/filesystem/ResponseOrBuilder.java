@@ -20,14 +20,56 @@ public interface ResponseOrBuilder extends
       getMessageBytes();
 
   /**
-   * <code>string fileBase64 = 2;</code>
-   * @return The fileBase64.
+   * <code>string file_path = 2;</code>
+   * @return The filePath.
    */
-  java.lang.String getFileBase64();
+  java.lang.String getFilePath();
   /**
-   * <code>string fileBase64 = 2;</code>
-   * @return The bytes for fileBase64.
+   * <code>string file_path = 2;</code>
+   * @return The bytes for filePath.
    */
   com.google.protobuf.ByteString
-      getFileBase64Bytes();
+      getFilePathBytes();
+
+  /**
+   * <code>string file_name = 3;</code>
+   * @return The fileName.
+   */
+  java.lang.String getFileName();
+  /**
+   * <code>string file_name = 3;</code>
+   * @return The bytes for fileName.
+   */
+  com.google.protobuf.ByteString
+      getFileNameBytes();
+
+  /**
+   * <code>int64 file_size = 4;</code>
+   * @return The fileSize.
+   */
+  long getFileSize();
+
+  /**
+   * <code>string file_type = 5;</code>
+   * @return The fileType.
+   */
+  java.lang.String getFileType();
+  /**
+   * <code>string file_type = 5;</code>
+   * @return The bytes for fileType.
+   */
+  com.google.protobuf.ByteString
+      getFileTypeBytes();
+
+  /**
+   * <code>string nodeId = 6;</code>
+   * @return The nodeId.
+   */
+  java.lang.String getNodeId();
+  /**
+   * <code>string nodeId = 6;</code>
+   * @return The bytes for nodeId.
+   */
+  com.google.protobuf.ByteString
+      getNodeIdBytes();
 }

@@ -1,95 +1,105 @@
 package filesystem;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
+import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
+import static io.grpc.stub.ClientCalls.asyncClientStreamingCall;
+import static io.grpc.stub.ClientCalls.asyncServerStreamingCall;
+import static io.grpc.stub.ClientCalls.asyncUnaryCall;
+import static io.grpc.stub.ClientCalls.blockingServerStreamingCall;
+import static io.grpc.stub.ClientCalls.blockingUnaryCall;
+import static io.grpc.stub.ClientCalls.futureUnaryCall;
+import static io.grpc.stub.ServerCalls.asyncBidiStreamingCall;
+import static io.grpc.stub.ServerCalls.asyncClientStreamingCall;
+import static io.grpc.stub.ServerCalls.asyncServerStreamingCall;
+import static io.grpc.stub.ServerCalls.asyncUnaryCall;
+import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
+import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
 /**
  * <pre>
  * Servicio para el registro y estado de los nodos
  * </pre>
  */
-
-@io.grpc.stub.annotations.GrpcGenerated
+@javax.annotation.Generated(
+    value = "by gRPC proto compiler (version 1.9.1)",
+    comments = "Source: filesystem.proto")
 public final class NodeServiceGrpc {
 
   private NodeServiceGrpc() {}
 
-  public static final java.lang.String SERVICE_NAME = "filesystem.NodeService";
+  public static final String SERVICE_NAME = "filesystem.NodeService";
 
   // Static method descriptors that strictly reflect the proto.
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  @java.lang.Deprecated // Use {@link #getRegisterNodeMethod()} instead. 
+  public static final io.grpc.MethodDescriptor<filesystem.NodeInfo,
+      filesystem.Response> METHOD_REGISTER_NODE = getRegisterNodeMethod();
+
   private static volatile io.grpc.MethodDescriptor<filesystem.NodeInfo,
       filesystem.Response> getRegisterNodeMethod;
 
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "RegisterNode",
-      requestType = filesystem.NodeInfo.class,
-      responseType = filesystem.Response.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static io.grpc.MethodDescriptor<filesystem.NodeInfo,
       filesystem.Response> getRegisterNodeMethod() {
     io.grpc.MethodDescriptor<filesystem.NodeInfo, filesystem.Response> getRegisterNodeMethod;
     if ((getRegisterNodeMethod = NodeServiceGrpc.getRegisterNodeMethod) == null) {
       synchronized (NodeServiceGrpc.class) {
         if ((getRegisterNodeMethod = NodeServiceGrpc.getRegisterNodeMethod) == null) {
-          NodeServiceGrpc.getRegisterNodeMethod = getRegisterNodeMethod =
+          NodeServiceGrpc.getRegisterNodeMethod = getRegisterNodeMethod = 
               io.grpc.MethodDescriptor.<filesystem.NodeInfo, filesystem.Response>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "RegisterNode"))
+              .setFullMethodName(generateFullMethodName(
+                  "filesystem.NodeService", "RegisterNode"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.NodeInfo.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.Response.getDefaultInstance()))
-              .setSchemaDescriptor(new NodeServiceMethodDescriptorSupplier("RegisterNode"))
-              .build();
+                  .setSchemaDescriptor(new NodeServiceMethodDescriptorSupplier("RegisterNode"))
+                  .build();
+          }
         }
-      }
-    }
-    return getRegisterNodeMethod;
+     }
+     return getRegisterNodeMethod;
   }
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  @java.lang.Deprecated // Use {@link #getReportStatusMethod()} instead. 
+  public static final io.grpc.MethodDescriptor<filesystem.NodeStatus,
+      filesystem.Response> METHOD_REPORT_STATUS = getReportStatusMethod();
 
   private static volatile io.grpc.MethodDescriptor<filesystem.NodeStatus,
       filesystem.Response> getReportStatusMethod;
 
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "ReportStatus",
-      requestType = filesystem.NodeStatus.class,
-      responseType = filesystem.Response.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
   public static io.grpc.MethodDescriptor<filesystem.NodeStatus,
       filesystem.Response> getReportStatusMethod() {
     io.grpc.MethodDescriptor<filesystem.NodeStatus, filesystem.Response> getReportStatusMethod;
     if ((getReportStatusMethod = NodeServiceGrpc.getReportStatusMethod) == null) {
       synchronized (NodeServiceGrpc.class) {
         if ((getReportStatusMethod = NodeServiceGrpc.getReportStatusMethod) == null) {
-          NodeServiceGrpc.getReportStatusMethod = getReportStatusMethod =
+          NodeServiceGrpc.getReportStatusMethod = getReportStatusMethod = 
               io.grpc.MethodDescriptor.<filesystem.NodeStatus, filesystem.Response>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "ReportStatus"))
+              .setFullMethodName(generateFullMethodName(
+                  "filesystem.NodeService", "ReportStatus"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.NodeStatus.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.Response.getDefaultInstance()))
-              .setSchemaDescriptor(new NodeServiceMethodDescriptorSupplier("ReportStatus"))
-              .build();
+                  .setSchemaDescriptor(new NodeServiceMethodDescriptorSupplier("ReportStatus"))
+                  .build();
+          }
         }
-      }
-    }
-    return getReportStatusMethod;
+     }
+     return getReportStatusMethod;
   }
 
   /**
    * Creates a new async stub that supports all call types for the service
    */
   public static NodeServiceStub newStub(io.grpc.Channel channel) {
-    io.grpc.stub.AbstractStub.StubFactory<NodeServiceStub> factory =
-      new io.grpc.stub.AbstractStub.StubFactory<NodeServiceStub>() {
-        @java.lang.Override
-        public NodeServiceStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
-          return new NodeServiceStub(channel, callOptions);
-        }
-      };
-    return NodeServiceStub.newStub(factory, channel);
+    return new NodeServiceStub(channel);
   }
 
   /**
@@ -97,14 +107,7 @@ public final class NodeServiceGrpc {
    */
   public static NodeServiceBlockingStub newBlockingStub(
       io.grpc.Channel channel) {
-    io.grpc.stub.AbstractStub.StubFactory<NodeServiceBlockingStub> factory =
-      new io.grpc.stub.AbstractStub.StubFactory<NodeServiceBlockingStub>() {
-        @java.lang.Override
-        public NodeServiceBlockingStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
-          return new NodeServiceBlockingStub(channel, callOptions);
-        }
-      };
-    return NodeServiceBlockingStub.newStub(factory, channel);
+    return new NodeServiceBlockingStub(channel);
   }
 
   /**
@@ -112,14 +115,7 @@ public final class NodeServiceGrpc {
    */
   public static NodeServiceFutureStub newFutureStub(
       io.grpc.Channel channel) {
-    io.grpc.stub.AbstractStub.StubFactory<NodeServiceFutureStub> factory =
-      new io.grpc.stub.AbstractStub.StubFactory<NodeServiceFutureStub>() {
-        @java.lang.Override
-        public NodeServiceFutureStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
-          return new NodeServiceFutureStub(channel, callOptions);
-        }
-      };
-    return NodeServiceFutureStub.newStub(factory, channel);
+    return new NodeServiceFutureStub(channel);
   }
 
   /**
@@ -127,53 +123,60 @@ public final class NodeServiceGrpc {
    * Servicio para el registro y estado de los nodos
    * </pre>
    */
-  public interface AsyncService {
+  public static abstract class NodeServiceImplBase implements io.grpc.BindableService {
 
     /**
      */
-    default void registerNode(filesystem.NodeInfo request,
+    public void registerNode(filesystem.NodeInfo request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getRegisterNodeMethod(), responseObserver);
+      asyncUnimplementedUnaryCall(getRegisterNodeMethod(), responseObserver);
     }
 
     /**
      */
-    default void reportStatus(filesystem.NodeStatus request,
+    public void reportStatus(filesystem.NodeStatus request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getReportStatusMethod(), responseObserver);
+      asyncUnimplementedUnaryCall(getReportStatusMethod(), responseObserver);
     }
-  }
-
-  /**
-   * Base class for the server implementation of the service NodeService.
-   * <pre>
-   * Servicio para el registro y estado de los nodos
-   * </pre>
-   */
-  public static abstract class NodeServiceImplBase
-      implements io.grpc.BindableService, AsyncService {
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
-      return NodeServiceGrpc.bindService(this);
+      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+          .addMethod(
+            getRegisterNodeMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                filesystem.NodeInfo,
+                filesystem.Response>(
+                  this, METHODID_REGISTER_NODE)))
+          .addMethod(
+            getReportStatusMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                filesystem.NodeStatus,
+                filesystem.Response>(
+                  this, METHODID_REPORT_STATUS)))
+          .build();
     }
   }
 
   /**
-   * A stub to allow clients to do asynchronous rpc calls to service NodeService.
    * <pre>
    * Servicio para el registro y estado de los nodos
    * </pre>
    */
-  public static final class NodeServiceStub
-      extends io.grpc.stub.AbstractAsyncStub<NodeServiceStub> {
-    private NodeServiceStub(
-        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+  public static final class NodeServiceStub extends io.grpc.stub.AbstractStub<NodeServiceStub> {
+    private NodeServiceStub(io.grpc.Channel channel) {
+      super(channel);
+    }
+
+    private NodeServiceStub(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
     @java.lang.Override
-    protected NodeServiceStub build(
-        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+    protected NodeServiceStub build(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
       return new NodeServiceStub(channel, callOptions);
     }
 
@@ -181,7 +184,7 @@ public final class NodeServiceGrpc {
      */
     public void registerNode(filesystem.NodeInfo request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      io.grpc.stub.ClientCalls.asyncUnaryCall(
+      asyncUnaryCall(
           getChannel().newCall(getRegisterNodeMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -189,61 +192,65 @@ public final class NodeServiceGrpc {
      */
     public void reportStatus(filesystem.NodeStatus request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      io.grpc.stub.ClientCalls.asyncUnaryCall(
+      asyncUnaryCall(
           getChannel().newCall(getReportStatusMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
   /**
-   * A stub to allow clients to do synchronous rpc calls to service NodeService.
    * <pre>
    * Servicio para el registro y estado de los nodos
    * </pre>
    */
-  public static final class NodeServiceBlockingStub
-      extends io.grpc.stub.AbstractBlockingStub<NodeServiceBlockingStub> {
-    private NodeServiceBlockingStub(
-        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+  public static final class NodeServiceBlockingStub extends io.grpc.stub.AbstractStub<NodeServiceBlockingStub> {
+    private NodeServiceBlockingStub(io.grpc.Channel channel) {
+      super(channel);
+    }
+
+    private NodeServiceBlockingStub(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
     @java.lang.Override
-    protected NodeServiceBlockingStub build(
-        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+    protected NodeServiceBlockingStub build(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
       return new NodeServiceBlockingStub(channel, callOptions);
     }
 
     /**
      */
     public filesystem.Response registerNode(filesystem.NodeInfo request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+      return blockingUnaryCall(
           getChannel(), getRegisterNodeMethod(), getCallOptions(), request);
     }
 
     /**
      */
     public filesystem.Response reportStatus(filesystem.NodeStatus request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+      return blockingUnaryCall(
           getChannel(), getReportStatusMethod(), getCallOptions(), request);
     }
   }
 
   /**
-   * A stub to allow clients to do ListenableFuture-style rpc calls to service NodeService.
    * <pre>
    * Servicio para el registro y estado de los nodos
    * </pre>
    */
-  public static final class NodeServiceFutureStub
-      extends io.grpc.stub.AbstractFutureStub<NodeServiceFutureStub> {
-    private NodeServiceFutureStub(
-        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+  public static final class NodeServiceFutureStub extends io.grpc.stub.AbstractStub<NodeServiceFutureStub> {
+    private NodeServiceFutureStub(io.grpc.Channel channel) {
+      super(channel);
+    }
+
+    private NodeServiceFutureStub(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
     @java.lang.Override
-    protected NodeServiceFutureStub build(
-        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+    protected NodeServiceFutureStub build(io.grpc.Channel channel,
+        io.grpc.CallOptions callOptions) {
       return new NodeServiceFutureStub(channel, callOptions);
     }
 
@@ -251,7 +258,7 @@ public final class NodeServiceGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<filesystem.Response> registerNode(
         filesystem.NodeInfo request) {
-      return io.grpc.stub.ClientCalls.futureUnaryCall(
+      return futureUnaryCall(
           getChannel().newCall(getRegisterNodeMethod(), getCallOptions()), request);
     }
 
@@ -259,7 +266,7 @@ public final class NodeServiceGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<filesystem.Response> reportStatus(
         filesystem.NodeStatus request) {
-      return io.grpc.stub.ClientCalls.futureUnaryCall(
+      return futureUnaryCall(
           getChannel().newCall(getReportStatusMethod(), getCallOptions()), request);
     }
   }
@@ -272,10 +279,10 @@ public final class NodeServiceGrpc {
       io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-    private final AsyncService serviceImpl;
+    private final NodeServiceImplBase serviceImpl;
     private final int methodId;
 
-    MethodHandlers(AsyncService serviceImpl, int methodId) {
+    MethodHandlers(NodeServiceImplBase serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
@@ -308,25 +315,6 @@ public final class NodeServiceGrpc {
     }
   }
 
-  public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
-    return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
-        .addMethod(
-          getRegisterNodeMethod(),
-          io.grpc.stub.ServerCalls.asyncUnaryCall(
-            new MethodHandlers<
-              filesystem.NodeInfo,
-              filesystem.Response>(
-                service, METHODID_REGISTER_NODE)))
-        .addMethod(
-          getReportStatusMethod(),
-          io.grpc.stub.ServerCalls.asyncUnaryCall(
-            new MethodHandlers<
-              filesystem.NodeStatus,
-              filesystem.Response>(
-                service, METHODID_REPORT_STATUS)))
-        .build();
-  }
-
   private static abstract class NodeServiceBaseDescriptorSupplier
       implements io.grpc.protobuf.ProtoFileDescriptorSupplier, io.grpc.protobuf.ProtoServiceDescriptorSupplier {
     NodeServiceBaseDescriptorSupplier() {}
@@ -350,9 +338,9 @@ public final class NodeServiceGrpc {
   private static final class NodeServiceMethodDescriptorSupplier
       extends NodeServiceBaseDescriptorSupplier
       implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
-    private final java.lang.String methodName;
+    private final String methodName;
 
-    NodeServiceMethodDescriptorSupplier(java.lang.String methodName) {
+    NodeServiceMethodDescriptorSupplier(String methodName) {
       this.methodName = methodName;
     }
 

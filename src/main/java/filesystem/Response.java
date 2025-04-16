@@ -17,7 +17,10 @@ private static final long serialVersionUID = 0L;
   }
   private Response() {
     message_ = "";
-    fileBase64_ = "";
+    filePath_ = "";
+    fileName_ = "";
+    fileType_ = "";
+    nodeId_ = "";
   }
 
   @java.lang.Override
@@ -84,39 +87,167 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int FILEBASE64_FIELD_NUMBER = 2;
+  public static final int FILE_PATH_FIELD_NUMBER = 2;
   @SuppressWarnings("serial")
-  private volatile java.lang.Object fileBase64_ = "";
+  private volatile java.lang.Object filePath_ = "";
   /**
-   * <code>string fileBase64 = 2;</code>
-   * @return The fileBase64.
+   * <code>string file_path = 2;</code>
+   * @return The filePath.
    */
   @java.lang.Override
-  public java.lang.String getFileBase64() {
-    java.lang.Object ref = fileBase64_;
+  public java.lang.String getFilePath() {
+    java.lang.Object ref = filePath_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      fileBase64_ = s;
+      filePath_ = s;
       return s;
     }
   }
   /**
-   * <code>string fileBase64 = 2;</code>
-   * @return The bytes for fileBase64.
+   * <code>string file_path = 2;</code>
+   * @return The bytes for filePath.
    */
   @java.lang.Override
   public com.google.protobuf.ByteString
-      getFileBase64Bytes() {
-    java.lang.Object ref = fileBase64_;
+      getFilePathBytes() {
+    java.lang.Object ref = filePath_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      fileBase64_ = b;
+      filePath_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int FILE_NAME_FIELD_NUMBER = 3;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object fileName_ = "";
+  /**
+   * <code>string file_name = 3;</code>
+   * @return The fileName.
+   */
+  @java.lang.Override
+  public java.lang.String getFileName() {
+    java.lang.Object ref = fileName_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      fileName_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string file_name = 3;</code>
+   * @return The bytes for fileName.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getFileNameBytes() {
+    java.lang.Object ref = fileName_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      fileName_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int FILE_SIZE_FIELD_NUMBER = 4;
+  private long fileSize_ = 0L;
+  /**
+   * <code>int64 file_size = 4;</code>
+   * @return The fileSize.
+   */
+  @java.lang.Override
+  public long getFileSize() {
+    return fileSize_;
+  }
+
+  public static final int FILE_TYPE_FIELD_NUMBER = 5;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object fileType_ = "";
+  /**
+   * <code>string file_type = 5;</code>
+   * @return The fileType.
+   */
+  @java.lang.Override
+  public java.lang.String getFileType() {
+    java.lang.Object ref = fileType_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      fileType_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string file_type = 5;</code>
+   * @return The bytes for fileType.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getFileTypeBytes() {
+    java.lang.Object ref = fileType_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      fileType_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int NODEID_FIELD_NUMBER = 6;
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object nodeId_ = "";
+  /**
+   * <code>string nodeId = 6;</code>
+   * @return The nodeId.
+   */
+  @java.lang.Override
+  public java.lang.String getNodeId() {
+    java.lang.Object ref = nodeId_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      nodeId_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string nodeId = 6;</code>
+   * @return The bytes for nodeId.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getNodeIdBytes() {
+    java.lang.Object ref = nodeId_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      nodeId_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -140,8 +271,20 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, message_);
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(fileBase64_)) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, fileBase64_);
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(filePath_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, filePath_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(fileName_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, fileName_);
+    }
+    if (fileSize_ != 0L) {
+      output.writeInt64(4, fileSize_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(fileType_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, fileType_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(nodeId_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, nodeId_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -155,8 +298,21 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(message_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, message_);
     }
-    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(fileBase64_)) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, fileBase64_);
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(filePath_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, filePath_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(fileName_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, fileName_);
+    }
+    if (fileSize_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(4, fileSize_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(fileType_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, fileType_);
+    }
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(nodeId_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, nodeId_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -175,8 +331,16 @@ private static final long serialVersionUID = 0L;
 
     if (!getMessage()
         .equals(other.getMessage())) return false;
-    if (!getFileBase64()
-        .equals(other.getFileBase64())) return false;
+    if (!getFilePath()
+        .equals(other.getFilePath())) return false;
+    if (!getFileName()
+        .equals(other.getFileName())) return false;
+    if (getFileSize()
+        != other.getFileSize()) return false;
+    if (!getFileType()
+        .equals(other.getFileType())) return false;
+    if (!getNodeId()
+        .equals(other.getNodeId())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -190,8 +354,17 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
     hash = (53 * hash) + getMessage().hashCode();
-    hash = (37 * hash) + FILEBASE64_FIELD_NUMBER;
-    hash = (53 * hash) + getFileBase64().hashCode();
+    hash = (37 * hash) + FILE_PATH_FIELD_NUMBER;
+    hash = (53 * hash) + getFilePath().hashCode();
+    hash = (37 * hash) + FILE_NAME_FIELD_NUMBER;
+    hash = (53 * hash) + getFileName().hashCode();
+    hash = (37 * hash) + FILE_SIZE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getFileSize());
+    hash = (37 * hash) + FILE_TYPE_FIELD_NUMBER;
+    hash = (53 * hash) + getFileType().hashCode();
+    hash = (37 * hash) + NODEID_FIELD_NUMBER;
+    hash = (53 * hash) + getNodeId().hashCode();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -322,7 +495,11 @@ private static final long serialVersionUID = 0L;
       super.clear();
       bitField0_ = 0;
       message_ = "";
-      fileBase64_ = "";
+      filePath_ = "";
+      fileName_ = "";
+      fileSize_ = 0L;
+      fileType_ = "";
+      nodeId_ = "";
       return this;
     }
 
@@ -360,7 +537,19 @@ private static final long serialVersionUID = 0L;
         result.message_ = message_;
       }
       if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.fileBase64_ = fileBase64_;
+        result.filePath_ = filePath_;
+      }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.fileName_ = fileName_;
+      }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.fileSize_ = fileSize_;
+      }
+      if (((from_bitField0_ & 0x00000010) != 0)) {
+        result.fileType_ = fileType_;
+      }
+      if (((from_bitField0_ & 0x00000020) != 0)) {
+        result.nodeId_ = nodeId_;
       }
     }
 
@@ -413,9 +602,27 @@ private static final long serialVersionUID = 0L;
         bitField0_ |= 0x00000001;
         onChanged();
       }
-      if (!other.getFileBase64().isEmpty()) {
-        fileBase64_ = other.fileBase64_;
+      if (!other.getFilePath().isEmpty()) {
+        filePath_ = other.filePath_;
         bitField0_ |= 0x00000002;
+        onChanged();
+      }
+      if (!other.getFileName().isEmpty()) {
+        fileName_ = other.fileName_;
+        bitField0_ |= 0x00000004;
+        onChanged();
+      }
+      if (other.getFileSize() != 0L) {
+        setFileSize(other.getFileSize());
+      }
+      if (!other.getFileType().isEmpty()) {
+        fileType_ = other.fileType_;
+        bitField0_ |= 0x00000010;
+        onChanged();
+      }
+      if (!other.getNodeId().isEmpty()) {
+        nodeId_ = other.nodeId_;
+        bitField0_ |= 0x00000020;
         onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
@@ -450,10 +657,30 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 10
             case 18: {
-              fileBase64_ = input.readStringRequireUtf8();
+              filePath_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000002;
               break;
             } // case 18
+            case 26: {
+              fileName_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000004;
+              break;
+            } // case 26
+            case 32: {
+              fileSize_ = input.readInt64();
+              bitField0_ |= 0x00000008;
+              break;
+            } // case 32
+            case 42: {
+              fileType_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000010;
+              break;
+            } // case 42
+            case 50: {
+              nodeId_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000020;
+              break;
+            } // case 50
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -543,74 +770,322 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private java.lang.Object fileBase64_ = "";
+    private java.lang.Object filePath_ = "";
     /**
-     * <code>string fileBase64 = 2;</code>
-     * @return The fileBase64.
+     * <code>string file_path = 2;</code>
+     * @return The filePath.
      */
-    public java.lang.String getFileBase64() {
-      java.lang.Object ref = fileBase64_;
+    public java.lang.String getFilePath() {
+      java.lang.Object ref = filePath_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        fileBase64_ = s;
+        filePath_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>string fileBase64 = 2;</code>
-     * @return The bytes for fileBase64.
+     * <code>string file_path = 2;</code>
+     * @return The bytes for filePath.
      */
     public com.google.protobuf.ByteString
-        getFileBase64Bytes() {
-      java.lang.Object ref = fileBase64_;
+        getFilePathBytes() {
+      java.lang.Object ref = filePath_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        fileBase64_ = b;
+        filePath_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>string fileBase64 = 2;</code>
-     * @param value The fileBase64 to set.
+     * <code>string file_path = 2;</code>
+     * @param value The filePath to set.
      * @return This builder for chaining.
      */
-    public Builder setFileBase64(
+    public Builder setFilePath(
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
-      fileBase64_ = value;
+      filePath_ = value;
       bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
     /**
-     * <code>string fileBase64 = 2;</code>
+     * <code>string file_path = 2;</code>
      * @return This builder for chaining.
      */
-    public Builder clearFileBase64() {
-      fileBase64_ = getDefaultInstance().getFileBase64();
+    public Builder clearFilePath() {
+      filePath_ = getDefaultInstance().getFilePath();
       bitField0_ = (bitField0_ & ~0x00000002);
       onChanged();
       return this;
     }
     /**
-     * <code>string fileBase64 = 2;</code>
-     * @param value The bytes for fileBase64 to set.
+     * <code>string file_path = 2;</code>
+     * @param value The bytes for filePath to set.
      * @return This builder for chaining.
      */
-    public Builder setFileBase64Bytes(
+    public Builder setFilePathBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
-      fileBase64_ = value;
+      filePath_ = value;
       bitField0_ |= 0x00000002;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object fileName_ = "";
+    /**
+     * <code>string file_name = 3;</code>
+     * @return The fileName.
+     */
+    public java.lang.String getFileName() {
+      java.lang.Object ref = fileName_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        fileName_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string file_name = 3;</code>
+     * @return The bytes for fileName.
+     */
+    public com.google.protobuf.ByteString
+        getFileNameBytes() {
+      java.lang.Object ref = fileName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        fileName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string file_name = 3;</code>
+     * @param value The fileName to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFileName(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      fileName_ = value;
+      bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string file_name = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearFileName() {
+      fileName_ = getDefaultInstance().getFileName();
+      bitField0_ = (bitField0_ & ~0x00000004);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string file_name = 3;</code>
+     * @param value The bytes for fileName to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFileNameBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      fileName_ = value;
+      bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+
+    private long fileSize_ ;
+    /**
+     * <code>int64 file_size = 4;</code>
+     * @return The fileSize.
+     */
+    @java.lang.Override
+    public long getFileSize() {
+      return fileSize_;
+    }
+    /**
+     * <code>int64 file_size = 4;</code>
+     * @param value The fileSize to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFileSize(long value) {
+      
+      fileSize_ = value;
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int64 file_size = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearFileSize() {
+      bitField0_ = (bitField0_ & ~0x00000008);
+      fileSize_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object fileType_ = "";
+    /**
+     * <code>string file_type = 5;</code>
+     * @return The fileType.
+     */
+    public java.lang.String getFileType() {
+      java.lang.Object ref = fileType_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        fileType_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string file_type = 5;</code>
+     * @return The bytes for fileType.
+     */
+    public com.google.protobuf.ByteString
+        getFileTypeBytes() {
+      java.lang.Object ref = fileType_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        fileType_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string file_type = 5;</code>
+     * @param value The fileType to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFileType(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      fileType_ = value;
+      bitField0_ |= 0x00000010;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string file_type = 5;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearFileType() {
+      fileType_ = getDefaultInstance().getFileType();
+      bitField0_ = (bitField0_ & ~0x00000010);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string file_type = 5;</code>
+     * @param value The bytes for fileType to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFileTypeBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      fileType_ = value;
+      bitField0_ |= 0x00000010;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object nodeId_ = "";
+    /**
+     * <code>string nodeId = 6;</code>
+     * @return The nodeId.
+     */
+    public java.lang.String getNodeId() {
+      java.lang.Object ref = nodeId_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        nodeId_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string nodeId = 6;</code>
+     * @return The bytes for nodeId.
+     */
+    public com.google.protobuf.ByteString
+        getNodeIdBytes() {
+      java.lang.Object ref = nodeId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        nodeId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string nodeId = 6;</code>
+     * @param value The nodeId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setNodeId(
+        java.lang.String value) {
+      if (value == null) { throw new NullPointerException(); }
+      nodeId_ = value;
+      bitField0_ |= 0x00000020;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string nodeId = 6;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearNodeId() {
+      nodeId_ = getDefaultInstance().getNodeId();
+      bitField0_ = (bitField0_ & ~0x00000020);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string nodeId = 6;</code>
+     * @param value The bytes for nodeId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setNodeIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) { throw new NullPointerException(); }
+      checkByteStringIsUtf8(value);
+      nodeId_ = value;
+      bitField0_ |= 0x00000020;
       onChanged();
       return this;
     }

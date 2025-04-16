@@ -1,12 +1,16 @@
 package controller.implementations;
 
+import apirest.DirectoryApi;
 import com.google.gson.Gson;
 import controller.FileDepotService;
 import dto.SoapResponse;
 import dto.directory.*;
+import dto.files.ListAll;
 import grpc.FileSystemClient;
 import grpc.GrpcNodeManager;
 import jakarta.jws.WebService;
+
+import java.util.List;
 
 @WebService(endpointInterface = "controller.FileDepotService")
 public class DirectoryImplementation implements FileDepotService {
@@ -20,13 +24,43 @@ public class DirectoryImplementation implements FileDepotService {
         try {
             switch (action) {
                 case "createDirectory": {
-                    CreateDirectory create = gson.fromJson(data, CreateDirectory.class);
-                    String result = client.createDirectory(create.path);
-                    boolean success = result.toLowerCase().contains("correctamente");
-                    SoapResponse response = new SoapResponse(success, result);
-                    String json = gson.toJson(response);
-                    System.out.println("Respuesta enviada al backend cliente: " + json);
-                    return json;
+                    CreateDirectory dir = gson.fromJson(data, CreateDirectory.class);
+
+                    client = GrpcNodeManager.getAvailableNodeClient();
+                    String nodeResult = client.createDirectory(dir.path);
+
+                    boolean successNode = nodeResult.toLowerCase().contains("correctamente");
+                    boolean successDb = false;
+
+                    if (successNode) {
+                        try {
+                            // Si es raíz, no tiene padre
+                            Integer parentId = null;
+                            if (!dir.isRoot && dir.parentDirectory != null && !dir.parentDirectory.isEmpty()) {
+                                int possibleParent = DirectoryApi.getDirectoryIdByPath(dir.parentDirectory);
+                                if (possibleParent != -1) {
+                                    parentId = possibleParent;
+                                }
+                            }
+
+                            // Extraer userId del path (ej: "15/proyectos" → "15")
+                            String[] parts = dir.path.split("/");
+                            int ownerId = Integer.parseInt(parts[0]);
+
+                            successDb = DirectoryApi.createDirectory(dir.path, ownerId, parentId);
+                        } catch (Exception e) {
+                            System.err.println("Error al registrar directorio en DB: " + e.getMessage());
+                        }
+                    }
+
+                    boolean totalSuccess = successNode && successDb;
+
+                    return gson.toJson(new SoapResponse(
+                            totalSuccess,
+                            totalSuccess ? "Directorio creado exitosamente" :
+                                    successNode ? "Nodo creado, pero no se guardó en la base de datos" :
+                                            "No se pudo crear el directorio"
+                    ));
                 }
 
                 case "addSubdirectory": {
@@ -64,14 +98,6 @@ public class DirectoryImplementation implements FileDepotService {
                     String result = client.deleteFile(delete.directoryID);
                     boolean success = result.toLowerCase().contains("correctamente");
                     SoapResponse response = new SoapResponse(success, result);
-                    String json = gson.toJson(response);
-                    System.out.println("Respuesta enviada al backend cliente: " + json);
-                    return json;
-                }
-
-                case "listDirectories": {
-                    var files = client.listFiles("/");
-                    SoapResponse response = new SoapResponse(true, gson.toJson(files));
                     String json = gson.toJson(response);
                     System.out.println("Respuesta enviada al backend cliente: " + json);
                     return json;
