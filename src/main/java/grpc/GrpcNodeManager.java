@@ -14,20 +14,29 @@ public class GrpcNodeManager {
     static {
         String[] hosts = {
                 ConfigLoader.get("NODE_1_HOST"),
-//              ConfigLoader.get("NODE_2_HOST"),
-//              ConfigLoader.get("NODE_3_HOST"),
-//              ConfigLoader.get("NODE_4_HOST")
+                // Agrega más nodos si es necesario
+                // ConfigLoader.get("NODE_2_HOST"),
+                // ConfigLoader.get("NODE_3_HOST"),
+                // ConfigLoader.get("NODE_4_HOST")
         };
 
         int port = Integer.parseInt(ConfigLoader.get("NODE_PORT"));
 
         for (String host : hosts) {
             if (host != null && !host.isEmpty()) {
-                clients.add(new FileSystemClient(host, port));
+                FileSystemClient client = new FileSystemClient(host, port);
 
-                // Registrar nodo automáticamente en base de datos
-                System.out.println("📡 Registrando nodo en microservicio DB: " + host);
-                NodeApi.registerNode(host, 1000000, 1000000); // Puedes reemplazar valores simulados
+                try {
+                    client.listFiles("/");
+
+                    clients.add(client);
+                    System.out.println("Nodo gRPC activo y agregado: " + host + ":" + port);
+
+                    // Registrar el nodo en la base de datos (valores simulados de espacio)
+                    NodeApi.registerNode(host, 1000000, 1000000);
+                } catch (Exception e) {
+                    System.err.println("Error al conectar con nodo gRPC " + host + ": " + e.getMessage());
+                }
             }
         }
 
@@ -35,7 +44,7 @@ public class GrpcNodeManager {
             throw new IllegalStateException("No se pudo establecer conexión con ningún nodo.");
         }
 
-        System.out.println("Total de nodos gRPC conectados: " + clients.size());
+        System.out.println("📦 Total de nodos gRPC conectados: " + clients.size());
     }
 
     public static FileSystemClient getAvailableNodeClient() {

@@ -21,9 +21,9 @@ public class FileApi {
         return ApiClient.post("/upload", json);
     }
 
-    public static boolean deleteFile(String fileName) {
+    public static boolean deleteFile(String fileId) {
         try {
-            String endpoint = "/delete/" + fileName;
+            String endpoint = "/delete/" + fileId;
             return ApiClient.delete(endpoint);
         } catch (Exception e) {
             System.err.println("Error al eliminar archivo: " + e.getMessage());
