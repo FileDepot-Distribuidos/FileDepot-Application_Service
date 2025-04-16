@@ -1,7 +1,10 @@
 package controller.implementations;
 
+import apirest.ApiClient;
 import apirest.FileApi;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import controller.FileDepotService;
 import dto.SoapResponse;
 import dto.files.*;
@@ -59,33 +62,54 @@ public class FileImplementation implements FileDepotService {
 
                 case "delete": {
                     DeleteFile delete = gson.fromJson(data, DeleteFile.class);
+                    String fileId = delete.fileID;
 
-                    // Eliminar en nodo
-                    String result = client.deleteFile(delete.fileID);
-                    boolean successNode = result.toLowerCase().contains("correctamente");
+                    try {
+                        // Obtener información del archivo desde la API
+                        String fileInfoJson = ApiClient.get("/files/byId/" + fileId);
 
-                    String fileNameOnly = delete.fileID.contains("/")
-                            ? delete.fileID.substring(delete.fileID.lastIndexOf("/") + 1)
-                            : delete.fileID;
+                        JsonObject fileInfo = JsonParser.parseString(fileInfoJson).getAsJsonObject();
 
-                    // 3. Eliminar en DB
-                    boolean successDb = false;
-                    if (successNode) {
-                        successDb = FileApi.deleteFile(fileNameOnly);
+
+                        if (!fileInfo.has("name") || !fileInfo.has("owner_id")) {
+                            return gson.toJson(new SoapResponse(false, "Archivo no encontrado en la base de datos"));
+                        }
+
+                        String fileName = fileInfo.get("name").getAsString();
+                        String ownerId = fileInfo.get("owner_id").getAsString();
+
+                        // Construir path en el nodo
+                        String filePath = ownerId + "/" + fileName;
+
+                        // Eliminar archivo en nodo
+                        String result = client.deleteFile(filePath);
+                        boolean successNode = result.toLowerCase().contains("correctamente");
+
+                        // Eliminar archivo en la base de datos
+                        boolean successDb = false;
+                        if (successNode) {
+                            successDb = FileApi.deleteFile(fileId);
+                        }
+
+                        // Resultado final
+                        boolean finalSuccess = successNode && successDb;
+                        String message = finalSuccess
+                                ? "Archivo eliminado correctamente del nodo y la base de datos"
+                                : successNode
+                                ? "Archivo eliminado del nodo, pero no de la base de datos"
+                                : "No se pudo eliminar el archivo del nodo";
+
+                        System.out.println("Resultado: " + message);
+                        SoapResponse response = new SoapResponse(finalSuccess, message);
+                        return gson.toJson(response);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return gson.toJson(new SoapResponse(false, "Error interno al eliminar archivo: " + e.getMessage()));
                     }
-
-                    boolean finalSuccess = successNode && successDb;
-                    String message = finalSuccess
-                            ? "Archivo eliminado correctamente del nodo y base de datos"
-                            : successNode
-                            ? "Archivo eliminado del nodo, pero no de la base de datos"
-                            : "No se pudo eliminar el archivo";
-
-                    SoapResponse response = new SoapResponse(finalSuccess, message);
-                    String json = gson.toJson(response);
-                    System.out.println("Respuesta enviada al backend cliente: " + json);
-                    return json;
                 }
+
+
 
                 case "rename": {
                     RenameFile rename = gson.fromJson(data, RenameFile.class);
