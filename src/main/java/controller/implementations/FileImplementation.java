@@ -8,8 +8,7 @@ import com.google.gson.JsonParser;
 import controller.FileDepotService;
 import dto.SoapResponse;
 import dto.files.*;
-import dto.files.ListAll;
-import filesystem.ListAllResponse;
+import dto.files.ListAllFiles;
 import grpc.FileSystemClient;
 import grpc.GrpcNodeManager;
 import jakarta.jws.WebService;
@@ -174,25 +173,25 @@ public class FileImplementation implements FileDepotService {
                     return json;
                 }
 
-//                case "listAll": {
-//                    ListAll request = gson.fromJson(data, ListAll.class);
-//                    ListAllResponse responseGrpc = client.listAll(request.path);
-//
-//                    // Puedes empaquetar como JSON combinado (archivos y carpetas)
-//                    var result = new java.util.HashMap<String, Object>();
-//                    result.put("directories", responseGrpc.getDirectoriesList());
-//                    result.put("files", responseGrpc.getFilesList());
-//
-//                    SoapResponse response = new SoapResponse(true, gson.toJson(result));
-//                    String json = gson.toJson(response);
-//                    System.out.println("Respuesta enviada al backend cliente: " + json);
-//                    return json;
-//                }
+                case "getAllFiles": {
+                    var request = gson.fromJson(data, ListAllFiles.class);
+
+                    String responseJson = FileApi.getAllFiles(request.userId);
+
+                    System.out.println("Respuesta enviada al backend cliente: " + responseJson);
+
+                    if (responseJson == null) {
+                        return gson.toJson(new SoapResponse(false, "No se pudo obtener la lista de archivos del usuario"));
+                    }
+
+                    SoapResponse response = new SoapResponse(true, "Se han recuperado los archivos", responseJson);
+                    return gson.toJson(response);
+                }
 
                 case "getFiles": {
-                    var request = gson.fromJson(data, dto.files.ListAll.class);
+                    var request = gson.fromJson(data, ListFilesByDir.class);
 
-                    String responseJson = FileApi.getFiles(request.userId);
+                    String responseJson = FileApi.getFiles(request.userId, request.dir);
 
                     System.out.println("Respuesta enviada al backend cliente: " + responseJson);
 

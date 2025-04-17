@@ -122,6 +122,28 @@ public class DirectoryApi {
         }
     }
 
+    //Listar todos los directorios
+    public static String getAllDirs(int userId) {
+        try {
+            String endpoint = "/directory/" + userId;
+            return ApiClient.get(endpoint);
+        } catch (Exception e) {
+            System.err.println("Error al obtener directorios del usuario: " + e.getMessage());
+            return null;
+        }
+    }
+
+    //Listar algunos directorios
+    public static String getDirs(int userId, int directoryId) {
+        try {
+            String endpoint = "/directory/" + userId + "/" + directoryId;
+            return ApiClient.get(endpoint);
+        } catch (Exception e) {
+            System.err.println("Error al obtener directorios del usuario: " + e.getMessage());
+            return null;
+        }
+    }
+
 
     // 🔹 Payload usado para enviar la estructura JSON a la API REST
     static class DirectoryPayload {

@@ -2,18 +2,16 @@ package controller.implementations;
 
 import apirest.ApiClient;
 import apirest.DirectoryApi;
+import apirest.FileApi;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import controller.FileDepotService;
 import dto.SoapResponse;
 import dto.directory.*;
-import dto.files.ListAll;
 import grpc.FileSystemClient;
 import grpc.GrpcNodeManager;
 import jakarta.jws.WebService;
-
-import java.util.List;
 
 @WebService(endpointInterface = "controller.FileDepotService")
 public class DirectoryImplementation implements FileDepotService {
@@ -188,6 +186,35 @@ public class DirectoryImplementation implements FileDepotService {
                     }
                 }
 
+                case "getAllDirs": {
+                    var request = gson.fromJson(data, ListAllDirectories.class);
+
+                    String responseJson = DirectoryApi.getAllDirs(request.userId);
+
+                    System.out.println("Respuesta enviada al backend cliente: " + responseJson);
+
+                    if (responseJson == null) {
+                        return gson.toJson(new SoapResponse(false, "No se pudo obtener la lista de directorios del usuario"));
+                    }
+
+                    SoapResponse response = new SoapResponse(true, "Se han recuperado los directorios", responseJson);
+                    return gson.toJson(response);
+                }
+
+                case "getDirs": {
+                    var request = gson.fromJson(data, ListDirectoriesByDir.class);
+
+                    String responseJson = DirectoryApi.getDirs(request.userId, request.dir);
+
+                    System.out.println("Respuesta enviada al backend cliente: " + responseJson);
+
+                    if (responseJson == null) {
+                        return gson.toJson(new SoapResponse(false, "No se pudo obtener la lista de directorios del usuario"));
+                    }
+
+                    SoapResponse response = new SoapResponse(true, "Se han recuperado los directorios", responseJson);
+                    return gson.toJson(response);
+                }
 
 
                 default: {
