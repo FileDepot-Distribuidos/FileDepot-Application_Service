@@ -64,6 +64,10 @@ public class DirectoryApi {
     // Obtiene el ID de directorio
     public static int getDirectoryIdByPath(String path) {
         try {
+            if (path.endsWith("/")) {
+                path = path.substring(0, path.length() - 1);
+            }
+
             String encoded = URLEncoder.encode(path, StandardCharsets.UTF_8.toString());
             String response = ApiClient.get("/directory/by-path/" + encoded);
 
@@ -80,6 +84,44 @@ public class DirectoryApi {
             return -1;
         }
     }
+
+    // Renombrar directorio
+    public static boolean renameDirectory(String id, String newPath) {
+        try {
+            JsonObject payload = new JsonObject();
+            payload.addProperty("id", Integer.parseInt(id));
+            payload.addProperty("newPath", newPath);
+            return ApiClient.put("/directory/rename", payload.toString());
+        } catch (Exception e) {
+            System.err.println("Error renombrando directorio: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Mover directorio
+    public static boolean moveDirectory(String id, String newParentId, String newFullPath) {
+        try {
+            JsonObject payload = new JsonObject();
+            payload.addProperty("id", Integer.parseInt(id));
+            payload.addProperty("newParentId", Integer.parseInt(newParentId));
+            payload.addProperty("newFullPath", newFullPath);
+            return ApiClient.put("/directory/move", payload.toString());
+        } catch (Exception e) {
+            System.err.println("Error moviendo directorio: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Eliminar directorio
+    public static boolean deleteDirectory(String id) {
+        try {
+            return ApiClient.delete("/directory/delete/" + id);
+        } catch (Exception e) {
+            System.err.println("Error eliminando directorio: " + e.getMessage());
+            return false;
+        }
+    }
+
 
     // 🔹 Payload usado para enviar la estructura JSON a la API REST
     static class DirectoryPayload {
