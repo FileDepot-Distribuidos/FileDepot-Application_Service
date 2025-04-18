@@ -94,6 +94,20 @@ public class FileApi {
         }
     }
 
+    public static String downloadFile(String fileID) {
+        try {
+            String endpoint = "/download/" + fileID;
+            String response = ApiClient.get(endpoint);
+
+            System.out.println("Respuesta de descarga: " + response);
+            return response;
+        } catch (Exception e) {
+            System.err.println("Error al descargar archivo: " + e.getMessage());
+            return null;
+        }
+    }
+
+
 
 
     static class FilePayload {

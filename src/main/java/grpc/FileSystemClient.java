@@ -199,5 +199,31 @@ public class FileSystemClient {
             return null;
         }
     }
+     //Download
+    public DownloadResult downloadFile(String filePath) {
+      try {
+        DownloadRequest request = DownloadRequest.newBuilder()
+          .setPath(filePath)
+          .build();
+
+        System.out.println("Solicitando descarga del archivo: " + filePath);
+        DownloadResponse response = stub.downloadFile(request);
+
+        // Obtenemos cada campo del response
+        String filename      = response.getFilename();
+        String base64String  = response.getContentBase64();
+        long   filesize      = response.getFilesize();
+        String fileType      = response.getFileType();
+
+        System.out.printf("Recibido del nodo → filename: %s, filesize: %d, fileType: %s%n",
+          filename, filesize, fileType);
+
+        return new DownloadResult(filename, base64String, filesize, fileType);
+
+      } catch (Exception e) {
+        System.err.println("Error al descargar archivo: " + e.getMessage());
+        return null;
+      }
+    }
 
 }
