@@ -1,6 +1,7 @@
 package grpc;
 
 import com.google.protobuf.ByteString;
+import dto.files.DownloadResult;
 import dto.files.UploadResult;
 import filesystem.*;
 import io.grpc.ManagedChannel;

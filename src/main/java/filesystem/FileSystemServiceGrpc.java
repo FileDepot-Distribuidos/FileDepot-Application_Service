@@ -1,19 +1,6 @@
 package filesystem;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
-import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
-import static io.grpc.stub.ClientCalls.asyncClientStreamingCall;
-import static io.grpc.stub.ClientCalls.asyncServerStreamingCall;
-import static io.grpc.stub.ClientCalls.asyncUnaryCall;
-import static io.grpc.stub.ClientCalls.blockingServerStreamingCall;
-import static io.grpc.stub.ClientCalls.blockingUnaryCall;
-import static io.grpc.stub.ClientCalls.futureUnaryCall;
-import static io.grpc.stub.ServerCalls.asyncBidiStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncClientStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncServerStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncUnaryCall;
-import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
 /**
  * <pre>
@@ -21,277 +8,307 @@ import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
  * </pre>
  */
 @javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 1.9.1)",
+    value = "by gRPC proto compiler (version 1.68.3)",
     comments = "Source: filesystem.proto")
+@io.grpc.stub.annotations.GrpcGenerated
 public final class FileSystemServiceGrpc {
 
   private FileSystemServiceGrpc() {}
 
-  public static final String SERVICE_NAME = "filesystem.FileSystemService";
+  public static final java.lang.String SERVICE_NAME = "filesystem.FileSystemService";
 
   // Static method descriptors that strictly reflect the proto.
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  @java.lang.Deprecated // Use {@link #getUploadFileMethod()} instead. 
-  public static final io.grpc.MethodDescriptor<filesystem.UploadRequest,
-      filesystem.Response> METHOD_UPLOAD_FILE = getUploadFileMethod();
-
   private static volatile io.grpc.MethodDescriptor<filesystem.UploadRequest,
       filesystem.Response> getUploadFileMethod;
 
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "UploadFile",
+      requestType = filesystem.UploadRequest.class,
+      responseType = filesystem.Response.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<filesystem.UploadRequest,
       filesystem.Response> getUploadFileMethod() {
     io.grpc.MethodDescriptor<filesystem.UploadRequest, filesystem.Response> getUploadFileMethod;
     if ((getUploadFileMethod = FileSystemServiceGrpc.getUploadFileMethod) == null) {
       synchronized (FileSystemServiceGrpc.class) {
         if ((getUploadFileMethod = FileSystemServiceGrpc.getUploadFileMethod) == null) {
-          FileSystemServiceGrpc.getUploadFileMethod = getUploadFileMethod = 
+          FileSystemServiceGrpc.getUploadFileMethod = getUploadFileMethod =
               io.grpc.MethodDescriptor.<filesystem.UploadRequest, filesystem.Response>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "filesystem.FileSystemService", "UploadFile"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "UploadFile"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.UploadRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.Response.getDefaultInstance()))
-                  .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("UploadFile"))
-                  .build();
-          }
+              .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("UploadFile"))
+              .build();
         }
-     }
-     return getUploadFileMethod;
+      }
+    }
+    return getUploadFileMethod;
   }
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  @java.lang.Deprecated // Use {@link #getCreateDirectoryMethod()} instead. 
-  public static final io.grpc.MethodDescriptor<filesystem.DirectoryRequest,
-      filesystem.Response> METHOD_CREATE_DIRECTORY = getCreateDirectoryMethod();
 
   private static volatile io.grpc.MethodDescriptor<filesystem.DirectoryRequest,
       filesystem.Response> getCreateDirectoryMethod;
 
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "CreateDirectory",
+      requestType = filesystem.DirectoryRequest.class,
+      responseType = filesystem.Response.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<filesystem.DirectoryRequest,
       filesystem.Response> getCreateDirectoryMethod() {
     io.grpc.MethodDescriptor<filesystem.DirectoryRequest, filesystem.Response> getCreateDirectoryMethod;
     if ((getCreateDirectoryMethod = FileSystemServiceGrpc.getCreateDirectoryMethod) == null) {
       synchronized (FileSystemServiceGrpc.class) {
         if ((getCreateDirectoryMethod = FileSystemServiceGrpc.getCreateDirectoryMethod) == null) {
-          FileSystemServiceGrpc.getCreateDirectoryMethod = getCreateDirectoryMethod = 
+          FileSystemServiceGrpc.getCreateDirectoryMethod = getCreateDirectoryMethod =
               io.grpc.MethodDescriptor.<filesystem.DirectoryRequest, filesystem.Response>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "filesystem.FileSystemService", "CreateDirectory"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "CreateDirectory"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.DirectoryRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.Response.getDefaultInstance()))
-                  .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("CreateDirectory"))
-                  .build();
-          }
+              .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("CreateDirectory"))
+              .build();
         }
-     }
-     return getCreateDirectoryMethod;
+      }
+    }
+    return getCreateDirectoryMethod;
   }
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  @java.lang.Deprecated // Use {@link #getCreateSubdirectoryMethod()} instead. 
-  public static final io.grpc.MethodDescriptor<filesystem.SubdirectoryRequest,
-      filesystem.Response> METHOD_CREATE_SUBDIRECTORY = getCreateSubdirectoryMethod();
 
   private static volatile io.grpc.MethodDescriptor<filesystem.SubdirectoryRequest,
       filesystem.Response> getCreateSubdirectoryMethod;
 
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "CreateSubdirectory",
+      requestType = filesystem.SubdirectoryRequest.class,
+      responseType = filesystem.Response.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<filesystem.SubdirectoryRequest,
       filesystem.Response> getCreateSubdirectoryMethod() {
     io.grpc.MethodDescriptor<filesystem.SubdirectoryRequest, filesystem.Response> getCreateSubdirectoryMethod;
     if ((getCreateSubdirectoryMethod = FileSystemServiceGrpc.getCreateSubdirectoryMethod) == null) {
       synchronized (FileSystemServiceGrpc.class) {
         if ((getCreateSubdirectoryMethod = FileSystemServiceGrpc.getCreateSubdirectoryMethod) == null) {
-          FileSystemServiceGrpc.getCreateSubdirectoryMethod = getCreateSubdirectoryMethod = 
+          FileSystemServiceGrpc.getCreateSubdirectoryMethod = getCreateSubdirectoryMethod =
               io.grpc.MethodDescriptor.<filesystem.SubdirectoryRequest, filesystem.Response>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "filesystem.FileSystemService", "CreateSubdirectory"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "CreateSubdirectory"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.SubdirectoryRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.Response.getDefaultInstance()))
-                  .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("CreateSubdirectory"))
-                  .build();
-          }
+              .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("CreateSubdirectory"))
+              .build();
         }
-     }
-     return getCreateSubdirectoryMethod;
+      }
+    }
+    return getCreateSubdirectoryMethod;
   }
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  @java.lang.Deprecated // Use {@link #getRenameFileMethod()} instead. 
-  public static final io.grpc.MethodDescriptor<filesystem.RenameRequest,
-      filesystem.Response> METHOD_RENAME_FILE = getRenameFileMethod();
 
   private static volatile io.grpc.MethodDescriptor<filesystem.RenameRequest,
       filesystem.Response> getRenameFileMethod;
 
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "RenameFile",
+      requestType = filesystem.RenameRequest.class,
+      responseType = filesystem.Response.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<filesystem.RenameRequest,
       filesystem.Response> getRenameFileMethod() {
     io.grpc.MethodDescriptor<filesystem.RenameRequest, filesystem.Response> getRenameFileMethod;
     if ((getRenameFileMethod = FileSystemServiceGrpc.getRenameFileMethod) == null) {
       synchronized (FileSystemServiceGrpc.class) {
         if ((getRenameFileMethod = FileSystemServiceGrpc.getRenameFileMethod) == null) {
-          FileSystemServiceGrpc.getRenameFileMethod = getRenameFileMethod = 
+          FileSystemServiceGrpc.getRenameFileMethod = getRenameFileMethod =
               io.grpc.MethodDescriptor.<filesystem.RenameRequest, filesystem.Response>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "filesystem.FileSystemService", "RenameFile"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "RenameFile"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.RenameRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.Response.getDefaultInstance()))
-                  .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("RenameFile"))
-                  .build();
-          }
+              .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("RenameFile"))
+              .build();
         }
-     }
-     return getRenameFileMethod;
+      }
+    }
+    return getRenameFileMethod;
   }
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  @java.lang.Deprecated // Use {@link #getDeleteFileMethod()} instead. 
-  public static final io.grpc.MethodDescriptor<filesystem.DeleteRequest,
-      filesystem.Response> METHOD_DELETE_FILE = getDeleteFileMethod();
 
   private static volatile io.grpc.MethodDescriptor<filesystem.DeleteRequest,
       filesystem.Response> getDeleteFileMethod;
 
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "DeleteFile",
+      requestType = filesystem.DeleteRequest.class,
+      responseType = filesystem.Response.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<filesystem.DeleteRequest,
       filesystem.Response> getDeleteFileMethod() {
     io.grpc.MethodDescriptor<filesystem.DeleteRequest, filesystem.Response> getDeleteFileMethod;
     if ((getDeleteFileMethod = FileSystemServiceGrpc.getDeleteFileMethod) == null) {
       synchronized (FileSystemServiceGrpc.class) {
         if ((getDeleteFileMethod = FileSystemServiceGrpc.getDeleteFileMethod) == null) {
-          FileSystemServiceGrpc.getDeleteFileMethod = getDeleteFileMethod = 
+          FileSystemServiceGrpc.getDeleteFileMethod = getDeleteFileMethod =
               io.grpc.MethodDescriptor.<filesystem.DeleteRequest, filesystem.Response>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "filesystem.FileSystemService", "DeleteFile"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "DeleteFile"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.DeleteRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.Response.getDefaultInstance()))
-                  .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("DeleteFile"))
-                  .build();
-          }
+              .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("DeleteFile"))
+              .build();
         }
-     }
-     return getDeleteFileMethod;
+      }
+    }
+    return getDeleteFileMethod;
   }
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  @java.lang.Deprecated // Use {@link #getListFilesMethod()} instead. 
-  public static final io.grpc.MethodDescriptor<filesystem.DirectoryRequest,
-      filesystem.ListResponse> METHOD_LIST_FILES = getListFilesMethod();
 
   private static volatile io.grpc.MethodDescriptor<filesystem.DirectoryRequest,
       filesystem.ListResponse> getListFilesMethod;
 
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "ListFiles",
+      requestType = filesystem.DirectoryRequest.class,
+      responseType = filesystem.ListResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<filesystem.DirectoryRequest,
       filesystem.ListResponse> getListFilesMethod() {
     io.grpc.MethodDescriptor<filesystem.DirectoryRequest, filesystem.ListResponse> getListFilesMethod;
     if ((getListFilesMethod = FileSystemServiceGrpc.getListFilesMethod) == null) {
       synchronized (FileSystemServiceGrpc.class) {
         if ((getListFilesMethod = FileSystemServiceGrpc.getListFilesMethod) == null) {
-          FileSystemServiceGrpc.getListFilesMethod = getListFilesMethod = 
+          FileSystemServiceGrpc.getListFilesMethod = getListFilesMethod =
               io.grpc.MethodDescriptor.<filesystem.DirectoryRequest, filesystem.ListResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "filesystem.FileSystemService", "ListFiles"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "ListFiles"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.DirectoryRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.ListResponse.getDefaultInstance()))
-                  .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("ListFiles"))
-                  .build();
-          }
+              .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("ListFiles"))
+              .build();
         }
-     }
-     return getListFilesMethod;
+      }
+    }
+    return getListFilesMethod;
   }
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  @java.lang.Deprecated // Use {@link #getMoveFileMethod()} instead. 
-  public static final io.grpc.MethodDescriptor<filesystem.MoveRequest,
-      filesystem.Response> METHOD_MOVE_FILE = getMoveFileMethod();
 
   private static volatile io.grpc.MethodDescriptor<filesystem.MoveRequest,
       filesystem.Response> getMoveFileMethod;
 
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "MoveFile",
+      requestType = filesystem.MoveRequest.class,
+      responseType = filesystem.Response.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<filesystem.MoveRequest,
       filesystem.Response> getMoveFileMethod() {
     io.grpc.MethodDescriptor<filesystem.MoveRequest, filesystem.Response> getMoveFileMethod;
     if ((getMoveFileMethod = FileSystemServiceGrpc.getMoveFileMethod) == null) {
       synchronized (FileSystemServiceGrpc.class) {
         if ((getMoveFileMethod = FileSystemServiceGrpc.getMoveFileMethod) == null) {
-          FileSystemServiceGrpc.getMoveFileMethod = getMoveFileMethod = 
+          FileSystemServiceGrpc.getMoveFileMethod = getMoveFileMethod =
               io.grpc.MethodDescriptor.<filesystem.MoveRequest, filesystem.Response>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "filesystem.FileSystemService", "MoveFile"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "MoveFile"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.MoveRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.Response.getDefaultInstance()))
-                  .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("MoveFile"))
-                  .build();
-          }
+              .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("MoveFile"))
+              .build();
         }
-     }
-     return getMoveFileMethod;
+      }
+    }
+    return getMoveFileMethod;
   }
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  @java.lang.Deprecated // Use {@link #getListAllMethod()} instead. 
-  public static final io.grpc.MethodDescriptor<filesystem.DirectoryRequest,
-      filesystem.ListAllResponse> METHOD_LIST_ALL = getListAllMethod();
 
   private static volatile io.grpc.MethodDescriptor<filesystem.DirectoryRequest,
       filesystem.ListAllResponse> getListAllMethod;
 
-  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "ListAll",
+      requestType = filesystem.DirectoryRequest.class,
+      responseType = filesystem.ListAllResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
   public static io.grpc.MethodDescriptor<filesystem.DirectoryRequest,
       filesystem.ListAllResponse> getListAllMethod() {
     io.grpc.MethodDescriptor<filesystem.DirectoryRequest, filesystem.ListAllResponse> getListAllMethod;
     if ((getListAllMethod = FileSystemServiceGrpc.getListAllMethod) == null) {
       synchronized (FileSystemServiceGrpc.class) {
         if ((getListAllMethod = FileSystemServiceGrpc.getListAllMethod) == null) {
-          FileSystemServiceGrpc.getListAllMethod = getListAllMethod = 
+          FileSystemServiceGrpc.getListAllMethod = getListAllMethod =
               io.grpc.MethodDescriptor.<filesystem.DirectoryRequest, filesystem.ListAllResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "filesystem.FileSystemService", "ListAll"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "ListAll"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.DirectoryRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   filesystem.ListAllResponse.getDefaultInstance()))
-                  .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("ListAll"))
-                  .build();
-          }
+              .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("ListAll"))
+              .build();
         }
-     }
-     return getListAllMethod;
+      }
+    }
+    return getListAllMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<filesystem.DownloadRequest,
+      filesystem.DownloadResponse> getDownloadFileMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "DownloadFile",
+      requestType = filesystem.DownloadRequest.class,
+      responseType = filesystem.DownloadResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<filesystem.DownloadRequest,
+      filesystem.DownloadResponse> getDownloadFileMethod() {
+    io.grpc.MethodDescriptor<filesystem.DownloadRequest, filesystem.DownloadResponse> getDownloadFileMethod;
+    if ((getDownloadFileMethod = FileSystemServiceGrpc.getDownloadFileMethod) == null) {
+      synchronized (FileSystemServiceGrpc.class) {
+        if ((getDownloadFileMethod = FileSystemServiceGrpc.getDownloadFileMethod) == null) {
+          FileSystemServiceGrpc.getDownloadFileMethod = getDownloadFileMethod =
+              io.grpc.MethodDescriptor.<filesystem.DownloadRequest, filesystem.DownloadResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "DownloadFile"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  filesystem.DownloadRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  filesystem.DownloadResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new FileSystemServiceMethodDescriptorSupplier("DownloadFile"))
+              .build();
+        }
+      }
+    }
+    return getDownloadFileMethod;
   }
 
   /**
    * Creates a new async stub that supports all call types for the service
    */
   public static FileSystemServiceStub newStub(io.grpc.Channel channel) {
-    return new FileSystemServiceStub(channel);
+    io.grpc.stub.AbstractStub.StubFactory<FileSystemServiceStub> factory =
+      new io.grpc.stub.AbstractStub.StubFactory<FileSystemServiceStub>() {
+        @java.lang.Override
+        public FileSystemServiceStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+          return new FileSystemServiceStub(channel, callOptions);
+        }
+      };
+    return FileSystemServiceStub.newStub(factory, channel);
   }
 
   /**
@@ -299,7 +316,14 @@ public final class FileSystemServiceGrpc {
    */
   public static FileSystemServiceBlockingStub newBlockingStub(
       io.grpc.Channel channel) {
-    return new FileSystemServiceBlockingStub(channel);
+    io.grpc.stub.AbstractStub.StubFactory<FileSystemServiceBlockingStub> factory =
+      new io.grpc.stub.AbstractStub.StubFactory<FileSystemServiceBlockingStub>() {
+        @java.lang.Override
+        public FileSystemServiceBlockingStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+          return new FileSystemServiceBlockingStub(channel, callOptions);
+        }
+      };
+    return FileSystemServiceBlockingStub.newStub(factory, channel);
   }
 
   /**
@@ -307,7 +331,14 @@ public final class FileSystemServiceGrpc {
    */
   public static FileSystemServiceFutureStub newFutureStub(
       io.grpc.Channel channel) {
-    return new FileSystemServiceFutureStub(channel);
+    io.grpc.stub.AbstractStub.StubFactory<FileSystemServiceFutureStub> factory =
+      new io.grpc.stub.AbstractStub.StubFactory<FileSystemServiceFutureStub>() {
+        @java.lang.Override
+        public FileSystemServiceFutureStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+          return new FileSystemServiceFutureStub(channel, callOptions);
+        }
+      };
+    return FileSystemServiceFutureStub.newStub(factory, channel);
   }
 
   /**
@@ -315,144 +346,105 @@ public final class FileSystemServiceGrpc {
    * Servicio para operaciones del sistema de archivos
    * </pre>
    */
-  public static abstract class FileSystemServiceImplBase implements io.grpc.BindableService {
+  public interface AsyncService {
 
     /**
      */
-    public void uploadFile(filesystem.UploadRequest request,
+    default void uploadFile(filesystem.UploadRequest request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      asyncUnimplementedUnaryCall(getUploadFileMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getUploadFileMethod(), responseObserver);
     }
 
     /**
      */
-    public void createDirectory(filesystem.DirectoryRequest request,
+    default void createDirectory(filesystem.DirectoryRequest request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      asyncUnimplementedUnaryCall(getCreateDirectoryMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getCreateDirectoryMethod(), responseObserver);
     }
 
     /**
      */
-    public void createSubdirectory(filesystem.SubdirectoryRequest request,
+    default void createSubdirectory(filesystem.SubdirectoryRequest request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      asyncUnimplementedUnaryCall(getCreateSubdirectoryMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getCreateSubdirectoryMethod(), responseObserver);
     }
 
     /**
      */
-    public void renameFile(filesystem.RenameRequest request,
+    default void renameFile(filesystem.RenameRequest request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      asyncUnimplementedUnaryCall(getRenameFileMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getRenameFileMethod(), responseObserver);
     }
 
     /**
      */
-    public void deleteFile(filesystem.DeleteRequest request,
+    default void deleteFile(filesystem.DeleteRequest request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      asyncUnimplementedUnaryCall(getDeleteFileMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getDeleteFileMethod(), responseObserver);
     }
 
     /**
      */
-    public void listFiles(filesystem.DirectoryRequest request,
+    default void listFiles(filesystem.DirectoryRequest request,
         io.grpc.stub.StreamObserver<filesystem.ListResponse> responseObserver) {
-      asyncUnimplementedUnaryCall(getListFilesMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getListFilesMethod(), responseObserver);
     }
 
     /**
      */
-    public void moveFile(filesystem.MoveRequest request,
+    default void moveFile(filesystem.MoveRequest request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      asyncUnimplementedUnaryCall(getMoveFileMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getMoveFileMethod(), responseObserver);
     }
 
     /**
      */
-    public void listAll(filesystem.DirectoryRequest request,
+    default void listAll(filesystem.DirectoryRequest request,
         io.grpc.stub.StreamObserver<filesystem.ListAllResponse> responseObserver) {
-      asyncUnimplementedUnaryCall(getListAllMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getListAllMethod(), responseObserver);
     }
+
+    /**
+     * <pre>
+     * &lt;--- Nuevo método
+     * </pre>
+     */
+    default void downloadFile(filesystem.DownloadRequest request,
+        io.grpc.stub.StreamObserver<filesystem.DownloadResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getDownloadFileMethod(), responseObserver);
+    }
+  }
+
+  /**
+   * Base class for the server implementation of the service FileSystemService.
+   * <pre>
+   * Servicio para operaciones del sistema de archivos
+   * </pre>
+   */
+  public static abstract class FileSystemServiceImplBase
+      implements io.grpc.BindableService, AsyncService {
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
-      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
-          .addMethod(
-            getUploadFileMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                filesystem.UploadRequest,
-                filesystem.Response>(
-                  this, METHODID_UPLOAD_FILE)))
-          .addMethod(
-            getCreateDirectoryMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                filesystem.DirectoryRequest,
-                filesystem.Response>(
-                  this, METHODID_CREATE_DIRECTORY)))
-          .addMethod(
-            getCreateSubdirectoryMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                filesystem.SubdirectoryRequest,
-                filesystem.Response>(
-                  this, METHODID_CREATE_SUBDIRECTORY)))
-          .addMethod(
-            getRenameFileMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                filesystem.RenameRequest,
-                filesystem.Response>(
-                  this, METHODID_RENAME_FILE)))
-          .addMethod(
-            getDeleteFileMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                filesystem.DeleteRequest,
-                filesystem.Response>(
-                  this, METHODID_DELETE_FILE)))
-          .addMethod(
-            getListFilesMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                filesystem.DirectoryRequest,
-                filesystem.ListResponse>(
-                  this, METHODID_LIST_FILES)))
-          .addMethod(
-            getMoveFileMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                filesystem.MoveRequest,
-                filesystem.Response>(
-                  this, METHODID_MOVE_FILE)))
-          .addMethod(
-            getListAllMethod(),
-            asyncUnaryCall(
-              new MethodHandlers<
-                filesystem.DirectoryRequest,
-                filesystem.ListAllResponse>(
-                  this, METHODID_LIST_ALL)))
-          .build();
+      return FileSystemServiceGrpc.bindService(this);
     }
   }
 
   /**
+   * A stub to allow clients to do asynchronous rpc calls to service FileSystemService.
    * <pre>
    * Servicio para operaciones del sistema de archivos
    * </pre>
    */
-  public static final class FileSystemServiceStub extends io.grpc.stub.AbstractStub<FileSystemServiceStub> {
-    private FileSystemServiceStub(io.grpc.Channel channel) {
-      super(channel);
-    }
-
-    private FileSystemServiceStub(io.grpc.Channel channel,
-        io.grpc.CallOptions callOptions) {
+  public static final class FileSystemServiceStub
+      extends io.grpc.stub.AbstractAsyncStub<FileSystemServiceStub> {
+    private FileSystemServiceStub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
     @java.lang.Override
-    protected FileSystemServiceStub build(io.grpc.Channel channel,
-        io.grpc.CallOptions callOptions) {
+    protected FileSystemServiceStub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       return new FileSystemServiceStub(channel, callOptions);
     }
 
@@ -460,7 +452,7 @@ public final class FileSystemServiceGrpc {
      */
     public void uploadFile(filesystem.UploadRequest request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getUploadFileMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -468,7 +460,7 @@ public final class FileSystemServiceGrpc {
      */
     public void createDirectory(filesystem.DirectoryRequest request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getCreateDirectoryMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -476,7 +468,7 @@ public final class FileSystemServiceGrpc {
      */
     public void createSubdirectory(filesystem.SubdirectoryRequest request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getCreateSubdirectoryMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -484,7 +476,7 @@ public final class FileSystemServiceGrpc {
      */
     public void renameFile(filesystem.RenameRequest request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getRenameFileMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -492,7 +484,7 @@ public final class FileSystemServiceGrpc {
      */
     public void deleteFile(filesystem.DeleteRequest request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getDeleteFileMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -500,7 +492,7 @@ public final class FileSystemServiceGrpc {
      */
     public void listFiles(filesystem.DirectoryRequest request,
         io.grpc.stub.StreamObserver<filesystem.ListResponse> responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getListFilesMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -508,7 +500,7 @@ public final class FileSystemServiceGrpc {
      */
     public void moveFile(filesystem.MoveRequest request,
         io.grpc.stub.StreamObserver<filesystem.Response> responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getMoveFileMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -516,107 +508,124 @@ public final class FileSystemServiceGrpc {
      */
     public void listAll(filesystem.DirectoryRequest request,
         io.grpc.stub.StreamObserver<filesystem.ListAllResponse> responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getListAllMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * &lt;--- Nuevo método
+     * </pre>
+     */
+    public void downloadFile(filesystem.DownloadRequest request,
+        io.grpc.stub.StreamObserver<filesystem.DownloadResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getDownloadFileMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
   /**
+   * A stub to allow clients to do synchronous rpc calls to service FileSystemService.
    * <pre>
    * Servicio para operaciones del sistema de archivos
    * </pre>
    */
-  public static final class FileSystemServiceBlockingStub extends io.grpc.stub.AbstractStub<FileSystemServiceBlockingStub> {
-    private FileSystemServiceBlockingStub(io.grpc.Channel channel) {
-      super(channel);
-    }
-
-    private FileSystemServiceBlockingStub(io.grpc.Channel channel,
-        io.grpc.CallOptions callOptions) {
+  public static final class FileSystemServiceBlockingStub
+      extends io.grpc.stub.AbstractBlockingStub<FileSystemServiceBlockingStub> {
+    private FileSystemServiceBlockingStub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
     @java.lang.Override
-    protected FileSystemServiceBlockingStub build(io.grpc.Channel channel,
-        io.grpc.CallOptions callOptions) {
+    protected FileSystemServiceBlockingStub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       return new FileSystemServiceBlockingStub(channel, callOptions);
     }
 
     /**
      */
     public filesystem.Response uploadFile(filesystem.UploadRequest request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getUploadFileMethod(), getCallOptions(), request);
     }
 
     /**
      */
     public filesystem.Response createDirectory(filesystem.DirectoryRequest request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getCreateDirectoryMethod(), getCallOptions(), request);
     }
 
     /**
      */
     public filesystem.Response createSubdirectory(filesystem.SubdirectoryRequest request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getCreateSubdirectoryMethod(), getCallOptions(), request);
     }
 
     /**
      */
     public filesystem.Response renameFile(filesystem.RenameRequest request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getRenameFileMethod(), getCallOptions(), request);
     }
 
     /**
      */
     public filesystem.Response deleteFile(filesystem.DeleteRequest request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getDeleteFileMethod(), getCallOptions(), request);
     }
 
     /**
      */
     public filesystem.ListResponse listFiles(filesystem.DirectoryRequest request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getListFilesMethod(), getCallOptions(), request);
     }
 
     /**
      */
     public filesystem.Response moveFile(filesystem.MoveRequest request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getMoveFileMethod(), getCallOptions(), request);
     }
 
     /**
      */
     public filesystem.ListAllResponse listAll(filesystem.DirectoryRequest request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getListAllMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * &lt;--- Nuevo método
+     * </pre>
+     */
+    public filesystem.DownloadResponse downloadFile(filesystem.DownloadRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getDownloadFileMethod(), getCallOptions(), request);
     }
   }
 
   /**
+   * A stub to allow clients to do ListenableFuture-style rpc calls to service FileSystemService.
    * <pre>
    * Servicio para operaciones del sistema de archivos
    * </pre>
    */
-  public static final class FileSystemServiceFutureStub extends io.grpc.stub.AbstractStub<FileSystemServiceFutureStub> {
-    private FileSystemServiceFutureStub(io.grpc.Channel channel) {
-      super(channel);
-    }
-
-    private FileSystemServiceFutureStub(io.grpc.Channel channel,
-        io.grpc.CallOptions callOptions) {
+  public static final class FileSystemServiceFutureStub
+      extends io.grpc.stub.AbstractFutureStub<FileSystemServiceFutureStub> {
+    private FileSystemServiceFutureStub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
     @java.lang.Override
-    protected FileSystemServiceFutureStub build(io.grpc.Channel channel,
-        io.grpc.CallOptions callOptions) {
+    protected FileSystemServiceFutureStub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       return new FileSystemServiceFutureStub(channel, callOptions);
     }
 
@@ -624,7 +633,7 @@ public final class FileSystemServiceGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<filesystem.Response> uploadFile(
         filesystem.UploadRequest request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getUploadFileMethod(), getCallOptions()), request);
     }
 
@@ -632,7 +641,7 @@ public final class FileSystemServiceGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<filesystem.Response> createDirectory(
         filesystem.DirectoryRequest request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getCreateDirectoryMethod(), getCallOptions()), request);
     }
 
@@ -640,7 +649,7 @@ public final class FileSystemServiceGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<filesystem.Response> createSubdirectory(
         filesystem.SubdirectoryRequest request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getCreateSubdirectoryMethod(), getCallOptions()), request);
     }
 
@@ -648,7 +657,7 @@ public final class FileSystemServiceGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<filesystem.Response> renameFile(
         filesystem.RenameRequest request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getRenameFileMethod(), getCallOptions()), request);
     }
 
@@ -656,7 +665,7 @@ public final class FileSystemServiceGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<filesystem.Response> deleteFile(
         filesystem.DeleteRequest request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getDeleteFileMethod(), getCallOptions()), request);
     }
 
@@ -664,7 +673,7 @@ public final class FileSystemServiceGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<filesystem.ListResponse> listFiles(
         filesystem.DirectoryRequest request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getListFilesMethod(), getCallOptions()), request);
     }
 
@@ -672,7 +681,7 @@ public final class FileSystemServiceGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<filesystem.Response> moveFile(
         filesystem.MoveRequest request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getMoveFileMethod(), getCallOptions()), request);
     }
 
@@ -680,8 +689,19 @@ public final class FileSystemServiceGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<filesystem.ListAllResponse> listAll(
         filesystem.DirectoryRequest request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getListAllMethod(), getCallOptions()), request);
+    }
+
+    /**
+     * <pre>
+     * &lt;--- Nuevo método
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<filesystem.DownloadResponse> downloadFile(
+        filesystem.DownloadRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getDownloadFileMethod(), getCallOptions()), request);
     }
   }
 
@@ -693,16 +713,17 @@ public final class FileSystemServiceGrpc {
   private static final int METHODID_LIST_FILES = 5;
   private static final int METHODID_MOVE_FILE = 6;
   private static final int METHODID_LIST_ALL = 7;
+  private static final int METHODID_DOWNLOAD_FILE = 8;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
       io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-    private final FileSystemServiceImplBase serviceImpl;
+    private final AsyncService serviceImpl;
     private final int methodId;
 
-    MethodHandlers(FileSystemServiceImplBase serviceImpl, int methodId) {
+    MethodHandlers(AsyncService serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
@@ -743,6 +764,10 @@ public final class FileSystemServiceGrpc {
           serviceImpl.listAll((filesystem.DirectoryRequest) request,
               (io.grpc.stub.StreamObserver<filesystem.ListAllResponse>) responseObserver);
           break;
+        case METHODID_DOWNLOAD_FILE:
+          serviceImpl.downloadFile((filesystem.DownloadRequest) request,
+              (io.grpc.stub.StreamObserver<filesystem.DownloadResponse>) responseObserver);
+          break;
         default:
           throw new AssertionError();
       }
@@ -757,6 +782,74 @@ public final class FileSystemServiceGrpc {
           throw new AssertionError();
       }
     }
+  }
+
+  public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
+    return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+        .addMethod(
+          getUploadFileMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              filesystem.UploadRequest,
+              filesystem.Response>(
+                service, METHODID_UPLOAD_FILE)))
+        .addMethod(
+          getCreateDirectoryMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              filesystem.DirectoryRequest,
+              filesystem.Response>(
+                service, METHODID_CREATE_DIRECTORY)))
+        .addMethod(
+          getCreateSubdirectoryMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              filesystem.SubdirectoryRequest,
+              filesystem.Response>(
+                service, METHODID_CREATE_SUBDIRECTORY)))
+        .addMethod(
+          getRenameFileMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              filesystem.RenameRequest,
+              filesystem.Response>(
+                service, METHODID_RENAME_FILE)))
+        .addMethod(
+          getDeleteFileMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              filesystem.DeleteRequest,
+              filesystem.Response>(
+                service, METHODID_DELETE_FILE)))
+        .addMethod(
+          getListFilesMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              filesystem.DirectoryRequest,
+              filesystem.ListResponse>(
+                service, METHODID_LIST_FILES)))
+        .addMethod(
+          getMoveFileMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              filesystem.MoveRequest,
+              filesystem.Response>(
+                service, METHODID_MOVE_FILE)))
+        .addMethod(
+          getListAllMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              filesystem.DirectoryRequest,
+              filesystem.ListAllResponse>(
+                service, METHODID_LIST_ALL)))
+        .addMethod(
+          getDownloadFileMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              filesystem.DownloadRequest,
+              filesystem.DownloadResponse>(
+                service, METHODID_DOWNLOAD_FILE)))
+        .build();
   }
 
   private static abstract class FileSystemServiceBaseDescriptorSupplier
@@ -782,9 +875,9 @@ public final class FileSystemServiceGrpc {
   private static final class FileSystemServiceMethodDescriptorSupplier
       extends FileSystemServiceBaseDescriptorSupplier
       implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
-    private final String methodName;
+    private final java.lang.String methodName;
 
-    FileSystemServiceMethodDescriptorSupplier(String methodName) {
+    FileSystemServiceMethodDescriptorSupplier(java.lang.String methodName) {
       this.methodName = methodName;
     }
 
@@ -812,6 +905,7 @@ public final class FileSystemServiceGrpc {
               .addMethod(getListFilesMethod())
               .addMethod(getMoveFileMethod())
               .addMethod(getListAllMethod())
+              .addMethod(getDownloadFileMethod())
               .build();
         }
       }
