@@ -65,7 +65,7 @@ public class FileImplementation implements FileDepotService {
 
                     try {
                         // Obtener información del archivo desde la API
-                        String fileInfoJson = ApiClient.get("/files/byId/" + fileId);
+                        String fileInfoJson = ApiClient.get("/file/byId/" + fileId);
 
                         JsonObject fileInfo = JsonParser.parseString(fileInfoJson).getAsJsonObject();
 
