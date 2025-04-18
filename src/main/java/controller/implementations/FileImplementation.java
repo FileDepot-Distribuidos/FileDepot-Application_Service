@@ -159,11 +159,38 @@ public class FileImplementation implements FileDepotService {
                 }
 
                 case "read": {
-                    ReadFile read = gson.fromJson(data, ReadFile.class);
-                    SoapResponse response = new SoapResponse(true, "Contenido de: " + read.fileID);
-                    String json = gson.toJson(response);
-                    System.out.println("Respuesta enviada al backend cliente: " + json);
-                    return json;
+                  // Parseamos la respuesta que contiene el filePath
+                  ReadFile read = gson.fromJson(data, ReadFile.class);
+
+                  // Obtenemos la ruta desde la BD
+                  String filePathJson = FileApi.downloadFile(read.fileID);
+
+                  // Extraemos solo el filePath del JSON
+                  JsonObject filePathObj = gson.fromJson(filePathJson, JsonObject.class);
+                  String filePath = filePathObj.get("filePath").getAsString();
+
+                  //  Llamamos al nodo y recibimos el archivo
+                  DownloadResult result = client.readFile(filePath);
+
+                  // Si no obtuvimos un resultado válido
+                  if (result == null) {
+                    return gson.toJson(new SoapResponse(false, "No llegan datos"));
+                  }
+
+                  // 3. Creamos la respuesta con los datos recibidos
+                  SoapDownloadResponse resp = new SoapDownloadResponse(
+                    true,
+                    "Se pasan datos de archivo",
+                    result.getFilename(),
+                    result.getFileType(),
+                    result.getContentBase64()
+                  );
+
+                  // Convertimos la respuesta a JSON
+                  String json = gson.toJson(resp);
+                  System.out.println("Respuesta enviada al backend cliente: " + json);
+
+                  return json;
                 }
 
                case "download": {
