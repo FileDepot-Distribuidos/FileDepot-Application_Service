@@ -2,18 +2,17 @@ package controller.implementations;
 
 import apirest.ApiClient;
 import apirest.DirectoryApi;
+import apirest.FileApi;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import controller.FileDepotService;
 import dto.SoapResponse;
 import dto.directory.*;
-import dto.files.ListAll;
 import grpc.FileSystemClient;
 import grpc.GrpcNodeManager;
 import jakarta.jws.WebService;
-
-import java.util.List;
 
 @WebService(endpointInterface = "controller.FileDepotService")
 public class DirectoryImplementation implements FileDepotService {
@@ -29,6 +28,12 @@ public class DirectoryImplementation implements FileDepotService {
                 case "createDirectory": {
                     CreateDirectory dir = gson.fromJson(data, CreateDirectory.class);
 
+                    // 🔍 Mostrar datos recibidos del backend
+                    System.out.println("📥 Datos recibidos para crear directorio:");
+                    System.out.println("  path: " + dir.path);
+                    System.out.println("  isRoot: " + dir.isRoot);
+                    System.out.println("  parentDirectory: " + dir.parentDirectory);
+
                     client = GrpcNodeManager.getAvailableNodeClient();
                     String nodeResult = client.createDirectory(dir.path);
 
@@ -38,17 +43,45 @@ public class DirectoryImplementation implements FileDepotService {
                     if (successNode) {
                         try {
                             Integer parentId = null;
-                            if (!dir.isRoot && dir.parentDirectory != null && !dir.parentDirectory.isEmpty()) {
-                                int possibleParent = DirectoryApi.getDirectoryIdByPath(dir.parentDirectory);
-                                if (possibleParent != -1) {
-                                    parentId = possibleParent;
+
+                            // ✅ Si el campo parentDirectory llega como ID (número), úsalo directamente
+                            if (dir.parentDirectory != null && dir.parentDirectory.matches("\\d+")) {
+                                parentId = Integer.parseInt(dir.parentDirectory);
+                                System.out.println("parentDirectory recibido como ID → " + parentId);
+                            } else {
+                                // Si no, inferir path
+                                String inferredParent = dir.parentDirectory;
+
+                                if (inferredParent == null || inferredParent.isEmpty()) {
+                                    String cleanPath = dir.path.endsWith("/") ? dir.path.substring(0, dir.path.length() - 1) : dir.path;
+                                    int lastSlash = cleanPath.lastIndexOf("/");
+                                    if (lastSlash != -1) {
+                                        inferredParent = cleanPath.substring(0, lastSlash);
+                                    }
+                                }
+
+                                System.out.println("Path inferido del padre: " + inferredParent);
+
+                                if (inferredParent != null && !inferredParent.isEmpty()) {
+                                    int possibleParent = DirectoryApi.getDirectoryIdByPath(inferredParent);
+                                    System.out.println("ID del directorio padre encontrado: " + possibleParent);
+                                    if (possibleParent != -1) {
+                                        parentId = possibleParent;
+                                    }
                                 }
                             }
 
                             String[] parts = dir.path.split("/");
                             int ownerId = Integer.parseInt(parts[0]);
 
-                            successDb = DirectoryApi.createDirectory(dir.path, ownerId, parentId);
+                            // ✅ Imprimir valores finales que se envían al DirectoryApi
+                            System.out.println("🚀 Enviando a DirectoryApi.createDirectory:");
+                            System.out.println("  path: " + dir.path);
+                            System.out.println("  ownerId: " + ownerId);
+                            System.out.println("  parentId: " + parentId);
+                            System.out.println("  isRoot: " + dir.isRoot);
+
+                            successDb = DirectoryApi.createDirectory(dir.path, ownerId, parentId, dir.isRoot);
                         } catch (Exception e) {
                             System.err.println("Error al registrar directorio en DB: " + e.getMessage());
                         }
@@ -63,6 +96,8 @@ public class DirectoryImplementation implements FileDepotService {
                                             "No se pudo crear el directorio"
                     ));
                 }
+
+
 
                 case "addSubdirectory": {
                     Subdirectory sub = gson.fromJson(data, Subdirectory.class);
@@ -80,7 +115,7 @@ public class DirectoryImplementation implements FileDepotService {
                     String newPath = rename.newName;
 
                     try {
-                        String dirJson = ApiClient.get("/directory/by-id/" + directoryId);
+                        String dirJson = ApiClient.get("/directorio/id/" + directoryId);
 
                         JsonObject dirInfo = JsonParser.parseString(dirJson).getAsJsonObject();
 
@@ -119,7 +154,7 @@ public class DirectoryImplementation implements FileDepotService {
                     String newParentPath = move.newParentDirectory;
 
                     try {
-                        String dirJson = ApiClient.get("/directory/by-id/" + directoryId);
+                        String dirJson = ApiClient.get("/directorio/id/" + directoryId);
                         JsonObject dirInfo = JsonParser.parseString(dirJson).getAsJsonObject();
 
                         if (!dirInfo.has("path")) {
@@ -160,27 +195,48 @@ public class DirectoryImplementation implements FileDepotService {
                 case "deleteDirectory": {
                     DeleteDirectory delete = gson.fromJson(data, DeleteDirectory.class);
                     String directoryId = delete.directoryID;
+                    System.out.println(directoryId);
 
                     try {
-                        String dirJson = ApiClient.get("/directory/by-id/" + directoryId);
-                        JsonObject dirInfo = JsonParser.parseString(dirJson).getAsJsonObject();
+                        System.out.println("🗑️ Solicitud para eliminar directorio con ID: " + directoryId);
 
-                        if (!dirInfo.has("path")) {
+                        String dirJson = ApiClient.get("/directorio/id/" + directoryId);
+                        System.out.println(dirJson);
+                        System.out.println("[GET] /directorio/id/" + directoryId + " → respuesta: " + dirJson);
+
+                        JsonElement parsed = JsonParser.parseString(dirJson);
+                        if (!parsed.isJsonObject()) {
+                            System.err.println("❌ No se encontró directorio con ID=" + directoryId + " → respuesta no es JSON válido: " + dirJson);
                             return gson.toJson(new SoapResponse(false, "No se encontró el directorio en la base de datos"));
                         }
 
-                        String path = dirInfo.get("path").getAsString();
+                        JsonObject dirInfo = parsed.getAsJsonObject();
+                        if (!dirInfo.has("path")) {
+                            System.err.println("❌ La respuesta del backend no contiene el campo 'path': " + dirInfo);
+                            return gson.toJson(new SoapResponse(false, "La información del directorio no contiene el campo 'path'"));
+                        }
 
-                        String nodeResult = client.deleteFile(path); // gRPC con path, no ID
+                        String path = dirInfo.get("path").getAsString();
+                        System.out.println("📂 Path del directorio a eliminar: " + path);
+
+                        String nodeResult = client.deleteFile(path);
+                        System.out.println("🛰️ Respuesta del nodo: " + nodeResult);
+
                         boolean successNode = nodeResult.toLowerCase().contains("correctamente") || nodeResult.toLowerCase().contains("éxito");
+                        System.out.println("✅ ¿Nodo eliminó correctamente?: " + successNode);
 
                         boolean successDb = DirectoryApi.deleteDirectory(directoryId);
+                        System.out.println("🗃️ ¿DB eliminada correctamente?: " + successDb);
 
                         boolean totalSuccess = successNode && successDb;
-                        return gson.toJson(new SoapResponse(totalSuccess,
-                                totalSuccess ? "Directorio eliminado correctamente" :
-                                        successNode ? "Nodo eliminado, pero fallo en DB" :
-                                                "Fallo al eliminar directorio"));
+                        String finalMessage = totalSuccess
+                                ? "Directorio eliminado correctamente"
+                                : successNode
+                                ? "Nodo eliminado, pero fallo en DB"
+                                : "Fallo al eliminar directorio";
+
+                        System.out.println("📤 Resultado final: " + finalMessage);
+                        return gson.toJson(new SoapResponse(totalSuccess, finalMessage));
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -188,6 +244,35 @@ public class DirectoryImplementation implements FileDepotService {
                     }
                 }
 
+                case "getAllDirs": {
+                    var request = gson.fromJson(data, ListAllDirectories.class);
+
+                    String responseJson = DirectoryApi.getAllDirs(request.userId);
+
+                    System.out.println("Respuesta enviada al backend cliente: " + responseJson);
+
+                    if (responseJson == null) {
+                        return gson.toJson(new SoapResponse(false, "No se pudo obtener la lista de directorios del usuario"));
+                    }
+
+                    SoapResponse response = new SoapResponse(true, "Se han recuperado los directorios", responseJson);
+                    return gson.toJson(response);
+                }
+
+                case "getDirs": {
+                    var request = gson.fromJson(data, ListDirectoriesByDir.class);
+
+                    String responseJson = DirectoryApi.getDirs(request.userId, request.dir);
+
+                    System.out.println("Respuesta enviada al backend cliente: " + responseJson);
+
+                    if (responseJson == null) {
+                        return gson.toJson(new SoapResponse(false, "No se pudo obtener la lista de directorios del usuario"));
+                    }
+
+                    SoapResponse response = new SoapResponse(true, "Se han recuperado los directorios", responseJson);
+                    return gson.toJson(response);
+                }
 
 
                 default: {

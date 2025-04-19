@@ -1,5 +1,5 @@
 package dto.files;
 
-public class ListAll {
+public class ListAllFiles {
     public int userId;
 }

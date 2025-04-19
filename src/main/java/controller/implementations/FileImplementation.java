@@ -6,10 +6,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import controller.FileDepotService;
+import dto.SoapDownloadResponse;
 import dto.SoapResponse;
 import dto.files.*;
-import dto.files.ListAll;
-import filesystem.ListAllResponse;
+import dto.files.ListAllFiles;
 import grpc.FileSystemClient;
 import grpc.GrpcNodeManager;
 import jakarta.jws.WebService;
@@ -66,7 +66,7 @@ public class FileImplementation implements FileDepotService {
 
                     try {
                         // Obtener información del archivo desde la API
-                        String fileInfoJson = ApiClient.get("/files/byId/" + fileId);
+                        String fileInfoJson = ApiClient.get("/file/byId/" + fileId);
 
                         JsonObject fileInfo = JsonParser.parseString(fileInfoJson).getAsJsonObject();
 
@@ -159,40 +159,94 @@ public class FileImplementation implements FileDepotService {
                 }
 
                 case "read": {
-                    ReadFile read = gson.fromJson(data, ReadFile.class);
-                    SoapResponse response = new SoapResponse(true, "Contenido de: " + read.fileID);
-                    String json = gson.toJson(response);
-                    System.out.println("Respuesta enviada al backend cliente: " + json);
-                    return json;
+                  // Parseamos la respuesta que contiene el filePath
+                  ReadFile read = gson.fromJson(data, ReadFile.class);
+
+                  // Obtenemos la ruta desde la BD
+                  String filePathJson = FileApi.downloadFile(read.fileID);
+
+                  // Extraemos solo el filePath del JSON
+                  JsonObject filePathObj = gson.fromJson(filePathJson, JsonObject.class);
+                  String filePath = filePathObj.get("filePath").getAsString();
+
+                  //  Llamamos al nodo y recibimos el archivo
+                  DownloadResult result = client.readFile(filePath);
+
+                  // Si no obtuvimos un resultado válido
+                  if (result == null) {
+                    return gson.toJson(new SoapResponse(false, "No llegan datos"));
+                  }
+
+                  // 3. Creamos la respuesta con los datos recibidos
+                  SoapDownloadResponse resp = new SoapDownloadResponse(
+                    true,
+                    "Se pasan datos de archivo",
+                    result.getFilename(),
+                    result.getFileType(),
+                    result.getContentBase64()
+                  );
+
+                  // Convertimos la respuesta a JSON
+                  String json = gson.toJson(resp);
+                  System.out.println("Respuesta enviada al backend cliente: " + json);
+
+                  return json;
                 }
 
-                case "download": {
-                    ReadFile download = gson.fromJson(data, ReadFile.class);
-                    SoapResponse response = new SoapResponse(true, "Archivo disponible para descarga: " + download.fileID);
-                    String json = gson.toJson(response);
-                    System.out.println("Respuesta enviada al backend cliente: " + json);
-                    return json;
+               case "download": {
+                // Parseamos la respuesta que contiene el filePath
+                ReadFile download = gson.fromJson(data, ReadFile.class);
+
+                // Obtenemos la ruta desde la BD
+                String filePathJson = FileApi.downloadFile(download.fileID);
+
+                // Extraemos solo el filePath del JSON
+                JsonObject filePathObj = gson.fromJson(filePathJson, JsonObject.class);
+                String filePath = filePathObj.get("filePath").getAsString();
+
+                //  Llamamos al nodo y recibimos el archivo
+                DownloadResult result = client.downloadFile(filePath);
+
+                // Si no obtuvimos un resultado válido
+                if (result == null) {
+                  return gson.toJson(new SoapResponse(false, "No se pudo descargar el archivo desde el nodo"));
                 }
 
-//                case "listAll": {
-//                    ListAll request = gson.fromJson(data, ListAll.class);
-//                    ListAllResponse responseGrpc = client.listAll(request.path);
-//
-//                    // Puedes empaquetar como JSON combinado (archivos y carpetas)
-//                    var result = new java.util.HashMap<String, Object>();
-//                    result.put("directories", responseGrpc.getDirectoriesList());
-//                    result.put("files", responseGrpc.getFilesList());
-//
-//                    SoapResponse response = new SoapResponse(true, gson.toJson(result));
-//                    String json = gson.toJson(response);
-//                    System.out.println("Respuesta enviada al backend cliente: " + json);
-//                    return json;
-//                }
+                // 3. Creamos la respuesta con los datos recibidos
+                SoapDownloadResponse resp = new SoapDownloadResponse(
+                  true,
+                  "Archivo descargado correctamente",
+                  result.getFilename(),
+                  result.getFileType(),
+                  result.getContentBase64()
+                );
+
+                // Convertimos la respuesta a JSON
+                String json = gson.toJson(resp);
+                System.out.println("Respuesta enviada al backend cliente: " + json);
+
+                return json;
+              }
+
+                case "getAllFiles": {
+                    var request = gson.fromJson(data, ListAllFiles.class);
+
+                    String responseJson = FileApi.getAllFiles(request.userId);
+
+                    System.out.println("Respuesta enviada al backend cliente: " + responseJson);
+
+                    if (responseJson == null) {
+                        return gson.toJson(new SoapResponse(false, "No se pudo obtener la lista de archivos del usuario"));
+                    }
+
+                    SoapResponse response = new SoapResponse(true, "Se han recuperado los archivos", responseJson);
+                    return gson.toJson(response);
+                }
 
                 case "getFiles": {
-                    var request = gson.fromJson(data, dto.files.ListAll.class);
+                    var request = gson.fromJson(data, ListFilesByDir.class);
 
-                    String responseJson = FileApi.getFiles(request.userId);
+                    String responseJson = FileApi.getFiles(request.userId, request.dir);
 
                     System.out.println("Respuesta enviada al backend cliente: " + responseJson);
 

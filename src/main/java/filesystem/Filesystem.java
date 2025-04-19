@@ -60,6 +60,16 @@ public final class Filesystem {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_filesystem_ListAllResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_filesystem_DownloadRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_filesystem_DownloadRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_filesystem_DownloadResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_filesystem_DownloadResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_filesystem_NodeInfo_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -92,28 +102,33 @@ public final class Filesystem {
       "e\030\003 \001(\t\022\021\n\tfile_size\030\004 \001(\003\022\021\n\tfile_type\030" +
       "\005 \001(\t\022\016\n\006nodeId\030\006 \001(\t\"\035\n\014ListResponse\022\r\n" +
       "\005files\030\001 \003(\t\"5\n\017ListAllResponse\022\r\n\005files" +
-      "\030\001 \003(\t\022\023\n\013directories\030\002 \003(\t\"+\n\010NodeInfo\022" +
-      "\017\n\007address\030\001 \001(\t\022\016\n\006status\030\002 \001(\t\"-\n\nNode" +
-      "Status\022\017\n\007address\030\001 \001(\t\022\016\n\006status\030\002 \001(\t2" +
-      "\252\004\n\021FileSystemService\022=\n\nUploadFile\022\031.fi" +
-      "lesystem.UploadRequest\032\024.filesystem.Resp" +
-      "onse\022E\n\017CreateDirectory\022\034.filesystem.Dir" +
-      "ectoryRequest\032\024.filesystem.Response\022K\n\022C" +
-      "reateSubdirectory\022\037.filesystem.Subdirect" +
-      "oryRequest\032\024.filesystem.Response\022=\n\nRena" +
-      "meFile\022\031.filesystem.RenameRequest\032\024.file" +
-      "system.Response\022=\n\nDeleteFile\022\031.filesyst" +
-      "em.DeleteRequest\032\024.filesystem.Response\022C" +
-      "\n\tListFiles\022\034.filesystem.DirectoryReques" +
-      "t\032\030.filesystem.ListResponse\0229\n\010MoveFile\022" +
-      "\027.filesystem.MoveRequest\032\024.filesystem.Re" +
-      "sponse\022D\n\007ListAll\022\034.filesystem.Directory" +
-      "Request\032\033.filesystem.ListAllResponse2\207\001\n" +
-      "\013NodeService\022:\n\014RegisterNode\022\024.filesyste" +
-      "m.NodeInfo\032\024.filesystem.Response\022<\n\014Repo" +
-      "rtStatus\022\026.filesystem.NodeStatus\032\024.files" +
-      "ystem.ResponseB \n\nfilesystemP\001Z\020proto/fi" +
-      "lesystemb\006proto3"
+      "\030\001 \003(\t\022\023\n\013directories\030\002 \003(\t\"\037\n\017DownloadR" +
+      "equest\022\014\n\004path\030\001 \001(\t\"a\n\020DownloadResponse" +
+      "\022\020\n\010filename\030\001 \001(\t\022\026\n\016content_base64\030\002 \001" +
+      "(\t\022\020\n\010filesize\030\003 \001(\003\022\021\n\tfile_type\030\004 \001(\t\"" +
+      "+\n\010NodeInfo\022\017\n\007address\030\001 \001(\t\022\016\n\006status\030\002" +
+      " \001(\t\"-\n\nNodeStatus\022\017\n\007address\030\001 \001(\t\022\016\n\006s" +
+      "tatus\030\002 \001(\t2\365\004\n\021FileSystemService\022=\n\nUpl" +
+      "oadFile\022\031.filesystem.UploadRequest\032\024.fil" +
+      "esystem.Response\022E\n\017CreateDirectory\022\034.fi" +
+      "lesystem.DirectoryRequest\032\024.filesystem.R" +
+      "esponse\022K\n\022CreateSubdirectory\022\037.filesyst" +
+      "em.SubdirectoryRequest\032\024.filesystem.Resp" +
+      "onse\022=\n\nRenameFile\022\031.filesystem.RenameRe" +
+      "quest\032\024.filesystem.Response\022=\n\nDeleteFil" +
+      "e\022\031.filesystem.DeleteRequest\032\024.filesyste" +
+      "m.Response\022C\n\tListFiles\022\034.filesystem.Dir" +
+      "ectoryRequest\032\030.filesystem.ListResponse\022" +
+      "9\n\010MoveFile\022\027.filesystem.MoveRequest\032\024.f" +
+      "ilesystem.Response\022D\n\007ListAll\022\034.filesyst" +
+      "em.DirectoryRequest\032\033.filesystem.ListAll" +
+      "Response\022I\n\014DownloadFile\022\033.filesystem.Do" +
+      "wnloadRequest\032\034.filesystem.DownloadRespo" +
+      "nse2\207\001\n\013NodeService\022:\n\014RegisterNode\022\024.fi" +
+      "lesystem.NodeInfo\032\024.filesystem.Response\022" +
+      "<\n\014ReportStatus\022\026.filesystem.NodeStatus\032" +
+      "\024.filesystem.ResponseB \n\nfilesystemP\001Z\020p" +
+      "roto/filesystemb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -173,14 +188,26 @@ public final class Filesystem {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_filesystem_ListAllResponse_descriptor,
         new java.lang.String[] { "Files", "Directories", });
-    internal_static_filesystem_NodeInfo_descriptor =
+    internal_static_filesystem_DownloadRequest_descriptor =
       getDescriptor().getMessageTypes().get(9);
+    internal_static_filesystem_DownloadRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_filesystem_DownloadRequest_descriptor,
+        new java.lang.String[] { "Path", });
+    internal_static_filesystem_DownloadResponse_descriptor =
+      getDescriptor().getMessageTypes().get(10);
+    internal_static_filesystem_DownloadResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_filesystem_DownloadResponse_descriptor,
+        new java.lang.String[] { "Filename", "ContentBase64", "Filesize", "FileType", });
+    internal_static_filesystem_NodeInfo_descriptor =
+      getDescriptor().getMessageTypes().get(11);
     internal_static_filesystem_NodeInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_filesystem_NodeInfo_descriptor,
         new java.lang.String[] { "Address", "Status", });
     internal_static_filesystem_NodeStatus_descriptor =
-      getDescriptor().getMessageTypes().get(10);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_filesystem_NodeStatus_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_filesystem_NodeStatus_descriptor,

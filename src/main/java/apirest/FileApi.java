@@ -45,9 +45,19 @@ public class FileApi {
         }
     }
 
-    public static String getFiles(int userId) {
+    public static String getAllFiles(int userId) {
         try {
             String endpoint = "/files/" + userId;
+            return ApiClient.get(endpoint);
+        } catch (Exception e) {
+            System.err.println("Error al obtener archivos del usuario: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static String getFiles(int userId, int directoryId) {
+        try {
+            String endpoint = "/files/" + userId + "/" + directoryId;
             return ApiClient.get(endpoint);
         } catch (Exception e) {
             System.err.println("Error al obtener archivos del usuario: " + e.getMessage());
@@ -83,6 +93,20 @@ public class FileApi {
             return null;
         }
     }
+
+    public static String downloadFile(String fileID) {
+        try {
+            String endpoint = "/download/" + fileID;
+            String response = ApiClient.get(endpoint);
+
+            System.out.println("Respuesta de descarga: " + response);
+            return response;
+        } catch (Exception e) {
+            System.err.println("Error al descargar archivo: " + e.getMessage());
+            return null;
+        }
+    }
+
 
 
 

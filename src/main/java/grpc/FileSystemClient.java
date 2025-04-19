@@ -1,6 +1,7 @@
 package grpc;
 
 import com.google.protobuf.ByteString;
+import dto.files.DownloadResult;
 import dto.files.UploadResult;
 import filesystem.*;
 import io.grpc.ManagedChannel;
@@ -23,33 +24,42 @@ public class FileSystemClient {
         System.out.println("Conectado a nodo gRPC en " + host + ":" + port);
     }
 
-    public UploadResult uploadBase64File(String filename, String base64Content, String directory) {
-        try {
-            if (filename == null || base64Content == null) {
-                return new UploadResult(filesystem.Response.newBuilder()
-                        .setMessage("El nombre del archivo y el contenido base64 no pueden ser nulos.")
-                        .build());
-            }
+  public UploadResult uploadBase64File(String filename, String base64Content, String directory) {
+    try {
+      if (filename == null || base64Content == null) {
+        return new UploadResult(filesystem.Response.newBuilder()
+          .setMessage("El nombre del archivo y el contenido base64 no pueden ser nulos.")
+          .build());
+      }
 
-            UploadRequest request = UploadRequest.newBuilder()
-                    .setFilename(filename)
-                    .setDirectory(directory != null ? directory : "")
-                    .setContent(ByteString.copyFrom(base64Content.getBytes()))
-                    .build();
+      // Opcional: limpiar encabezado si el base64 viene con "data:...base64,"
+      if (base64Content.contains(",")) {
+        base64Content = base64Content.split(",")[1];
+      }
 
-            System.out.println("Subiendo archivo: " + filename + " a " + directory);
-            Response response = stub.uploadFile(request);
-            System.out.println("Respuesta del nodo: " + response.getMessage());
-            System.out.println("Ruta completa devuelta por el nodo: " + response.getFilePath());
+      // Verificación de contenido
+      System.out.println(" Base64 recibido (longitud): " + base64Content.length());
 
-            return new UploadResult(response);
+      // Construcción del request gRPC con base64 como texto
+      UploadRequest request = UploadRequest.newBuilder()
+        .setFilename(filename)
+        .setDirectory(directory != null ? directory : "")
+        .setContentBase64(base64Content) //  AQUÍ usamos el campo correcto esperado por el nodo
+        .build();
 
-        } catch (Exception e) {
-            System.err.println("Error en subida gRPC: " + e.getMessage());
-            Response errorResponse = Response.newBuilder()
-                    .setMessage("Error en subida gRPC: " + e.getMessage())
-                    .build();
-            return new UploadResult(errorResponse);
+      System.out.println(" Subiendo archivo: " + filename + " a " + directory);
+      Response response = stub.uploadFile(request);
+      System.out.println(" Respuesta del nodo: " + response.getMessage());
+      System.out.println(" Ruta en nodo: " + response.getFilePath());
+
+      return new UploadResult(response);
+
+    } catch (Exception e) {
+      System.err.println(" Error en subida gRPC: " + e.getMessage());
+      Response errorResponse = Response.newBuilder()
+        .setMessage("Error en subida gRPC: " + e.getMessage())
+        .build();
+      return new UploadResult(errorResponse);
         }
     }
 
@@ -198,6 +208,59 @@ public class FileSystemClient {
             System.err.println("Error al obtener Node ID: " + e.getMessage());
             return null;
         }
+    }
+     //Download
+    public DownloadResult downloadFile(String filePath) {
+      try {
+        DownloadRequest request = DownloadRequest.newBuilder()
+          .setPath(filePath)
+          .build();
+
+        System.out.println("Solicitando descarga del archivo: " + filePath);
+        DownloadResponse response = stub.downloadFile(request);
+
+        // Obtenemos cada campo del response
+        String filename      = response.getFilename();
+        String base64String  = response.getContentBase64();
+        long   filesize      = response.getFilesize();
+        String fileType      = response.getFileType();
+
+        System.out.printf("Recibido del nodo → filename: %s, filesize: %d, fileType: %s%n",
+          filename, filesize, fileType);
+
+        return new DownloadResult(filename, base64String, filesize, fileType);
+
+      } catch (Exception e) {
+        System.err.println("Error al descargar archivo: " + e.getMessage());
+        return null;
+      }
+    }
+
+    //Read file
+    public DownloadResult readFile(String filePath) {
+      try {
+        DownloadRequest request = DownloadRequest.newBuilder()
+          .setPath(filePath)
+          .build();
+
+        System.out.println("Path " + filePath);
+        DownloadResponse response = stub.downloadFile(request);
+
+        // Obtenemos cada campo del response
+        String filename      = response.getFilename();
+        String base64String  = response.getContentBase64();
+        long   filesize      = response.getFilesize();
+        String fileType      = response.getFileType();
+
+        System.out.printf("Recibido del nodo → filename: %s, filesize: %d, fileType: %s%n",
+          filename, filesize, fileType);
+
+        return new DownloadResult(filename, base64String, filesize, fileType);
+
+      } catch (Exception e) {
+        System.err.println("Error al descargar archivo: " + e.getMessage());
+        return null;
+      }
     }
 
 }
