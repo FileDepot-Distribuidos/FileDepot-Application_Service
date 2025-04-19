@@ -16,8 +16,8 @@ public class FileSystemClient {
     public FileSystemClient(String host, int port) {
         ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
                 .usePlaintext()
-                .maxInboundMessageSize(20 * 1024 * 1024) // 20MB, puedes ajustar
-                .maxInboundMetadataSize(10 * 1024 * 1024) // opcional, por si usas metadatos grandes
+                .maxInboundMessageSize(20 * 1024 * 1024)
+                .maxInboundMetadataSize(10 * 1024 * 1024)
                 .build();
 
         stub = FileSystemServiceGrpc.newBlockingStub(channel);
@@ -32,22 +32,19 @@ public class FileSystemClient {
           .build());
       }
 
-      // Opcional: limpiar encabezado si el base64 viene con "data:...base64,"
       if (base64Content.contains(",")) {
         base64Content = base64Content.split(",")[1];
       }
 
-      // Verificación de contenido
       System.out.println(" Base64 recibido (longitud): " + base64Content.length());
 
-      // Construcción del request gRPC con base64 como texto
       UploadRequest request = UploadRequest.newBuilder()
         .setFilename(filename)
         .setDirectory(directory != null ? directory : "")
-        .setContentBase64(base64Content) //  AQUÍ usamos el campo correcto esperado por el nodo
+        .setContentBase64(base64Content)
         .build();
 
-      System.out.println(" Subiendo archivo: " + filename + " a " + directory);
+      System.out.println("Subiendo archivo: " + filename + " a " + directory);
       Response response = stub.uploadFile(request);
       System.out.println(" Respuesta del nodo: " + response.getMessage());
       System.out.println(" Ruta en nodo: " + response.getFilePath());
