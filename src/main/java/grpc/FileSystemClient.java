@@ -63,6 +63,7 @@ public class FileSystemClient {
 
     public String renameFile(String oldName, String newName) {
         try {
+            System.out.println(" Ruta en nodo: " + oldName + " a " + newName);
             RenameRequest request = RenameRequest.newBuilder()
                     .setOldName(oldName)
                     .setNewName(newName)
