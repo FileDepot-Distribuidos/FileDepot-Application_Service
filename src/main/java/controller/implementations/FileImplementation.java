@@ -14,6 +14,9 @@ import grpc.FileSystemClient;
 import grpc.GrpcNodeManager;
 import jakarta.jws.WebService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @WebService(endpointInterface = "controller.FileDepotService")
 public class FileImplementation implements FileDepotService {
 
@@ -26,38 +29,48 @@ public class FileImplementation implements FileDepotService {
         try {
             switch (action) {
                 case "upload": {
-                    UploadFile upload = gson.fromJson(data, UploadFile.class);
+                    UploadFileBatch batch = gson.fromJson(data, UploadFileBatch.class);
 
-                    System.out.println(gson.toJson(upload));
+                    List<UploadFile> files = batch.files;
+                    List<String> resultados = new ArrayList<>();
 
-                    String directory = upload.owner + "/";
+                    for (UploadFile upload : files) {
+                        System.out.println("Procesando archivo: " + upload.name);
 
-                    try {
-                        UploadResult result = client.uploadBase64File(upload.name, upload.base64, directory);
+                        String directory = upload.owner + "/";
 
-                        if (!result.success || result.nodeId == null || result.nodeId.isEmpty()) {
-                            return gson.toJson(new SoapResponse(false, "Error al subir el archivo: " + result.message));
+                        try {
+                            UploadResult result = client.uploadBase64File(upload.name, upload.base64, directory);
+
+                            if (!result.success || result.nodeId == null || result.nodeId.isEmpty()) {
+                                resultados.add(upload.name + ": Fallo al subir el archivo (" + result.message + ")");
+                                continue;
+                            }
+
+                            upload.name = result.name;
+                            String fileType = result.type;
+                            String nodeId = result.nodeId;
+
+                            boolean saved = FileApi.registerFile(upload, nodeId, fileType);
+
+                            if (!saved) {
+                                resultados.add(upload.name + ": Subido pero no registrado en la base de datos");
+                            } else {
+                                resultados.add(upload.name + ": Subido y registrado correctamente");
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            resultados.add(upload.name + ": Error interno al subir (" + e.getMessage() + ")");
                         }
-
-                        upload.name = result.name;
-                        String fileType = result.type;
-                        String nodeId = result.nodeId;
-
-                        System.out.println(gson.toJson(upload.size));
-
-                        boolean saved = apirest.FileApi.registerFile(upload, nodeId, fileType);
-
-                        if (!saved) {
-                            return gson.toJson(new SoapResponse(false, "Archivo subido pero no registrado en la base de datos"));
-                        }
-
-                        return gson.toJson(new SoapResponse(true, "Archivo subido y registrado correctamente"));
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return gson.toJson(new SoapResponse(false, "Error interno al subir archivo: " + e.getMessage()));
                     }
+
+                    boolean todosBien = resultados.stream().allMatch(s -> s.contains("Subido y registrado correctamente"));
+                    String resumen = String.join("\n", resultados);
+
+                    return gson.toJson(new SoapResponse(todosBien, resumen));
                 }
+
 
 
                 case "delete": {
