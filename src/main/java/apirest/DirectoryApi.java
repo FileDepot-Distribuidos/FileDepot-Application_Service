@@ -93,10 +93,10 @@ public class DirectoryApi {
 
 
     // Renombrar directorio
-    public static boolean renameDirectory(String id, String newPath) {
+    public static boolean renameDirectory(int id, String newPath) {
         try {
             JsonObject payload = new JsonObject();
-            payload.addProperty("id", Integer.parseInt(id));
+            payload.addProperty("id", id);
             payload.addProperty("newPath", newPath);
             return ApiClient.put("/directory/rename", payload.toString());
         } catch (Exception e) {

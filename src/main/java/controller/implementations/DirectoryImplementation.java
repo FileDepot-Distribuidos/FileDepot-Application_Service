@@ -111,8 +111,7 @@ public class DirectoryImplementation implements FileDepotService {
 
                 case "renameDirectory": {
                     RenameDirectory rename = gson.fromJson(data, RenameDirectory.class);
-                    String directoryId = rename.directoryID;
-                    String newPath = rename.newName;
+                    int directoryId = rename.directoryID;
 
                     try {
                         String dirJson = ApiClient.get("/directorio/id/" + directoryId);
@@ -125,11 +124,14 @@ public class DirectoryImplementation implements FileDepotService {
 
                         String oldPath = dirInfo.get("path").getAsString();
 
+                        String parentPath = oldPath.substring(0, oldPath.lastIndexOf('/'));
+                        String fullNewName = parentPath + "/" + rename.newName;
+
                         // Renombrar en el nodo
-                        String nodeResult = client.renameFile(oldPath, newPath);
+                        String nodeResult = client.renameFile(oldPath, fullNewName);
 
                         boolean successNode = nodeResult.toLowerCase().contains("con éxito");
-                        boolean successDb = DirectoryApi.renameDirectory(directoryId, newPath);
+                        boolean successDb = DirectoryApi.renameDirectory(directoryId, fullNewName);
                         boolean finalSuccess = successNode && successDb;
 
                         String message = finalSuccess

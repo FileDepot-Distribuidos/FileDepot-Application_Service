@@ -127,8 +127,13 @@ public class FileImplementation implements FileDepotService {
                 case "rename": {
                     RenameFile rename = gson.fromJson(data, RenameFile.class);
 
+                    // Construye los paths completos usando userId
+                    String userPathPrefix = rename.userId + "/";
+                    String fullOldName = userPathPrefix + rename.oldFileName;
+                    String fullNewName = userPathPrefix + rename.newFileName;
+
                     // 1. Renombrar en nodo
-                    String result = client.renameFile(rename.oldFileName, rename.newFileName);
+                    String result = client.renameFile(fullOldName, fullNewName);
                     boolean successNode = result.toLowerCase().contains("renombrado");
 
                     // 2. Renombrar en la base de datos
