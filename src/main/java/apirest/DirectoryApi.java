@@ -58,10 +58,6 @@ public class DirectoryApi {
 
     public static int getDirectoryIdByPath(String path) {
         try {
-            if (!path.endsWith("/")) {
-                path += "/";
-            }
-
             String encoded = URLEncoder.encode(path, StandardCharsets.UTF_8.toString());
             String response = ApiClient.get("/directorio/path/" + encoded);
 
@@ -126,7 +122,7 @@ public class DirectoryApi {
     // Eliminar directorio
     public static boolean deleteDirectory(String id) {
         try {
-            System.out.println("🗑️ Solicitud de eliminación para ID: " + id);
+            System.out.println("Solicitud de eliminación para ID: " + id);
 
             String endpoint = "/directory/delete/" + id;
             boolean result = ApiClient.delete(endpoint);
