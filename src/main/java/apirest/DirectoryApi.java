@@ -40,6 +40,7 @@ public class DirectoryApi {
 
     public static int getRootDirectoryId(String userId) {
         try {
+            // Crear metodo de directory root
             String response = ApiClient.get("/directory/root/" + userId);
             JsonObject json = JsonParser.parseString(response).getAsJsonObject();
 
@@ -58,6 +59,7 @@ public class DirectoryApi {
 
     public static int getDirectoryIdByPath(String path) {
         try {
+            // Cambiar al metodo de path
             String encoded = URLEncoder.encode(path, StandardCharsets.UTF_8.toString());
             String response = ApiClient.get("/directorio/path/" + encoded);
 
@@ -79,6 +81,7 @@ public class DirectoryApi {
 
     public static String getDirectoryPathById(int directoryId) {
         try {
+            //Cambiar al metodo de id
             String response = ApiClient.get("/directorio/id/" + directoryId);
             JsonElement parsed = JsonParser.parseString(response);
             if (!parsed.isJsonObject()) return null;

@@ -57,7 +57,6 @@ public class DirectoryImplementation implements FileDepotService {
                                     }
                                 }
 
-                                System.out.println("Path inferido del padre: " + inferredParent);
 
                                 if (inferredParent != null && !inferredParent.isEmpty()) {
                                     int possibleParent = DirectoryApi.getDirectoryIdByPath(inferredParent);
@@ -70,12 +69,6 @@ public class DirectoryImplementation implements FileDepotService {
 
                             String[] parts = dir.path.split("/");
                             int ownerId = Integer.parseInt(parts[0]);
-
-                            System.out.println("Enviando a DirectoryApi.createDirectory:");
-                            System.out.println("  path: " + dir.path);
-                            System.out.println("  ownerId: " + ownerId);
-                            System.out.println("  parentId: " + parentId);
-                            System.out.println("  isRoot: " + dir.isRoot);
 
                             successDb = DirectoryApi.createDirectory(dir.path, ownerId, parentId, dir.isRoot);
                         } catch (Exception e) {

@@ -5,7 +5,7 @@ public class SoapDownloadResponse {
   public String message;
   public String filename;
   public String fileType;
-  public String data;  // aquí metemos el base64
+  public String data;
 
   public SoapDownloadResponse(boolean success, String message,
                               String filename, String fileType, String data) {

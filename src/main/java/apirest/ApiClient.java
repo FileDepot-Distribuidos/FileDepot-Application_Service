@@ -95,7 +95,7 @@ public class ApiClient {
             return responseCode >= 200 && responseCode < 300;
 
         } catch (Exception e) {
-            System.err.println("❌ Error HTTP PUT: " + e.getMessage());
+            System.err.println("Error HTTP PUT: " + e.getMessage());
             return false;
         }
     }

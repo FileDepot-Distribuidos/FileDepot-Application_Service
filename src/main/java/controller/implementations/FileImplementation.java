@@ -38,7 +38,6 @@ public class FileImplementation implements FileDepotService {
                     for (UploadFile upload : files) {
                         System.out.println("Procesando archivo: " + upload.name);
 
-                        // Obtener ruta física del directorio usando el ID
                         String directory = DirectoryApi.getDirectoryPathById(upload.directoryId);
 
                         if (directory == null) {
