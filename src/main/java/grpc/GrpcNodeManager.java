@@ -14,7 +14,6 @@ public class GrpcNodeManager {
     static {
         String[] hosts = {
                 ConfigLoader.get("NODE_1_HOST"),
-                // Agrega más nodos si es necesario
                 // ConfigLoader.get("NODE_2_HOST"),
                 // ConfigLoader.get("NODE_3_HOST"),
                 // ConfigLoader.get("NODE_4_HOST")
@@ -31,8 +30,6 @@ public class GrpcNodeManager {
 
                     clients.add(client);
                     System.out.println("Nodo gRPC activo y agregado: " + host + ":" + port);
-
-                    // Registrar el nodo en la base de datos (valores simulados de espacio)
                     NodeApi.registerNode(host, 1000000, 1000000);
                 } catch (Exception e) {
                     System.err.println("Error al conectar con nodo gRPC " + host + ": " + e.getMessage());
