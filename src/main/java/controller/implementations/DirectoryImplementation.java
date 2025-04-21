@@ -28,64 +28,63 @@ public class DirectoryImplementation implements FileDepotService {
                 case "createDirectory": {
                     CreateDirectory dir = gson.fromJson(data, CreateDirectory.class);
 
-                    System.out.println("📥 Datos recibidos para crear directorio:");
+                    System.out.println("Datos recibidos para crear directorio:");
                     System.out.println("  path: " + dir.path);
                     System.out.println("  isRoot: " + dir.isRoot);
                     System.out.println("  parentDirectory: " + dir.parentDirectory);
 
-                    Integer parentId = null;
-                    String fullPath = "";
+                    client = GrpcNodeManager.getAvailableNodeClient();
+                    String nodeResult = client.createDirectory(dir.path);
 
-                    try {
-                        // 🔹 Extraer el nombre de la nueva carpeta desde el path
-                        String cleanPath = dir.path.endsWith("/") ? dir.path.substring(0, dir.path.length() - 1) : dir.path;
-                        int lastSlash = cleanPath.lastIndexOf("/");
-                        String name = (lastSlash != -1) ? cleanPath.substring(lastSlash + 1) : cleanPath;
+                    boolean successNode = nodeResult.toLowerCase().contains("correctamente");
+                    boolean successDb = false;
 
-                        if (dir.parentDirectory != null && dir.parentDirectory.matches("\\d+")) {
-                            parentId = Integer.parseInt(dir.parentDirectory);
-                            String parentPath = DirectoryApi.getDirectoryPathById(parentId);
+                    if (successNode) {
+                        try {
+                            Integer parentId = null;
 
-                            if (parentPath == null || parentPath.isEmpty()) {
-                                return gson.toJson(new SoapResponse(false, "No se pudo obtener el path del directorio padre"));
+                            if (dir.parentDirectory != null && dir.parentDirectory.matches("\\d+")) {
+                                parentId = Integer.parseInt(dir.parentDirectory);
+                                System.out.println("parentDirectory recibido como ID → " + parentId);
+                            } else {
+                                String inferredParent = dir.parentDirectory;
+
+                                if (inferredParent == null || inferredParent.isEmpty()) {
+                                    String cleanPath = dir.path.endsWith("/") ? dir.path.substring(0, dir.path.length() - 1) : dir.path;
+                                    int lastSlash = cleanPath.lastIndexOf("/");
+                                    if (lastSlash != -1) {
+                                        inferredParent = cleanPath.substring(0, lastSlash);
+                                    }
+                                }
+
+                                if (inferredParent != null && !inferredParent.isEmpty()) {
+                                    int possibleParent = DirectoryApi.getDirectoryIdByPath(inferredParent);
+                                    System.out.println("ID del directorio padre encontrado: " + possibleParent);
+                                    if (possibleParent != -1) {
+                                        parentId = possibleParent;
+                                    }
+                                }
                             }
 
-                            // 🔹 Re-armar path final usando el verdadero path padre + nombre
-                            fullPath = parentPath.endsWith("/") ? parentPath + name : parentPath + "/" + name;
-                            System.out.println("📁 path completo corregido: " + fullPath);
-                        } else {
-                            return gson.toJson(new SoapResponse(false, "ID de directorio padre inválido"));
-                        }
-
-                        // 🔸 Crear en nodo
-                        client = GrpcNodeManager.getAvailableNodeClient();
-                        String nodeResult = client.createDirectory(fullPath);
-                        boolean successNode = nodeResult.toLowerCase().contains("correctamente");
-
-                        boolean successDb = false;
-
-                        if (successNode) {
-                            // 🔸 Obtener ownerId del path (primer segmento)
-                            String[] parts = fullPath.split("/");
+                            String[] parts = dir.path.split("/");
                             int ownerId = Integer.parseInt(parts[0]);
 
-                            // 🔸 Guardar en DB con path corregido
-                            successDb = DirectoryApi.createDirectory(fullPath, ownerId, parentId, dir.isRoot);
+                            successDb = DirectoryApi.createDirectory(dir.path, ownerId, parentId, dir.isRoot);
+                        } catch (Exception e) {
+                            System.err.println("Error al registrar directorio en DB: " + e.getMessage());
                         }
-
-                        boolean totalSuccess = successNode && successDb;
-
-                        return gson.toJson(new SoapResponse(
-                                totalSuccess,
-                                totalSuccess ? "Directorio creado exitosamente" :
-                                        successNode ? "Nodo creado, pero no se guardó en la base de datos" :
-                                                "No se pudo crear el directorio"
-                        ));
-                    } catch (Exception e) {
-                        System.err.println("❌ Error general al crear directorio: " + e.getMessage());
-                        return gson.toJson(new SoapResponse(false, "Error interno al crear directorio"));
                     }
+
+                    boolean totalSuccess = successNode && successDb;
+
+                    return gson.toJson(new SoapResponse(
+                            totalSuccess,
+                            totalSuccess ? "Directorio creado exitosamente" :
+                                    successNode ? "Nodo creado, pero no se guardó en la base de datos" :
+                                            "No se pudo crear el directorio"
+                    ));
                 }
+
 
 
 
