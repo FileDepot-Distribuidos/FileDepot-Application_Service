@@ -40,6 +40,11 @@ public class FileImplementation implements FileDepotService {
 
                         String directory = DirectoryApi.getDirectoryPathById(upload.directoryId);
 
+                        if (upload.directoryId == 0) {
+                            int rootDirectory = DirectoryApi.getRootDirectoryId(upload.owner);
+                            directory = DirectoryApi.getDirectoryPathById(rootDirectory);
+                        }
+
                         if (directory == null) {
                             resultados.add(upload.name + ": No se pudo obtener el path del directorio destino");
                             continue;
@@ -98,7 +103,7 @@ public class FileImplementation implements FileDepotService {
                         String ownerId = fileInfo.get("owner_id").getAsString();
 
                         // Construir path en el nodo
-                        String filePath = ownerId + "/" + fileName;
+                        String filePath = fileInfo.get("directory_path").getAsString() + "/" + fileName;
 
                         // Eliminar archivo en nodo
                         String result = client.deleteFile(filePath);
