@@ -21,7 +21,6 @@ public class FileSystemClient {
                 .build();
 
         stub = FileSystemServiceGrpc.newBlockingStub(channel);
-        System.out.println("Conectado a nodo gRPC en " + host + ":" + port);
     }
 
   public UploadResult uploadBase64File(String filename, String base64Content, String directory) {
@@ -36,8 +35,6 @@ public class FileSystemClient {
         base64Content = base64Content.split(",")[1];
       }
 
-      System.out.println(" Base64 recibido (longitud): " + base64Content.length());
-
       UploadRequest request = UploadRequest.newBuilder()
         .setFilename(filename)
         .setDirectory(directory != null ? directory : "")
@@ -47,7 +44,6 @@ public class FileSystemClient {
       System.out.println("Subiendo archivo: " + filename + " a " + directory);
       Response response = stub.uploadFile(request);
       System.out.println(" Respuesta del nodo: " + response.getMessage());
-      System.out.println(" Ruta en nodo: " + response.getFilePath());
 
       return new UploadResult(response);
 
@@ -71,7 +67,6 @@ public class FileSystemClient {
 
             System.out.println("Renombrando: " + oldName + " a " + newName);
             Response response = stub.renameFile(request);
-            System.out.println("Respuesta del nodo: " + response.getMessage());
 
             return response.getMessage();
 
@@ -217,7 +212,6 @@ public class FileSystemClient {
         System.out.println("Solicitando descarga del archivo: " + filePath);
         DownloadResponse response = stub.downloadFile(request);
 
-        // Obtenemos cada campo del response
         String filename      = response.getFilename();
         String base64String  = response.getContentBase64();
         long   filesize      = response.getFilesize();

@@ -9,19 +9,13 @@ import java.time.LocalDateTime;
 
 public class DirectoryApi {
 
-    // Crea directorio
     public static boolean createDirectory(String path, int ownerId, Integer parentId, boolean isRoot) {
         try {
-            // Forzar barra final si no la tiene
-            if (!path.endsWith("/")) {
-                path += "/";
-            }
-
             DirectoryPayload payload = new DirectoryPayload(path, ownerId, parentId, isRoot);
 
             String json = new GsonBuilder().serializeNulls().create().toJson(payload);
 
-            System.out.println("🧪 parentId a enviar: " + parentId);
+            System.out.println("parentId a enviar: " + parentId);
             System.out.println("\ud83d\udce6 Payload enviado a /directory:");
             System.out.println(json);
 
@@ -33,21 +27,20 @@ public class DirectoryApi {
     }
 
 
-    // Crea un directorio raíz
     public static boolean createRootDirectory(String email, int ownerId) {
         try {
             DirectoryPayload payload = new DirectoryPayload(email + "/", ownerId, null, true);
             String json = new Gson().toJson(payload);
             return ApiClient.post("/directory", json);
         } catch (Exception e) {
-            System.err.println("❌ Excepción creando directorio raíz: " + e.getMessage());
+            System.err.println("Excepción creando directorio raíz: " + e.getMessage());
             return false;
         }
     }
 
-    // Obtiene el ID del directorio raíz
     public static int getRootDirectoryId(String userId) {
         try {
+            // Crear metodo de directory root
             String response = ApiClient.get("/directory/root/" + userId);
             JsonObject json = JsonParser.parseString(response).getAsJsonObject();
 
@@ -64,14 +57,9 @@ public class DirectoryApi {
         }
     }
 
-    // Obtiene el ID de directorio
     public static int getDirectoryIdByPath(String path) {
         try {
-            // Forzar barra final para coincidir con lo guardado en DB
-            if (!path.endsWith("/")) {
-                path += "/";
-            }
-
+            // Cambiar al metodo de path
             String encoded = URLEncoder.encode(path, StandardCharsets.UTF_8.toString());
             String response = ApiClient.get("/directorio/path/" + encoded);
 
@@ -91,8 +79,23 @@ public class DirectoryApi {
         }
     }
 
+    public static String getDirectoryPathById(int directoryId) {
+        try {
+            //Cambiar al metodo de id
+            String response = ApiClient.get("/directorio/id/" + directoryId);
+            JsonElement parsed = JsonParser.parseString(response);
+            if (!parsed.isJsonObject()) return null;
 
-    // Renombrar directorio
+            JsonObject obj = parsed.getAsJsonObject();
+            if (obj.has("path")) {
+                return obj.get("path").getAsString();
+            }
+        } catch (Exception e) {
+            System.err.println("Error al obtener path del directorio: " + e.getMessage());
+        }
+        return null;
+    }
+
     public static boolean renameDirectory(int id, String newPath) {
         try {
             JsonObject payload = new JsonObject();
@@ -122,17 +125,17 @@ public class DirectoryApi {
     // Eliminar directorio
     public static boolean deleteDirectory(String id) {
         try {
-            System.out.println("🗑️ Solicitud de eliminación para ID: " + id);
+            System.out.println("Solicitud de eliminación para ID: " + id);
 
             String endpoint = "/directory/delete/" + id;
             boolean result = ApiClient.delete(endpoint);
 
-            System.out.println("📤 DELETE enviado a endpoint: " + endpoint);
-            System.out.println("✅ Resultado de la operación: " + result);
+            System.out.println("DELETE enviado a endpoint: " + endpoint);
+            System.out.println("Resultado de la operación: " + result);
 
             return result;
         } catch (Exception e) {
-            System.err.println("❌ Error eliminando directorio: " + e.getMessage());
+            System.err.println("Error eliminando directorio: " + e.getMessage());
             return false;
         }
     }

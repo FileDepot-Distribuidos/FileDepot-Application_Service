@@ -79,7 +79,6 @@ public class FileApi {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = digest.digest(fileBytes);
 
-            // Convertir a string hexadecimal
             StringBuilder hexString = new StringBuilder();
             for (byte b : hashBytes) {
                 String hex = Integer.toHexString(0xff & b);
@@ -126,8 +125,13 @@ public class FileApi {
             this.hash = generateHash(f.base64);
             this.owner_id = f.owner;
             this.NODE_idNODE = Integer.parseInt(nodeId);
-            int dirId = DirectoryApi.getRootDirectoryId(f.owner);
-            this.DIRECTORY_idDIRECTORY = dirId != -1 ? dirId : null;
+
+            if (f.directoryId != 0) {
+                this.DIRECTORY_idDIRECTORY = f.directoryId;
+            } else {
+                int dirId = DirectoryApi.getRootDirectoryId(f.owner);
+                this.DIRECTORY_idDIRECTORY = dirId != -1 ? dirId : null;
+            }
         }
 
         private String guessMimeType(String filename) {

@@ -15,20 +15,16 @@ public class UserImplementation implements FileDepotService {
 
     @Override
     public String processAuthRequest(String action, String data) {
-        System.out.println("→ Solicitud SOAP recibida en processAuthRequest");
-        System.out.println("  Acción: " + action);
-        System.out.println("  Datos: " + data);
-
         try {
             switch (action) {
                 case "login" -> {
                     UserLogin login = gson.fromJson(data, UserLogin.class);
-                    System.out.println("  → Login con email: " + login.email);
+                    System.out.println("Login con email: " + login.email);
 
                     int userId = AuthService.getService().login(login.email, login.password);
                     boolean success = userId > 0;
 
-                    System.out.println("  Resultado login: " + success + " (ID: " + userId + ")");
+                    System.out.println("Resultado login: " + success + " (ID: " + userId + ")");
 
                     var loginData = new java.util.HashMap<String, Object>();
                     loginData.put("userId", userId);
@@ -42,7 +38,7 @@ public class UserImplementation implements FileDepotService {
 
                 case "register" -> {
                     UserRegister register = gson.fromJson(data, UserRegister.class);
-                    System.out.println("→ Registro con email: " + register.email + ", phone: " + register.phone);
+                    System.out.println("Registro con email: " + register.email + ", phone: " + register.phone);
 
                     int userId = AuthService.getService().register(
                             "a", register.email, register.password, register.phone);

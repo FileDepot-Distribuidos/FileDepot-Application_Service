@@ -1,6 +1,7 @@
 package controller.implementations;
 
 import apirest.ApiClient;
+import apirest.DirectoryApi;
 import apirest.FileApi;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -37,7 +38,17 @@ public class FileImplementation implements FileDepotService {
                     for (UploadFile upload : files) {
                         System.out.println("Procesando archivo: " + upload.name);
 
-                        String directory = upload.owner + "/";
+                        String directory = DirectoryApi.getDirectoryPathById(upload.directoryId);
+
+                        if (upload.directoryId == 0) {
+                            int rootDirectory = DirectoryApi.getRootDirectoryId(upload.owner);
+                            directory = DirectoryApi.getDirectoryPathById(rootDirectory);
+                        }
+
+                        if (directory == null) {
+                            resultados.add(upload.name + ": No se pudo obtener el path del directorio destino");
+                            continue;
+                        }
 
                         try {
                             UploadResult result = client.uploadBase64File(upload.name, upload.base64, directory);
@@ -92,7 +103,7 @@ public class FileImplementation implements FileDepotService {
                         String ownerId = fileInfo.get("owner_id").getAsString();
 
                         // Construir path en el nodo
-                        String filePath = ownerId + "/" + fileName;
+                        String filePath = fileInfo.get("directory_path").getAsString() + "/" + fileName;
 
                         // Eliminar archivo en nodo
                         String result = client.deleteFile(filePath);
