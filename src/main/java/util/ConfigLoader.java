@@ -19,10 +19,18 @@ public class ConfigLoader {
     }
 
     public static String get(String key) {
-        return props.getProperty(key);
+        String value = props.getProperty(key);
+        if (value == null || value.trim().isEmpty()) {
+            throw new RuntimeException("Configuración faltante: '" + key + "'");
+        }
+        return value;
     }
 
     public static int getInt(String key) {
-        return Integer.parseInt(get(key));
+        try {
+            return Integer.parseInt(get(key));
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Configuración inválida para '" + key + "': debe ser un número entero.");
+        }
     }
 }

@@ -1,5 +1,7 @@
 package apirest;
 
+import util.ConfigLoader;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -7,7 +9,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ApiClient {
-    private static final String BASE_URL = "http://localhost:3001/api";
+    private static final String BASE_URL;
+
+    static {
+        String host = ConfigLoader.get("REST_DB_HOST");
+        int port = ConfigLoader.getInt("REST_DB_PORT");
+        String basePath = ConfigLoader.get("REST_DB_BASE_URL");
+
+        BASE_URL = "http://" + host + ":" + port + basePath;
+        System.out.println("API DB: " + BASE_URL);
+    }
 
     public static boolean post(String endpoint, String json) {
         try {
@@ -99,5 +110,4 @@ public class ApiClient {
             return false;
         }
     }
-
 }
