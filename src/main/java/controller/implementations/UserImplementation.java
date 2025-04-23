@@ -50,12 +50,17 @@ public class UserImplementation implements FileDepotService {
                         boolean dirCreatedDb = apirest.DirectoryApi.createRootDirectory(String.valueOf(userId), userId);
                         boolean dirCreatedNode = false;
 
-                        try {
-                            grpc.FileSystemClient client = grpc.GrpcNodeManager.getAvailableNodeClient();
-                            String result = client.createDirectory(userId + "/");
-                            dirCreatedNode = result.toLowerCase().contains("correctamente");
-                        } catch (Exception e) {
-                            System.err.println("Error creando directorio en nodo: " + e.getMessage());
+                        for (grpc.FileSystemClient client : grpc.GrpcNodeManager.getAllClients()) {
+                            try {
+                                String result = client.createDirectory(userId + "/");
+                                if (!result.toLowerCase().contains("correctamente")) {
+                                    dirCreatedNode = false;
+                                    System.err.println("Fallo al crear directorio en nodo: " + result);
+                                }
+                            } catch (Exception e) {
+                                dirCreatedNode = false;
+                                System.err.println("Excepción creando directorio en nodo: " + e.getMessage());
+                            }
                         }
 
                         if (!dirCreatedDb || !dirCreatedNode) {
