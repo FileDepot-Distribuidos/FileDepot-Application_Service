@@ -14,7 +14,7 @@ public class GrpcNodeManager {
     static {
         String[] hosts = {
                 ConfigLoader.get("NODE_1_HOST"),
-                // ConfigLoader.get("NODE_2_HOST"),
+                //ConfigLoader.get("NODE_2_HOST"),
                 // ConfigLoader.get("NODE_3_HOST"),
                 // ConfigLoader.get("NODE_4_HOST")
         };
@@ -27,7 +27,6 @@ public class GrpcNodeManager {
 
                 try {
                     client.listFiles("/");
-
                     clients.add(client);
                     System.out.println("Nodo gRPC activo y agregado: " + host + ":" + port);
                     NodeApi.registerNode(host, 1000000, 1000000);
@@ -41,12 +40,16 @@ public class GrpcNodeManager {
             throw new IllegalStateException("No se pudo establecer conexión con ningún nodo.");
         }
 
-        System.out.println("📦 Total de nodos gRPC conectados: " + clients.size());
+        System.out.println("Total de nodos gRPC conectados: " + clients.size());
     }
 
     public static FileSystemClient getAvailableNodeClient() {
         int index = roundRobinCounter.getAndUpdate(i -> (i + 1) % clients.size());
         return clients.get(index);
+    }
+
+    public static List<FileSystemClient> getAllClients() {
+        return clients;
     }
 
     public static void verifyConnectionReady() {

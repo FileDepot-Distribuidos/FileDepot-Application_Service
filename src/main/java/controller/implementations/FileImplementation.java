@@ -25,21 +25,15 @@ public class FileImplementation implements FileDepotService {
 
     @Override
     public String processFileRequest(String action, String data) {
-        FileSystemClient client = GrpcNodeManager.getAvailableNodeClient();
-
         try {
             switch (action) {
                 case "upload": {
                     UploadFileBatch batch = gson.fromJson(data, UploadFileBatch.class);
-
                     List<UploadFile> files = batch.files;
                     List<String> resultados = new ArrayList<>();
 
                     for (UploadFile upload : files) {
-                        System.out.println("Procesando archivo: " + upload.name);
-
                         String directory = DirectoryApi.getDirectoryPathById(upload.directoryId);
-
                         if (upload.directoryId == 0) {
                             int rootDirectory = DirectoryApi.getRootDirectoryId(upload.owner);
                             directory = DirectoryApi.getDirectoryPathById(rootDirectory);
@@ -50,37 +44,42 @@ public class FileImplementation implements FileDepotService {
                             continue;
                         }
 
-                        try {
-                            UploadResult result = client.uploadBase64File(upload.name, upload.base64, directory);
+                        List<FileSystemClient> clients = GrpcNodeManager.getAllClients();
+                        UploadResult primerExito = null;
 
-                            if (!result.success || result.nodeId == null || result.nodeId.isEmpty()) {
-                                resultados.add(upload.name + ": Fallo al subir el archivo (" + result.message + ")");
-                                continue;
+                        for (FileSystemClient client : clients) {
+                            try {
+                                UploadResult result = client.uploadBase64File(upload.name, upload.base64, directory);
+                                if (result.success && primerExito == null && result.nodeId != null && !result.nodeId.isEmpty()) {
+                                    primerExito = result;
+                                }
+                            } catch (Exception e) {
+                                System.err.println("Error al subir archivo en nodo: " + e.getMessage());
                             }
+                        }
 
-                            upload.name = result.name;
-                            String fileType = result.type;
-                            String nodeId = result.nodeId;
+                        if (primerExito == null) {
+                            resultados.add(upload.name + ": Fallo en todos los nodos disponibles");
+                            continue;
+                        }
 
-                            boolean saved = FileApi.registerFile(upload, nodeId, fileType);
+                        upload.name = primerExito.name;
+                        String fileType = primerExito.type;
+                        String nodeId = primerExito.nodeId;
 
-                            if (!saved) {
-                                resultados.add(upload.name + ": Subido pero no registrado en la base de datos");
-                            } else {
-                                resultados.add(upload.name + ": Subido y registrado correctamente");
-                            }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            resultados.add(upload.name + ": Error interno al subir (" + e.getMessage() + ")");
+                        boolean registered = FileApi.registerFile(upload, nodeId, fileType);
+                        if (!registered) {
+                            resultados.add(upload.name + ": Subido pero no registrado en DB");
+                        } else {
+                            resultados.add(upload.name + ": Subido y registrado correctamente");
                         }
                     }
 
-                    boolean todosBien = resultados.stream().allMatch(s -> s.contains("Subido y registrado correctamente"));
-                    String resumen = String.join("\n", resultados);
-
-                    return gson.toJson(new SoapResponse(todosBien, resumen));
+                    boolean todosBien = resultados.stream().allMatch(s -> s.contains("registrado correctamente"));
+                    return gson.toJson(new SoapResponse(todosBien, String.join("\n", resultados)));
                 }
+
+
 
 
 
@@ -89,200 +88,156 @@ public class FileImplementation implements FileDepotService {
                     String fileId = delete.fileID;
 
                     try {
-                        // Obtener información del archivo desde la API
                         String fileInfoJson = ApiClient.get("/file/byId/" + fileId);
-
                         JsonObject fileInfo = JsonParser.parseString(fileInfoJson).getAsJsonObject();
-
-
-                        if (!fileInfo.has("name") || !fileInfo.has("owner_id")) {
-                            return gson.toJson(new SoapResponse(false, "Archivo no encontrado en la base de datos"));
+                        if (!fileInfo.has("name")) {
+                            return gson.toJson(new SoapResponse(false, "Archivo no encontrado en DB"));
                         }
 
                         String fileName = fileInfo.get("name").getAsString();
-                        String ownerId = fileInfo.get("owner_id").getAsString();
-
-                        // Construir path en el nodo
                         String filePath = fileInfo.get("directory_path").getAsString() + "/" + fileName;
 
-                        // Eliminar archivo en nodo
-                        String result = client.deleteFile(filePath);
-                        boolean successNode = result.toLowerCase().contains("correctamente");
-
-                        // Eliminar archivo en la base de datos
-                        boolean successDb = false;
-                        if (successNode) {
-                            successDb = FileApi.deleteFile(fileId);
+                        boolean eliminado = false;
+                        for (FileSystemClient client : GrpcNodeManager.getAllClients()) {
+                            try {
+                                String result = client.deleteFile(filePath);
+                                if (result.toLowerCase().contains("correctamente") || result.toLowerCase().contains("éxito")) {
+                                    eliminado = true;
+                                }
+                            } catch (Exception e) {
+                                System.err.println("Error al eliminar en nodo: " + e.getMessage());
+                            }
                         }
 
-                        // Resultado final
-                        boolean finalSuccess = successNode && successDb;
-                        String message = finalSuccess
-                                ? "Archivo eliminado correctamente del nodo y la base de datos"
-                                : successNode
-                                ? "Archivo eliminado del nodo, pero no de la base de datos"
-                                : "No se pudo eliminar el archivo del nodo";
-
-                        System.out.println("Resultado: " + message);
-                        SoapResponse response = new SoapResponse(finalSuccess, message);
-                        return gson.toJson(response);
-
+                        boolean successDb = eliminado && FileApi.deleteFile(fileId);
+                        return gson.toJson(new SoapResponse(successDb, successDb ? "Archivo eliminado correctamente" : "Falló la eliminación"));
                     } catch (Exception e) {
-                        e.printStackTrace();
-                        return gson.toJson(new SoapResponse(false, "Error interno al eliminar archivo: " + e.getMessage()));
+                        return gson.toJson(new SoapResponse(false, "Error interno: " + e.getMessage()));
                     }
                 }
-
 
 
                 case "rename": {
                     RenameFile rename = gson.fromJson(data, RenameFile.class);
+                    String oldPath = rename.userId + "/" + rename.oldFileName;
+                    String newPath = rename.userId + "/" + rename.newFileName;
 
-                    // Construye los paths completos usando userId
-                    String userPathPrefix = rename.userId + "/";
-                    String fullOldName = userPathPrefix + rename.oldFileName;
-                    String fullNewName = userPathPrefix + rename.newFileName;
-
-                    // 1. Renombrar en nodo
-                    String result = client.renameFile(fullOldName, fullNewName);
-                    boolean successNode = result.toLowerCase().contains("renombrado");
-
-                    // 2. Renombrar en la base de datos
-                    String oldNameOnly = rename.oldFileName.contains("/")
-                            ? rename.oldFileName.substring(rename.oldFileName.lastIndexOf("/") + 1)
-                            : rename.oldFileName;
-
-                    String newNameOnly = rename.newFileName.contains("/")
-                            ? rename.newFileName.substring(rename.newFileName.lastIndexOf("/") + 1)
-                            : rename.newFileName;
-
-                    boolean successDb = false;
-                    if (successNode) {
-                        successDb = FileApi.renameFile(oldNameOnly, newNameOnly);
+                    boolean renombrado = false;
+                    for (FileSystemClient client : GrpcNodeManager.getAllClients()) {
+                        try {
+                            String result = client.renameFile(oldPath, newPath);
+                            if (result.toLowerCase().contains("renombrado")) {
+                                renombrado = true;
+                            }
+                        } catch (Exception e) {
+                            System.err.println("Error al renombrar en nodo: " + e.getMessage());
+                        }
                     }
 
-                    boolean finalSuccess = successNode && successDb;
+                    String oldName = rename.oldFileName.substring(rename.oldFileName.lastIndexOf("/") + 1);
+                    String newName = rename.newFileName.substring(rename.newFileName.lastIndexOf("/") + 1);
+                    boolean successDb = renombrado && FileApi.renameFile(oldName, newName);
 
-                    String message = finalSuccess
-                            ? "Archivo renombrado en nodo y base de datos correctamente"
-                            : successNode
-                            ? "Archivo renombrado en nodo, pero no en base de datos"
-                            : "Error al renombrar archivo en el nodo";
-
-                    SoapResponse response = new SoapResponse(finalSuccess, message);
-                    String json = gson.toJson(response);
-                    System.out.println("Respuesta enviada al backend cliente: " + json);
-                    return json;
+                    return gson.toJson(new SoapResponse(successDb, successDb ? "Archivo renombrado correctamente" : "Fallo al renombrar archivo"));
                 }
+
 
 
                 case "move": {
                     MoveFile move = gson.fromJson(data, MoveFile.class);
-                    String result = client.moveFile(move.fileID, move.newDirectoryID);
-                    boolean success = result.toLowerCase().contains("correctamente");
-
+                    boolean success = false;
+                    String result = "";
+                    for (FileSystemClient client : GrpcNodeManager.getAllClients()) {
+                        try {
+                            result = client.moveFile(move.fileID, move.newDirectoryID);
+                            if (result.toLowerCase().contains("correctamente")) {
+                                success = true;
+                            }
+                        } catch (Exception e) {
+                            System.err.println("Error al mover archivo en nodo: " + e.getMessage());
+                        }
+                    }
                     SoapResponse response = new SoapResponse(success, result);
-                    String json = gson.toJson(response);
-                    System.out.println("Respuesta enviada al backend cliente: " + json);
-                    return json;
+                    return gson.toJson(response);
                 }
 
                 case "read": {
-                  // Parseamos la respuesta que contiene el filePath
-                  ReadFile read = gson.fromJson(data, ReadFile.class);
+                    ReadFile read = gson.fromJson(data, ReadFile.class);
+                    String filePathJson = FileApi.downloadFile(read.fileID);
+                    JsonObject filePathObj = gson.fromJson(filePathJson, JsonObject.class);
+                    String filePath = filePathObj.get("filePath").getAsString();
 
-                  // Obtenemos la ruta desde la BD
-                  String filePathJson = FileApi.downloadFile(read.fileID);
+                    DownloadResult result = null;
+                    for (FileSystemClient client : GrpcNodeManager.getAllClients()) {
+                        try {
+                            result = client.readFile(filePath);
+                            if (result != null) break;
+                        } catch (Exception e) {
+                            System.err.println("Error al leer archivo en nodo: " + e.getMessage());
+                        }
+                    }
 
-                  // Extraemos solo el filePath del JSON
-                  JsonObject filePathObj = gson.fromJson(filePathJson, JsonObject.class);
-                  String filePath = filePathObj.get("filePath").getAsString();
+                    if (result == null) {
+                        return gson.toJson(new SoapResponse(false, "No llegan datos"));
+                    }
 
-                  //  Llamamos al nodo y recibimos el archivo
-                  DownloadResult result = client.readFile(filePath);
-
-                  // Si no obtuvimos un resultado válido
-                  if (result == null) {
-                    return gson.toJson(new SoapResponse(false, "No llegan datos"));
-                  }
-
-                  // 3. Creamos la respuesta con los datos recibidos
-                  SoapDownloadResponse resp = new SoapDownloadResponse(
-                    true,
-                    "Se pasan datos de archivo",
-                    result.getFilename(),
-                    result.getFileType(),
-                    result.getContentBase64()
-                  );
-
-                  // Convertimos la respuesta a JSON
-                  String json = gson.toJson(resp);
-                  System.out.println("Respuesta enviada al backend cliente: " + json);
-
-                  return json;
+                    SoapDownloadResponse resp = new SoapDownloadResponse(
+                            true,
+                            "Se pasan datos de archivo",
+                            result.getFilename(),
+                            result.getFileType(),
+                            result.getContentBase64()
+                    );
+                    return gson.toJson(resp);
                 }
 
-               case "download": {
-                // Parseamos la respuesta que contiene el filePath
-                ReadFile download = gson.fromJson(data, ReadFile.class);
+                case "download": {
+                    ReadFile download = gson.fromJson(data, ReadFile.class);
+                    String filePathJson = FileApi.downloadFile(download.fileID);
+                    JsonObject filePathObj = gson.fromJson(filePathJson, JsonObject.class);
+                    String filePath = filePathObj.get("filePath").getAsString();
 
-                // Obtenemos la ruta desde la BD
-                String filePathJson = FileApi.downloadFile(download.fileID);
+                    DownloadResult result = null;
+                    for (FileSystemClient client : GrpcNodeManager.getAllClients()) {
+                        try {
+                            result = client.downloadFile(filePath);
+                            if (result != null) break;
+                        } catch (Exception e) {
+                            System.err.println("Error al descargar archivo en nodo: " + e.getMessage());
+                        }
+                    }
 
-                // Extraemos solo el filePath del JSON
-                JsonObject filePathObj = gson.fromJson(filePathJson, JsonObject.class);
-                String filePath = filePathObj.get("filePath").getAsString();
+                    if (result == null) {
+                        return gson.toJson(new SoapResponse(false, "No se pudo descargar el archivo desde el nodo"));
+                    }
 
-                //  Llamamos al nodo y recibimos el archivo
-                DownloadResult result = client.downloadFile(filePath);
-
-                // Si no obtuvimos un resultado válido
-                if (result == null) {
-                  return gson.toJson(new SoapResponse(false, "No se pudo descargar el archivo desde el nodo"));
+                    SoapDownloadResponse resp = new SoapDownloadResponse(
+                            true,
+                            "Archivo descargado correctamente",
+                            result.getFilename(),
+                            result.getFileType(),
+                            result.getContentBase64()
+                    );
+                    return gson.toJson(resp);
                 }
 
-                // 3. Creamos la respuesta con los datos recibidos
-                SoapDownloadResponse resp = new SoapDownloadResponse(
-                  true,
-                  "Archivo descargado correctamente",
-                  result.getFilename(),
-                  result.getFileType(),
-                  result.getContentBase64()
-                );
-
-                // Convertimos la respuesta a JSON
-                String json = gson.toJson(resp);
-                System.out.println("Respuesta enviada al backend cliente: " + json);
-
-                return json;
-              }
 
                 case "getAllFiles": {
                     var request = gson.fromJson(data, ListAllFiles.class);
-
                     String responseJson = FileApi.getAllFiles(request.userId);
-
-                    System.out.println("Respuesta enviada al backend cliente: " + responseJson);
-
                     if (responseJson == null) {
                         return gson.toJson(new SoapResponse(false, "No se pudo obtener la lista de archivos del usuario"));
                     }
-
                     SoapResponse response = new SoapResponse(true, "Se han recuperado los archivos", responseJson);
                     return gson.toJson(response);
                 }
 
                 case "getFiles": {
                     var request = gson.fromJson(data, ListFilesByDir.class);
-
                     String responseJson = FileApi.getFiles(request.userId, request.dir);
-
-                    System.out.println("Respuesta enviada al backend cliente: " + responseJson);
-
                     if (responseJson == null) {
                         return gson.toJson(new SoapResponse(false, "No se pudo obtener la lista de archivos del usuario"));
                     }
-
                     SoapResponse response = new SoapResponse(true, "Se han recuperado los archivos", responseJson);
                     return gson.toJson(response);
                 }
