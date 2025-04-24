@@ -1,6 +1,8 @@
 package apirest;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import dto.files.UploadFile;
 
 import java.util.HashMap;
@@ -106,8 +108,36 @@ public class FileApi {
         }
     }
 
+    public static Boolean moveFile(int fileID, int newDirectoryId) {
+        try {
+            Map<String, Integer> body = new HashMap<>();
+            body.put("fileID", fileID);
+            body.put("newDirectoryId", newDirectoryId);
+            String json = new Gson().toJson(body);
+            return ApiClient.put("/move", json);
+        } catch (Exception e) {
+            System.err.println("Error al mover archivo: " + e.getMessage());
+            return false;
+        }
+    }
 
+    public static String getFilePathById(int fileID) {
+        try {
+            String endpoint = "/file/byId/" + fileID;
+            String response = ApiClient.get(endpoint);
 
+            JsonObject jsonResponse = JsonParser.parseString(response).getAsJsonObject();
+            if (jsonResponse.has("directory_path") && jsonResponse.has("name")) {
+                return jsonResponse.get("directory_path").getAsString() + "/" + jsonResponse.get("name").getAsString();
+            } else {
+                System.err.println("El campo 'directory_path' no está presente en la respuesta.");
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Error al obtener información del archivo: " + e.getMessage());
+            return null;
+        }
+    }
 
     static class FilePayload {
         String name;

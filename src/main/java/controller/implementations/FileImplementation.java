@@ -147,15 +147,30 @@ public class FileImplementation implements FileDepotService {
                     MoveFile move = gson.fromJson(data, MoveFile.class);
                     boolean success = false;
                     String result = "";
+
+                    String filePathJson = FileApi.getFilePathById(move.fileID);
+                    String newFilePath = DirectoryApi.getDirectoryPathById(move.newDirectoryID);
+
+                    System.out.println("File path JSON: " + filePathJson);
+                    System.out.println("New file path: " + newFilePath);
+
                     for (FileSystemClient client : GrpcNodeManager.getAllClients()) {
                         try {
-                            result = client.moveFile(move.fileID, move.newDirectoryID);
-                            if (result.toLowerCase().contains("correctamente")) {
+                            result = client.moveFile(filePathJson, newFilePath + "/");
+                            if (result.toLowerCase().contains("con éxito")) {
                                 success = true;
                             }
                         } catch (Exception e) {
                             System.err.println("Error al mover archivo en nodo: " + e.getMessage());
                         }
+                    }
+                    if (success) {
+                        boolean successDb = FileApi.moveFile(move.fileID, move.newDirectoryID);
+                        if (!successDb) {
+                            return gson.toJson(new SoapResponse(false, "Archivo movido pero no registrado en DB"));
+                        }
+                    } else {
+                        return gson.toJson(new SoapResponse(false, "Error al mover el archivo"));
                     }
                     SoapResponse response = new SoapResponse(success, result);
                     return gson.toJson(response);
