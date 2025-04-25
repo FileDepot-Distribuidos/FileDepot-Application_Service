@@ -52,4 +52,14 @@ public class ShareApi {
             return null;
         }
     }
+
+    public static String listSharedDirs(int userId) {
+        try {
+            String endpoint = "/sharedDirs/" + userId;
+            return ApiClient.get(endpoint);
+        } catch (Exception e) {
+            System.err.println("Error al listar carpetas compartidas: " + e.getMessage());
+            return null;
+        }
+    }
 }

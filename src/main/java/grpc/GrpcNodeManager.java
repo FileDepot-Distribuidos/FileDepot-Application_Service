@@ -14,8 +14,8 @@ public class GrpcNodeManager {
     static {
         String[] hosts = {
                 ConfigLoader.get("NODE_1_HOST"),
-                //ConfigLoader.get("NODE_2_HOST"),
-                // ConfigLoader.get("NODE_3_HOST"),
+//                ConfigLoader.get("NODE_2_HOST"),
+//                ConfigLoader.get("NODE_3_HOST"),
                 // ConfigLoader.get("NODE_4_HOST")
         };
 

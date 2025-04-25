@@ -112,6 +112,19 @@ public class ShareImplementation implements FileDepotService {
                     return gson.toJson(response);
                 }
 
+                case "listSharedDirs": {
+                    ListSharedDirs request = gson.fromJson(data, ListSharedDirs.class);
+
+                    String responseJson = ShareApi.listSharedDirs(request.userId);
+
+                    if (responseJson == null) {
+                        return gson.toJson(new SoapResponse(false, "No se pudo obtener las carpetas compartidas"));
+                    }
+
+                    SoapResponse response = new SoapResponse(true, "Se han recuperado las carpetas compartidas", responseJson);
+                    return gson.toJson(response);
+                }
+
                 default: {
                     SoapResponse response = new SoapResponse(false, "Acción de compartido no soportada: " + action);
                     String json = gson.toJson(response);
