@@ -109,11 +109,11 @@ public class DirectoryApi {
     }
 
     // Mover directorio
-    public static boolean moveDirectory(String id, String newParentId, String newFullPath) {
+    public static boolean moveDirectory(int id, int newParentId, String newFullPath) {
         try {
             JsonObject payload = new JsonObject();
-            payload.addProperty("id", Integer.parseInt(id));
-            payload.addProperty("newParentId", Integer.parseInt(newParentId));
+            payload.addProperty("id", id);
+            payload.addProperty("newParentId", newParentId);
             payload.addProperty("newFullPath", newFullPath);
             return ApiClient.put("/directory/move", payload.toString());
         } catch (Exception e) {

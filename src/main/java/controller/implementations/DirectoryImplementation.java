@@ -141,18 +141,25 @@ public class DirectoryImplementation implements FileDepotService {
                 case "moveDirectory": {
                     MoveDirectory move = gson.fromJson(data, MoveDirectory.class);
 
-                    String directoryId = move.directoryID;
-                    String newParentPath = move.newParentDirectory;
+                    int directoryId = move.directoryID;
+                    int newParentId = move.newParentDirectory;
 
                     try {
-                        String oldPath = DirectoryApi.getDirectoryPathById(Integer.parseInt(directoryId));
+                        String oldPath = DirectoryApi.getDirectoryPathById(directoryId);
                         if (oldPath == null) {
+                            return gson.toJson(new SoapResponse(false, "No se encontró el directorio en la base de datos"));
+                        }
+
+                        String newPath = DirectoryApi.getDirectoryPathById(newParentId);
+                        if (newPath == null) {
                             return gson.toJson(new SoapResponse(false, "No se encontró el directorio en la base de datos"));
                         }
 
                         String[] parts = oldPath.split("/");
                         String folderName = parts[parts.length - 1];
-                        String newFullPath = newParentPath.endsWith("/") ? newParentPath + folderName : newParentPath + "/" + folderName;
+                        String newFullPath = (newPath.endsWith("/") ? newPath + folderName : newPath + "/" + folderName).replace("\\", "/");
+
+                        System.out.println("Nuevo path completo: " + newFullPath);
 
                         boolean successNode = true;
                         for (FileSystemClient client : GrpcNodeManager.getAllClients()) {
@@ -162,12 +169,7 @@ public class DirectoryImplementation implements FileDepotService {
                             }
                         }
 
-                        int newParentId = DirectoryApi.getDirectoryIdByPath(newParentPath);
-                        if (newParentId == -1) {
-                            return gson.toJson(new SoapResponse(false, "No se pudo encontrar el nuevo directorio padre en la base de datos"));
-                        }
-
-                        boolean successDb = DirectoryApi.moveDirectory(directoryId, String.valueOf(newParentId), newFullPath);
+                        boolean successDb = DirectoryApi.moveDirectory(directoryId, newParentId, newFullPath);
                         boolean finalSuccess = successNode && successDb;
 
                         String message = finalSuccess

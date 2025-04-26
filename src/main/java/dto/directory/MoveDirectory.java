@@ -1,8 +1,8 @@
 package dto.directory;
 
 public class MoveDirectory {
-    public String directoryID;
-    public String newParentDirectory;
+    public int directoryID;
+    public int newParentDirectory;
 
     public MoveDirectory() {}
 }

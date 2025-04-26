@@ -156,7 +156,12 @@ public class FileImplementation implements FileDepotService {
 
                     for (FileSystemClient client : GrpcNodeManager.getAllClients()) {
                         try {
-                            result = client.moveFile(filePathJson, newFilePath + "/");
+                            String[] parts = filePathJson.split("/");
+                            String fileName = parts[parts.length - 1];
+                            String newFullPath = newFilePath.endsWith("/") ? newFilePath + fileName : newFilePath + "/" + fileName;
+
+                            result = client.moveFile(filePathJson, newFullPath);
+
                             if (result.toLowerCase().contains("con éxito")) {
                                 success = true;
                             }
