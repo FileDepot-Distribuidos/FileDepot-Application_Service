@@ -1,6 +1,5 @@
 package dto.files;
 
-// 1. DTO para el resultado de la descarga
 public class DownloadResult {
   private final String filename;
   private final String contentBase64;

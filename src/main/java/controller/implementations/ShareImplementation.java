@@ -133,7 +133,7 @@ public class ShareImplementation implements FileDepotService {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Agrega trazabilidad
+            e.printStackTrace();
             SoapResponse response = new SoapResponse(false, "Error en acción de compartido: " + e.getMessage());
             String json = gson.toJson(response);
             System.out.println("Respuesta enviada al backend cliente: " + json);

@@ -40,7 +40,6 @@ public class DirectoryApi {
 
     public static int getRootDirectoryId(String userId) {
         try {
-            // Crear metodo de directory root
             String response = ApiClient.get("/directory/root/" + userId);
             JsonObject json = JsonParser.parseString(response).getAsJsonObject();
 
@@ -59,7 +58,6 @@ public class DirectoryApi {
 
     public static int getDirectoryIdByPath(String path) {
         try {
-            // Cambiar al metodo de path
             String encoded = URLEncoder.encode(path, StandardCharsets.UTF_8.toString());
             String response = ApiClient.get("/directorio/path/" + encoded);
 
@@ -81,7 +79,6 @@ public class DirectoryApi {
 
     public static String getDirectoryPathById(int directoryId) {
         try {
-            //Cambiar al metodo de id
             String response = ApiClient.get("/directorio/id/" + directoryId);
             JsonElement parsed = JsonParser.parseString(response);
             if (!parsed.isJsonObject()) return null;
@@ -108,7 +105,6 @@ public class DirectoryApi {
         }
     }
 
-    // Mover directorio
     public static boolean moveDirectory(int id, int newParentId, String newFullPath) {
         try {
             JsonObject payload = new JsonObject();
@@ -122,7 +118,6 @@ public class DirectoryApi {
         }
     }
 
-    // Eliminar directorio
     public static boolean deleteDirectory(String id) {
         try {
             System.out.println("Solicitud de eliminación para ID: " + id);
@@ -141,7 +136,6 @@ public class DirectoryApi {
     }
 
 
-    //Listar todos los directorios
     public static String getAllDirs(int userId) {
         try {
             String endpoint = "/directory/" + userId;
@@ -152,7 +146,6 @@ public class DirectoryApi {
         }
     }
 
-    //Listar algunos directorios
     public static String getDirs(int userId, int directoryId) {
         try {
             String endpoint = "/directory/" + userId + "/" + directoryId;
