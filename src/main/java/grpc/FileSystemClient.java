@@ -181,28 +181,10 @@ public class FileSystemClient {
 
         } catch (Exception e) {
             System.err.println("Error al listar todo: " + e.getMessage());
-            return ListAllResponse.newBuilder().build(); // vacío
+            return ListAllResponse.newBuilder().build();
         }
     }
 
-    public String getNodeId(String filename, String base64Content, String directory) {
-        try {
-            UploadRequest request = UploadRequest.newBuilder()
-                    .setFilename(filename)
-                    .setDirectory(directory != null ? directory : "")
-                    .setContent(ByteString.copyFrom(base64Content.getBytes()))
-                    .build();
-
-            Response response = stub.uploadFile(request);
-            System.out.println("Respuesta del nodo: " + response.getMessage() + " | Node ID: " + response.getNodeId());
-            return response.getNodeId();
-
-        } catch (Exception e) {
-            System.err.println("Error al obtener Node ID: " + e.getMessage());
-            return null;
-        }
-    }
-     //Download
     public DownloadResult downloadFile(String filePath) {
       try {
         DownloadRequest request = DownloadRequest.newBuilder()
@@ -228,7 +210,16 @@ public class FileSystemClient {
       }
     }
 
-    //Read file
+    public boolean isAlive() {
+        try {
+            listFiles("/");
+            return true;
+        } catch (Exception e) {
+            System.err.println("[isAlive] Nodo no disponible: " + e.getMessage());
+            return false;
+        }
+    }
+
     public DownloadResult readFile(String filePath) {
       try {
         DownloadRequest request = DownloadRequest.newBuilder()
@@ -238,7 +229,6 @@ public class FileSystemClient {
         System.out.println("Path " + filePath);
         DownloadResponse response = stub.downloadFile(request);
 
-        // Obtenemos cada campo del response
         String filename      = response.getFilename();
         String base64String  = response.getContentBase64();
         long   filesize      = response.getFilesize();

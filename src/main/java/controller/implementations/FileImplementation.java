@@ -50,8 +50,9 @@ public class FileImplementation implements FileDepotService {
                         for (FileSystemClient client : clients) {
                             try {
                                 UploadResult result = client.uploadBase64File(upload.name, upload.base64, directory);
-                                if (result.success && primerExito == null && result.nodeId != null && !result.nodeId.isEmpty()) {
+                                if (result.success && primerExito == null) {
                                     primerExito = result;
+                                    primerExito.nodeId = String.valueOf(GrpcNodeManager.getNodeId(client));
                                 }
                             } catch (Exception e) {
                                 System.err.println("Error al subir archivo en nodo: " + e.getMessage());
@@ -78,9 +79,6 @@ public class FileImplementation implements FileDepotService {
                     boolean todosBien = resultados.stream().allMatch(s -> s.contains("registrado correctamente"));
                     return gson.toJson(new SoapResponse(todosBien, String.join("\n", resultados)));
                 }
-
-
-
 
 
                 case "delete": {

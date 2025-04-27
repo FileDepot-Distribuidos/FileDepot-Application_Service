@@ -2,6 +2,7 @@ package Service;
 
 import controller.implementations.FileDepotImplementation;
 import grpc.GrpcNodeManager;
+import grpc.sync.NodeSyncService;
 import jakarta.xml.ws.Endpoint;
 import rmi.AuthService;
 import util.ConfigLoader;
@@ -17,6 +18,7 @@ public class Service {
 
             //gRPC
             GrpcNodeManager.verifyConnectionReady();
+            NodeSyncService.startSync();
 
             //SOAP
             int soapPort = ConfigLoader.getInt("SOAP_PORT");

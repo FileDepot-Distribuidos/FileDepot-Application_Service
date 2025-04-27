@@ -4,22 +4,27 @@ import apirest.NodeApi;
 import util.ConfigLoader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class GrpcNodeManager {
     private static final List<FileSystemClient> clients = new ArrayList<>();
+    private static final Map<FileSystemClient, Integer> clientIds = new HashMap<>();
     private static final AtomicInteger roundRobinCounter = new AtomicInteger(0);
 
     static {
         String[] hosts = {
                 ConfigLoader.get("NODE_1_HOST"),
-//                ConfigLoader.get("NODE_2_HOST"),
-//                ConfigLoader.get("NODE_3_HOST"),
-                // ConfigLoader.get("NODE_4_HOST")
+                ConfigLoader.get("NODE_2_HOST"),
+                ConfigLoader.get("NODE_3_HOST"),
+                //ConfigLoader.get("NODE_4_HOST")
         };
 
         int port = Integer.parseInt(ConfigLoader.get("NODE_PORT"));
+
+        int idCounter = 1;
 
         for (String host : hosts) {
             if (host != null && !host.isEmpty()) {
@@ -28,8 +33,11 @@ public class GrpcNodeManager {
                 try {
                     client.listFiles("/");
                     clients.add(client);
-                    System.out.println("Nodo gRPC activo y agregado: " + host + ":" + port);
+                    clientIds.put(client, idCounter);
+                    System.out.println("Nodo gRPC activo y agregado: " + host + ":" + port + " con ID: " + idCounter);
+
                     NodeApi.registerNode(host, 1000000, 1000000);
+                    idCounter++;
                 } catch (Exception e) {
                     System.err.println("Error al conectar con nodo gRPC " + host + ": " + e.getMessage());
                 }
@@ -43,13 +51,12 @@ public class GrpcNodeManager {
         System.out.println("Total de nodos gRPC conectados: " + clients.size());
     }
 
-    public static FileSystemClient getAvailableNodeClient() {
-        int index = roundRobinCounter.getAndUpdate(i -> (i + 1) % clients.size());
-        return clients.get(index);
-    }
-
     public static List<FileSystemClient> getAllClients() {
         return clients;
+    }
+
+    public static int getNodeId(FileSystemClient client) {
+        return clientIds.getOrDefault(client, -1);
     }
 
     public static void verifyConnectionReady() {

@@ -1,5 +1,7 @@
 package apirest;
 
+import com.google.gson.Gson;
+import dto.StructureResponse;
 import util.ConfigLoader;
 
 import java.io.BufferedReader;
@@ -42,6 +44,24 @@ public class ApiClient {
         }
     }
 
+    public static StructureResponse getStructure() {
+        try {
+            String json = get("/structure");
+
+            Gson gson = new Gson();
+            StructureResponse structure = gson.fromJson(json, StructureResponse.class);
+
+            System.out.println("[ApiClient] Estructura recibida:");
+            System.out.println("- Directorios: " + (structure.getDirectories() != null ? structure.getDirectories().size() : 0));
+            System.out.println("- Archivos: " + (structure.getFiles() != null ? structure.getFiles().size() : 0));
+
+            return structure;
+        } catch (Exception e) {
+            System.err.println("[ApiClient] Error al obtener estructura: " + e.getMessage());
+            return new StructureResponse();
+        }
+    }
+
     public static boolean delete(String endpoint) {
         try {
             URL url = new URL(BASE_URL + endpoint);
@@ -56,6 +76,7 @@ public class ApiClient {
             return false;
         }
     }
+
 
     public static String get(String endpoint) {
         try {
