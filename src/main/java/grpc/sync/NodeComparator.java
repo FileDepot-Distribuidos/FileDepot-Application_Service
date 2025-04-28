@@ -20,6 +20,11 @@ public class NodeComparator {
         for (String userRoot : userRoots) {
             System.out.println("Sincronizando usuario: " + userRoot);
 
+            List<String> userDbDirectories = filterPathsByRoot(dbDirectories, userRoot);
+            List<String> userDbFiles = filterPathsByRoot(dbFiles, userRoot);
+            List<String> userNodeDirectories = filterPathsByRoot(nodeStructure.getDirectories(), userRoot);
+            List<String> userNodeFiles = filterPathsByRoot(nodeStructure.getFiles(), userRoot);
+
             System.out.println("Directorios en DB para usuario " + userRoot + ":");
             for (String dir : dbDirectories) {
                 if (dir.equals(userRoot) || dir.startsWith(userRoot + "/")) {
@@ -68,6 +73,26 @@ public class NodeComparator {
                             outOfSync = true;
                             break;
                         }
+                    }
+                }
+            }
+
+            if (!outOfSync) {
+                for (String actualDir : userNodeDirectories) {
+                    if (!userDbDirectories.contains(actualDir)) {
+                        System.out.println("[SYNC][ERROR] Directorio extra no registrado: " + actualDir);
+                        outOfSync = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!outOfSync) {
+                for (String actualFile : userNodeFiles) {
+                    if (!userDbFiles.contains(actualFile)) {
+                        System.out.println("[SYNC][ERROR] Archivo extra no registrado: " + actualFile);
+                        outOfSync = true;
+                        break;
                     }
                 }
             }
