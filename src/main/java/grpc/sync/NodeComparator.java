@@ -12,89 +12,104 @@ public class NodeComparator {
     public static void compareAndSynchronize(FileSystemClient client, NodeStructure nodeStructure, StructureResponse dbStructure) {
         System.out.println("\n--- Comparando y sincronizando nodo ---");
 
-        if (isNodeTooDifferent(nodeStructure, dbStructure)) {
-            System.out.println("Nodo desactualizado, sincronizando...");
-            NodeSyncService.synchronizeFromOtherNode(client, dbStructure);
-            return;
+        List<String> dbDirectories = buildDbDirectories(dbStructure);
+        List<String> dbFiles = buildDbFiles(dbStructure);
+
+        List<String> userRoots = getUserRoots(dbStructure);
+
+        for (String userRoot : userRoots) {
+            System.out.println("Sincronizando usuario: " + userRoot);
+
+            System.out.println("Directorios en DB para usuario " + userRoot + ":");
+            for (String dir : dbDirectories) {
+                if (dir.equals(userRoot) || dir.startsWith(userRoot + "/")) {
+                    System.out.println("DB " + dir);
+                }
+            }
+
+            System.out.println("Directorios en Nodo para usuario " + userRoot + ":");
+            for (String dir : nodeStructure.getDirectories()) {
+                if (dir.equals(userRoot) || dir.startsWith(userRoot + "/")) {
+                    System.out.println("Nodo " + dir);
+                }
+            }
+
+            System.out.println("Archivos en DB para usuario " + userRoot + ":");
+            for (String file : dbFiles) {
+                if (file.equals(userRoot) || file.startsWith(userRoot + "/")) {
+                    System.out.println("DB File " + file);
+                }
+            }
+
+            System.out.println("Archivos en Nodo para usuario " + userRoot + ":");
+            for (String file : nodeStructure.getFiles()) {
+                if (file.equals(userRoot) || file.startsWith(userRoot + "/")) {
+                    System.out.println("Nodo File " + file);
+                }
+            }
+
+            boolean outOfSync = false;
+
+            for (String expectedDir : dbDirectories) {
+                if (expectedDir.equals(userRoot) || expectedDir.startsWith(userRoot + "/")) {
+                    if (!nodeStructure.getDirectories().contains(expectedDir)) {
+                        System.out.println("Directorio faltante en nodo: " + expectedDir);
+                        outOfSync = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!outOfSync) {
+                for (String expectedFile : dbFiles) {
+                    if (expectedFile.equals(userRoot) || expectedFile.startsWith(userRoot + "/")) {
+                        if (!nodeStructure.getFiles().contains(expectedFile)) {
+                            System.out.println("Archivo faltante en nodo: " + expectedFile);
+                            outOfSync = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (outOfSync) {
+                System.out.println("Usuario " + userRoot + " desincronizado, iniciando clonación...");
+                NodeSyncService.synchronizeFromOtherNode(client, dbStructure, userRoot);
+            } else {
+                System.out.println("Usuario " + userRoot + " completamente sincronizado.");
+            }
         }
-
-        Set<String> dbDirectories = buildDbDirectories(dbStructure);
-        Set<String> dbFiles = buildDbFiles(dbStructure);
-
-        createMissingDirectories(client, nodeStructure, dbStructure);
-        uploadMissingFiles(client, nodeStructure, dbStructure);
 
         System.out.println("--- Nodo sincronizado ---");
     }
 
 
-    private static boolean isNodeTooDifferent(NodeStructure nodeStructure, StructureResponse dbStructure) {
-        int archivosNodo = nodeStructure.getFiles().size();
-        int archivosDb = dbStructure.getFiles().size();
-        int carpetasNodo = nodeStructure.getDirectories().size();
-        int carpetasDb = dbStructure.getDirectories().size();
-
-        int diferenciaArchivos = Math.abs(archivosNodo - archivosDb);
-        int diferenciaDirectorios = Math.abs(carpetasNodo - carpetasDb);
-
-        double porcentajeArchivos = (double) diferenciaArchivos / Math.max(archivosNodo, archivosDb);
-        double porcentajeDirectorios = (double) diferenciaDirectorios / Math.max(carpetasNodo, carpetasDb);
-
-        return porcentajeArchivos > 0.2 || porcentajeDirectorios > 0.2; // Si hay más del 20% de diferencia
-    }
-
-
-    private static void createMissingDirectories(FileSystemClient client, NodeStructure nodeStructure, StructureResponse dbStructure) {
-        System.out.println("Creando carpetas faltantes...");
-        Set<String> dbDirectories = buildDbDirectories(dbStructure);
-
-        for (String dir : dbDirectories) {
-            if (!nodeStructure.getDirectories().contains(dir)) {
-                System.out.println("Creando carpeta: " + dir);
-                try {
-                    client.createDirectory("/" + dir);
-                } catch (Exception e) {
-                    System.err.println("Error creando carpeta " + dir + ": " + e.getMessage());
-                }
-            }
-        }
-    }
-
-    private static void uploadMissingFiles(FileSystemClient client, NodeStructure nodeStructure, StructureResponse dbStructure) {
-        System.out.println("Subiendo archivos faltantes...");
-        Set<String> dbFiles = buildDbFiles(dbStructure);
-
-        for (String file : dbFiles) {
-            if (!nodeStructure.getFiles().contains(file)) {
-                System.out.println("Archivo faltante, intentando recuperar: " + file);
-            }
-        }
-    }
-
-
-
-    private static Set<String> buildDbDirectories(StructureResponse dbStructure) {
-        Set<String> dirs = new HashSet<>();
+    private static List<String> buildDbDirectories(StructureResponse dbStructure) {
+        List<String> dirs = new ArrayList<>();
         for (DbDirectory dir : dbStructure.getDirectories()) {
             if (dir != null && dir.getPath() != null && !dir.getPath().isBlank()) {
-                String clean = dir.getPath();
-                if (clean.endsWith("/")) clean = clean.substring(0, clean.length() - 1);
+                String clean = normalizePath(dir.getPath());
                 dirs.add(clean);
             }
         }
         return dirs;
     }
 
-    private static Set<String> buildDbFiles(StructureResponse dbStructure) {
-        Set<String> files = new HashSet<>();
+
+    private static List<String> buildDbFiles(StructureResponse dbStructure) {
+        List<String> files = new ArrayList<>();
         for (DbFile file : dbStructure.getFiles()) {
             if (file != null && file.getName() != null) {
                 String path = buildFilePath(file, dbStructure.getDirectories());
-                if (path != null) files.add(path);
+                if (path != null) {
+                    path = normalizePath(path);
+                    files.add(path);
+                }
             }
         }
         return files;
     }
+
 
     private static String buildFilePath(DbFile file, List<DbDirectory> dirs) {
         DbDirectory parent = dirs.stream()
@@ -103,8 +118,41 @@ public class NodeComparator {
                 .orElse(null);
 
         String dirPath = (parent != null) ? parent.getPath() : "/";
-        if (dirPath.endsWith("/")) dirPath = dirPath.substring(0, dirPath.length() - 1);
+        dirPath = normalizePath(dirPath);
 
         return dirPath + "/" + file.getName();
     }
+
+    private static List<String> getUserRoots(StructureResponse dbStructure) {
+        List<String> roots = new ArrayList<>();
+        for (DbDirectory dir : dbStructure.getDirectories()) {
+            if (dir.getPath() != null) {
+                String normalized = normalizePath(dir.getPath());
+                if (normalized.matches("\\d+")) {
+                    roots.add(normalized);
+                }
+            }
+        }
+        return roots;
+    }
+
+
+    private static List<String> filterPathsByRoot(List<String> paths, String root) {
+        List<String> filtered = new ArrayList<>();
+        for (String path : paths) {
+            if (path.equals(root) || path.startsWith(root + "/")) {
+                filtered.add(path);
+            }
+        }
+        return filtered;
+    }
+
+
+    private static String normalizePath(String path) {
+        if (path == null) return "";
+        if (path.startsWith("/")) path = path.substring(1);
+        if (path.endsWith("/")) path = path.substring(0, path.length() - 1);
+        return path;
+    }
+
 }
