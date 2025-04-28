@@ -46,20 +46,12 @@ public class NodeSyncService {
 
     }
 
-    public static void synchronizeFromOtherNode(FileSystemClient client, StructureResponse dbStructure) {
+    public static void synchronizeFromOtherNode(FileSystemClient client, StructureResponse dbStructure, String userRootDirectory) {
         try {
-            // Obtener el ID de usuario
-            String rootUserDirectory = getRootUserDirectory(dbStructure);
-            if (rootUserDirectory == null) {
-                System.err.println("No se pudo determinar el directorio raíz del usuario");
-                return;
-            }
+            System.out.println("Eliminando carpeta del usuario: " + userRootDirectory);
 
-            // Borrar solo la carpeta del usuario
-            client.deleteFile("/" + rootUserDirectory);
+            client.deleteFile(userRootDirectory);
 
-
-            // Buscar un nodo para copiar su estructura
             FileSystemClient referenceNode = null;
             for (FileSystemClient otherNode : GrpcNodeManager.getAllClients()) {
                 if (otherNode != client && otherNode.isAlive()) {
@@ -69,55 +61,49 @@ public class NodeSyncService {
             }
 
             if (referenceNode == null) {
-                System.err.println("No hay nodos vivos para copiar la estructura");
+                System.err.println("No hay nodos vivos para copiar estructura.");
                 return;
             }
 
-            System.out.println("Nodo de referencia encontrado");
+            System.out.println("Nodo de referencia encontrado.");
 
-            // Recorre solo la estructura de usuario x
-            NodeStructure referenceStructure = NodeStructureBuilder.build(referenceNode, "/" + rootUserDirectory);
+            NodeStructure referenceStructure = NodeStructureBuilder.build(referenceNode, userRootDirectory);
 
-            // Crea carpetas
             List<String> directories = new ArrayList<>(referenceStructure.getDirectories());
             directories.sort(Comparator.comparingInt(NodeSyncService::countSlashes));
+
             for (String dir : directories) {
                 if (!dir.isBlank()) {
-                    System.out.println("Creando carpeta: " + dir);
-                    client.createDirectory("/" + dir);
+                    client.createDirectory(dir);
                 }
             }
 
-            // Sube archivos
             for (String filePath : referenceStructure.getFiles()) {
                 try {
                     String directory = getDirectoryFromPath(filePath);
                     String filename = getFilenameFromPath(filePath);
 
-                    System.out.println("Copiando archivo: " + filePath);
-
-                    var fileData = referenceNode.downloadFile("/" + filePath);
+                    var fileData = referenceNode.downloadFile(filePath);
                     if (fileData != null && fileData.getContentBase64() != null) {
-                        client.uploadBase64File(filename, fileData.getContentBase64(), "/" + directory);
+                        client.uploadBase64File(filename, fileData.getContentBase64(), directory);
                     }
                 } catch (Exception e) {
                     System.err.println("Error copiando archivo " + filePath + ": " + e.getMessage());
                 }
             }
 
-            System.out.println("Nodo clonado exitosamente");
+            System.out.println("Nodo clonado exitosamente.");
 
         } catch (Exception e) {
-            System.err.println("Error durante la sincronización completa: " + e.getMessage());
+            System.err.println("Error durante sincronización completa: " + e.getMessage());
         }
     }
 
 
-    public static void startSync() {
-        int initialDelay = 2;
-        int interval = 3;
 
-        System.out.println("Sincronización automática en " + interval + " minutos.");
+    public static void startSync() {
+        int initialDelay = 1;
+        int interval = 1;
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -138,7 +124,7 @@ public class NodeSyncService {
                 .orElse(null);
     }
 
-    private static int countSlashes(String path) {
+    public static int countSlashes(String path) {
         return (int) path.chars().filter(ch -> ch == '/').count();
     }
 
