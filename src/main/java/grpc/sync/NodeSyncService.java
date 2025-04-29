@@ -102,8 +102,8 @@ public class NodeSyncService {
 
 
     public static void startSync() {
-        int initialDelay = 1;
-        int interval = 1;
+        int initialDelay = 10000;
+        int interval = 10000;
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 

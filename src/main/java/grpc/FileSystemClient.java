@@ -1,6 +1,7 @@
 package grpc;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.Empty;
 import dto.files.DownloadResult;
 import dto.files.UploadResult;
 import filesystem.*;
@@ -8,12 +9,19 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class FileSystemClient {
 
     private final FileSystemServiceGrpc.FileSystemServiceBlockingStub stub;
+    private final String host;
+    private final int port;
 
     public FileSystemClient(String host, int port) {
+        this.host = host;
+        this.port = port;
         ManagedChannel channel = ManagedChannelBuilder.forAddress(host, port)
                 .usePlaintext()
                 .maxInboundMessageSize(20 * 1024 * 1024)
@@ -23,7 +31,15 @@ public class FileSystemClient {
         stub = FileSystemServiceGrpc.newBlockingStub(channel);
     }
 
-  public UploadResult uploadBase64File(String filename, String base64Content, String directory) {
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public UploadResult uploadBase64File(String filename, String base64Content, String directory) {
     try {
       if (filename == null || base64Content == null) {
         return new UploadResult(filesystem.Response.newBuilder()
@@ -219,6 +235,30 @@ public class FileSystemClient {
             return false;
         }
     }
+
+    public boolean nodeIsAlive() {
+        CompletableFuture<List<String>> future = CompletableFuture.supplyAsync(() -> {
+            try {
+                return listFiles("/"); // Llamada que puede ser asincrónica
+            } catch (Exception e) {
+                return null; // Si hay error, devolvemos null
+            }
+        });
+
+        try {
+            // Espera el resultado con un timeout para no bloquear indefinidamente
+            List<String> archivos = future.get(5, TimeUnit.SECONDS);
+            return archivos != null && !archivos.isEmpty();
+        } catch (TimeoutException e) {
+            System.err.println("[isAlive] Tiempo de espera agotado");
+            return false;
+        } catch (Exception e) {
+            System.err.println("[isAlive] Error al comprobar el nodo: " + e.getMessage());
+            return false;
+        }
+    }
+
+
 
     public DownloadResult readFile(String filePath) {
       try {
