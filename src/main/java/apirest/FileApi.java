@@ -142,19 +142,21 @@ public class FileApi {
     static class FilePayload {
         String name;
         String type;
-        long size;
+        long bytes;
         String hash;
         String owner_id;
-        int NODE_idNODE;
+        int original_idNODE;
+        int copy_idNODE;
         Integer DIRECTORY_idDIRECTORY;
 
         public FilePayload(UploadFile f, String nodeId, String fileType) {
             this.name = f.name;
             this.type = fileType;
-            this.size = f.size;
+            this.bytes = f.bytes;
             this.hash = generateHash(f.base64);
             this.owner_id = f.owner;
-            this.NODE_idNODE = Integer.parseInt(nodeId);
+            this.original_idNODE = Integer.parseInt(nodeId);
+            this.copy_idNODE = Integer.parseInt(nodeId);
 
             if (f.directoryId != 0) {
                 this.DIRECTORY_idDIRECTORY = f.directoryId;

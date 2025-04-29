@@ -19,7 +19,7 @@ public class GrpcNodeManager {
                 ConfigLoader.get("NODE_1_HOST"),
                 ConfigLoader.get("NODE_2_HOST"),
                 ConfigLoader.get("NODE_3_HOST"),
-                //ConfigLoader.get("NODE_4_HOST")
+                ConfigLoader.get("NODE_4_HOST")
         };
 
         int port = Integer.parseInt(ConfigLoader.get("NODE_PORT"));
@@ -28,7 +28,7 @@ public class GrpcNodeManager {
 
         for (String host : hosts) {
             if (host != null && !host.isEmpty()) {
-                FileSystemClient client = new FileSystemClient(host, port);
+                FileSystemClient client = new FileSystemClient(host, port++);
 
                 try {
                     client.listFiles("/");
@@ -36,7 +36,7 @@ public class GrpcNodeManager {
                     clientIds.put(client, idCounter);
                     System.out.println("Nodo gRPC activo y agregado: " + host + ":" + port + " con ID: " + idCounter);
 
-                    NodeApi.registerNode(host, 1000000, 1000000);
+                    NodeApi.registerNode(host, 1000000000, 1000000000);
                     idCounter++;
                 } catch (Exception e) {
                     System.err.println("Error al conectar con nodo gRPC " + host + ": " + e.getMessage());
