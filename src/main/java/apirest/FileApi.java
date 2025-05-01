@@ -12,10 +12,10 @@ import java.util.Base64;
 
 public class FileApi {
 
-    public static boolean registerFile(UploadFile file, String nodeId, String fileType) {
+    public static boolean registerFile(UploadFile file, String original_nodeId, String copy_nodeId, String fileType) {
         Gson gson = new Gson();
 
-        FilePayload payload = new FilePayload(file, nodeId, fileType);
+        FilePayload payload = new FilePayload(file, original_nodeId, copy_nodeId, fileType);
         String json = gson.toJson(payload);
 
         System.out.println("Enviando archivo a la API REST: " + json);
@@ -142,19 +142,21 @@ public class FileApi {
     static class FilePayload {
         String name;
         String type;
-        long size;
+        long bytes;
         String hash;
         String owner_id;
-        int NODE_idNODE;
+        int original_idNODE;
+        int copy_idNODE;
         Integer DIRECTORY_idDIRECTORY;
 
-        public FilePayload(UploadFile f, String nodeId, String fileType) {
+        public FilePayload(UploadFile f, String original_nodeId, String copy_nodeId, String fileType) {
             this.name = f.name;
             this.type = fileType;
-            this.size = f.size;
+            this.bytes = f.bytes;
             this.hash = generateHash(f.base64);
             this.owner_id = f.owner;
-            this.NODE_idNODE = Integer.parseInt(nodeId);
+            this.original_idNODE = Integer.parseInt(original_nodeId);
+            this.copy_idNODE = Integer.parseInt(copy_nodeId);
 
             if (f.directoryId != 0) {
                 this.DIRECTORY_idDIRECTORY = f.directoryId;

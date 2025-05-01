@@ -1,6 +1,11 @@
 package apirest;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import dto.node.NodeInfo;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class NodeApi {
 
@@ -17,6 +22,20 @@ public class NodeApi {
             }
         } catch (Exception e) {
             System.err.println("Excepción al registrar nodo: " + e.getMessage());
+        }
+    }
+
+    public static List<NodeInfo> listAllNodes() {
+        String jsonResponse = ApiClient.get("/nodes");
+
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<NodeInfo>>() {}.getType();
+
+        try {
+            return gson.fromJson(jsonResponse, listType);
+        } catch (Exception e) {
+            System.err.println("Error al parsear nodos: " + e.getMessage());
+            return List.of();
         }
     }
 
