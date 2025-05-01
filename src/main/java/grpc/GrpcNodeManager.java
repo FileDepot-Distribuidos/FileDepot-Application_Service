@@ -17,7 +17,7 @@ public class GrpcNodeManager {
                 ConfigLoader.get("NODE_1_HOST"),
                 ConfigLoader.get("NODE_2_HOST"),
                 ConfigLoader.get("NODE_3_HOST"),
-                ConfigLoader.get("NODE_4_HOST")
+                //ConfigLoader.get("NODE_4_HOST")
         };
 
         int port = Integer.parseInt(ConfigLoader.get("NODE_PORT"));

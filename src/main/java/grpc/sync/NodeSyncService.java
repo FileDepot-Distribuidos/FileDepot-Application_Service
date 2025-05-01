@@ -2,6 +2,7 @@ package grpc.sync;
 
 import apirest.ApiClient;
 import dto.StructureResponse;
+import dto.files.DbFile;
 import grpc.FileSystemClient;
 import grpc.GrpcNodeManager;
 
@@ -48,62 +49,89 @@ public class NodeSyncService {
 
     public static void synchronizeFromOtherNode(FileSystemClient client, StructureResponse dbStructure, String userRootDirectory) {
         try {
-            System.out.println("Eliminando carpeta del usuario: " + userRootDirectory);
+            int currentNodeId = GrpcNodeManager.getNodeId(client);
+            List<DbFile> allFiles = dbStructure.getFiles();
+            List<String> createdDirs = new ArrayList<>();
+            List<String> expectedPaths = new ArrayList<>();
 
-            client.deleteFile(userRootDirectory);
+            createdDirs.add(userRootDirectory);
 
-            FileSystemClient referenceNode = null;
-            for (FileSystemClient otherNode : GrpcNodeManager.getAllClients()) {
-                if (otherNode != client && otherNode.isAlive()) {
-                    referenceNode = otherNode;
-                    break;
+            // Restaura archivos válidos
+            for (DbFile file : allFiles) {
+                String fullPath = NodeComparator.buildFilePath(file, dbStructure.getDirectories());
+                if (fullPath == null) continue;
+                String normalizedPath = fullPath.replaceFirst("^/", "");
+
+                if (file.getOriginal_idNODE() != currentNodeId && file.getCopy_idNODE() != currentNodeId) {
+                    continue;
                 }
-            }
 
-            if (referenceNode == null) {
-                System.err.println("No hay nodos vivos para copiar estructura.");
-                return;
-            }
-
-            System.out.println("Nodo de referencia encontrado.");
-
-            NodeStructure referenceStructure = NodeStructureBuilder.build(referenceNode, userRootDirectory);
-
-            List<String> directories = new ArrayList<>(referenceStructure.getDirectories());
-            directories.sort(Comparator.comparingInt(NodeSyncService::countSlashes));
-
-            for (String dir : directories) {
-                if (!dir.isBlank()) {
-                    client.createDirectory(dir);
+                if (!normalizedPath.startsWith(userRootDirectory + "/") && !normalizedPath.equals(userRootDirectory)) {
+                    continue;
                 }
-            }
 
-            for (String filePath : referenceStructure.getFiles()) {
-                try {
-                    String directory = getDirectoryFromPath(filePath);
-                    String filename = getFilenameFromPath(filePath);
+                expectedPaths.add(normalizedPath);
 
-                    var fileData = referenceNode.downloadFile(filePath);
-                    if (fileData != null && fileData.getContentBase64() != null) {
-                        client.uploadBase64File(filename, fileData.getContentBase64(), directory);
+                String directory = getDirectoryFromPath(normalizedPath);
+                if (!createdDirs.contains(directory)) {
+                    client.createDirectory(directory);
+                    createdDirs.add(directory);
+                }
+
+                FileSystemClient sourceNode = null;
+                for (FileSystemClient other : GrpcNodeManager.getAllClients()) {
+                    int nodeId = GrpcNodeManager.getNodeId(other);
+                    if ((file.getOriginal_idNODE() == nodeId || file.getCopy_idNODE() == nodeId)
+                            && other != client && other.isAlive()) {
+                        sourceNode = other;
+                        break;
                     }
-                } catch (Exception e) {
-                    System.err.println("Error copiando archivo " + filePath + ": " + e.getMessage());
+                }
+
+                if (sourceNode != null) {
+                    try {
+                        var data = sourceNode.downloadFile(normalizedPath);
+                        if (data != null && data.getContentBase64() != null) {
+                            String filename = getFilenameFromPath(normalizedPath);
+                            client.uploadBase64File(filename, data.getContentBase64(), directory);
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Error copiando archivo " + normalizedPath + ": " + e.getMessage());
+                    }
+                } else {
+                    System.err.println("No se encontró nodo fuente para archivo: " + normalizedPath);
                 }
             }
 
-            System.out.println("Nodo clonado exitosamente.");
+            NodeStructure actualStructure = NodeStructureBuilder.build(client, userRootDirectory);
+            for (String actualPath : actualStructure.getFiles()) {
+                if (!expectedPaths.contains(actualPath)) {
+                    System.out.println("[SYNC][LIMPIEZA] Eliminando archivo sobrante: " + actualPath);
+                    client.deleteFile(actualPath);
+                }
+            }
 
+            for (String actualDir : actualStructure.getDirectories()) {
+                if (!createdDirs.contains(actualDir) && actualDir.startsWith(userRootDirectory)) {
+                    System.out.println("[SYNC][LIMPIEZA] Eliminando directorio sobrante: " + actualDir);
+                    client.deleteFile(actualDir);
+                }
+            }
+
+            System.out.println("Sincronización puntual finalizada para usuario " + userRootDirectory);
         } catch (Exception e) {
-            System.err.println("Error durante sincronización completa: " + e.getMessage());
+            System.err.println("Error durante sincronización de archivos: " + e.getMessage());
         }
     }
 
 
 
+
+
+
     public static void startSync() {
-        int initialDelay = 10000;
-        int interval = 10000;
+        int initialDelay = 1;
+        int interval = 1;
 
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -116,13 +144,19 @@ public class NodeSyncService {
         }, initialDelay, interval, TimeUnit.MINUTES);
     }
 
-    private static String getRootUserDirectory(StructureResponse dbStructure) {
-        return dbStructure.getDirectories().stream()
-                .filter(d -> d.getPath() != null && d.getPath().matches("\\d+/"))
-                .map(d -> d.getPath().replace("/", ""))
-                .findFirst()
-                .orElse(null);
+    public static List<String> getRootUserDirectories(StructureResponse dbStructure) {
+        List<String> roots = new ArrayList<>();
+        for (var dir : dbStructure.getDirectories()) {
+            if (dir.getPath() != null) {
+                String path = dir.getPath().replaceAll("^/|/$", "");
+                if (path.matches("\\d+")) {
+                    roots.add(path);
+                }
+            }
+        }
+        return roots;
     }
+
 
     public static int countSlashes(String path) {
         return (int) path.chars().filter(ch -> ch == '/').count();

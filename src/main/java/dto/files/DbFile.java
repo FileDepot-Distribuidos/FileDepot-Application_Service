@@ -3,59 +3,46 @@ package dto.files;
 public class DbFile {
     private int idFILE;
     private String name;
+    private String type;
+    private long bytes;
     private String hash;
+    private int owner_id;
+    private String creation_date;
+    private String last_modified;
+    private int original_idNODE;
+    private int copy_idNODE;
     private int DIRECTORY_idDIRECTORY;
-    private int NODE_idNODE;
-    private int USER_idUSER;
 
-    public DbFile() {
-    }
+    public int getIdFILE() { return idFILE; }
+    public void setIdFILE(int idFILE) { this.idFILE = idFILE; }
 
-    public int getIdFILE() {
-        return idFILE;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
 
-    public String getHash() {
-        return hash;
-    }
+    public long getBytes() { return bytes; }
+    public void setBytes(long bytes) { this.bytes = bytes; }
 
-    public int getDIRECTORY_idDIRECTORY() {
-        return DIRECTORY_idDIRECTORY;
-    }
+    public String getHash() { return hash; }
+    public void setHash(String hash) { this.hash = hash; }
 
-    public int getNODE_idNODE() {
-        return NODE_idNODE;
-    }
+    public int getOwner_id() { return owner_id; }
+    public void setOwner_id(int owner_id) { this.owner_id = owner_id; }
 
-    public int getUSER_idUSER() {
-        return USER_idUSER;
-    }
+    public String getCreation_date() { return creation_date; }
+    public void setCreation_date(String creation_date) { this.creation_date = creation_date; }
 
-    public void setIdFILE(int idFILE) {
-        this.idFILE = idFILE;
-    }
+    public String getLast_modified() { return last_modified; }
+    public void setLast_modified(String last_modified) { this.last_modified = last_modified; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public int getOriginal_idNODE() { return original_idNODE; }
+    public void setOriginal_idNODE(int original_idNODE) { this.original_idNODE = original_idNODE; }
 
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
+    public int getCopy_idNODE() { return copy_idNODE; }
+    public void setCopy_idNODE(int copy_idNODE) { this.copy_idNODE = copy_idNODE; }
 
-    public void setDIRECTORY_idDIRECTORY(int DIRECTORY_idDIRECTORY) {
-        this.DIRECTORY_idDIRECTORY = DIRECTORY_idDIRECTORY;
-    }
-
-    public void setNODE_idNODE(int NODE_idNODE) {
-        this.NODE_idNODE = NODE_idNODE;
-    }
-
-    public void setUSER_idUSER(int USER_idUSER) {
-        this.USER_idUSER = USER_idUSER;
-    }
+    public int getDIRECTORY_idDIRECTORY() { return DIRECTORY_idDIRECTORY; }
+    public void setDIRECTORY_idDIRECTORY(int DIRECTORY_idDIRECTORY) { this.DIRECTORY_idDIRECTORY = DIRECTORY_idDIRECTORY; }
 }
